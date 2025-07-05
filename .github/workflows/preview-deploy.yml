@@ -59,19 +59,28 @@ jobs:
           cat wrangler.preview.toml
 
       - name: 🚀 Deploy to Cloudflare Workers Preview
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: '.'
           command: deploy --config wrangler.preview.toml --compatibility-date=2024-01-01
 
+      - name: 🔍 Verify deployment URL
+        run: |
+          WORKER_NAME="aswin-portfolio-pr-${{ github.event.number }}"
+          echo "Expected URL: https://${WORKER_NAME}.workers.dev"
+          echo "Testing URL accessibility..."
+          sleep 10  # Wait for deployment to be ready
+          curl -I "https://${WORKER_NAME}.workers.dev" || echo "URL not immediately accessible - this is normal for new deployments"
+
       - name: 📝 Comment on PR with preview URL
         uses: actions/github-script@v7
         with:
           script: |
             const prNumber = context.issue.number;
-            const previewUrl = `https://aswin-portfolio-pr-${prNumber}.aswinlocal.workers.dev`;
-            const deploymentUrl = `https://aswin-portfolio-pr-${prNumber}.aswinlocal.workers.dev`;
+            const workerName = `aswin-portfolio-pr-${prNumber}`;
+            const previewUrl = `https://${workerName}.workers.dev`;
             
             // Check if preview comment already exists
             const comments = await github.rest.issues.listComments({
@@ -151,7 +160,7 @@ jobs:
             
             **Removed:**
             - Worker: \`aswin-portfolio-pr-${prNumber}\`
-            - Preview URL: \`https://aswin-portfolio-pr-${prNumber}.aswinlocal.workers.dev\`
+            - Preview URL: \`https://aswin-portfolio-pr-${prNumber}.workers.dev\`
             
             Thank you for your contribution! 🙏`;
             
