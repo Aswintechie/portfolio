@@ -9,6 +9,7 @@ import { Server as IOServer } from 'socket.io';
 import http from 'http';
 import { sendTelegramMessage } from './telegram-curl.js';
 import { setSocketIO, startPolling } from './telegram-polling.js';
+import { setupWebhook } from './setup-telegram-webhook.js';
 
 // Load environment variables from current directory
 dotenv.config();
@@ -54,15 +55,19 @@ async function initializeTelegram() {
 }
 
 // Start Telegram initialization
-initializeTelegram().then(() => {
-  // Set up Telegram polling for two-way communication after initialization
-  if (telegramEnabled) {
-    console.log('🔄 Setting up Telegram polling...');
+initializeTelegram().then(async () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const webhookUrl = process.env.WEBHOOK_URL;
+
+  if (isProduction && webhookUrl) {
+    // Production: Use webhook
+    await setupWebhook();
+    console.log('✅ Using Telegram webhook for production');
+  } else {
+    // Development: Use polling
     setSocketIO(io);
     startPolling();
-    console.log('✅ Telegram polling started for two-way communication');
-  } else {
-    console.log('⚠️  Telegram polling not started (telegramEnabled is false)');
+    console.log('✅ Using Telegram polling for development');
   }
 });
 

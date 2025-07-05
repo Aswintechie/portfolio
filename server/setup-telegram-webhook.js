@@ -90,23 +90,27 @@ async function removeWebhook() {
   }
 }
 
-// Handle command line arguments
-const command = process.argv[2];
+// Export for programmatic use
+export { setupWebhook, removeWebhook };
 
-if (command === 'remove') {
-  removeWebhook().then(success => {
-    process.exit(success ? 0 : 1);
-  });
-} else {
-  setupWebhook().then(success => {
-    if (success) {
-      console.log('\n🎉 Telegram webhook setup complete!');
-      console.log('💡 Now when you reply in Telegram, messages will appear in the live chat.');
-      console.log('💡 Make sure your server is running on port 3001');
-      console.log('💡 For production, set WEBHOOK_URL in .env to your public URL');
-    } else {
-      console.log('\n❌ Webhook setup failed');
-    }
-    process.exit(success ? 0 : 1);
-  });
+// CLI support
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const command = process.argv[2];
+  if (command === 'remove') {
+    removeWebhook().then(success => {
+      process.exit(success ? 0 : 1);
+    });
+  } else {
+    setupWebhook().then(success => {
+      if (success) {
+        console.log('\n🎉 Telegram webhook setup complete!');
+        console.log('💡 Now when you reply in Telegram, messages will appear in the live chat.');
+        console.log('💡 Make sure your server is running on port 3001');
+        console.log('💡 For production, set WEBHOOK_URL in .env to your public URL');
+      } else {
+        console.log('\n❌ Webhook setup failed');
+      }
+      process.exit(success ? 0 : 1);
+    });
+  }
 }
