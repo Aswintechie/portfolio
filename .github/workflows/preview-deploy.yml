@@ -52,9 +52,10 @@ jobs:
 
       - name: 🚀 Deploy to Cloudflare Workers Preview
         id: deploy
-        uses: cloudflare/wrangler-action@v4
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: 'latest'
           workingDirectory: '.'
           command: deploy --config wrangler.preview.toml --compatibility-date=2024-01-01
 
@@ -135,9 +136,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🗑️ Delete preview deployment
-        uses: cloudflare/wrangler-action@v4
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: 'latest'
           workingDirectory: '.'
           command: delete aswin-portfolio-pr-${{ github.event.number }} --force
 
