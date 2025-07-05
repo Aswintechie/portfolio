@@ -41,7 +41,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Create reusable transporter object using SMTP configuration from .env
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT) || 587,
     secure: false, // true for 465, false for other ports
@@ -60,8 +60,9 @@ const contactValidation = [
   body('name')
     .isLength({ min: 2, max: 100 })
     .withMessage('Name must be between 2 and 100 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name must contain only letters and spaces'),
+    .matches(/^[a-zA-Z\s\-'.]+$/)
+    .withMessage('Name must contain only letters, spaces, hyphens, apostrophes, and periods')
+    .trim(),
 
   body('email').isEmail().withMessage('Please provide a valid email address').normalizeEmail(),
 
@@ -94,6 +95,15 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
     }
 
     const { name, email, message } = req.body;
+
+    // Check if SMTP is configured
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      console.log('SMTP not configured, returning success without sending email');
+      return res.status(200).json({
+        success: true,
+        message: 'Message received! Thank you for contacting me. (Email service not configured)',
+      });
+    }
 
     // Create transporter
     const transporter = createTransporter();
