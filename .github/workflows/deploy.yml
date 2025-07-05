@@ -93,7 +93,7 @@ jobs:
       - name: 🔐 Set Cloudflare secrets for production
         run: |
           echo "Setting Cloudflare secrets for production deployment..."
-          
+
           # Set Telegram Bot Token
           if [ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ]; then
             echo "${{ secrets.TELEGRAM_BOT_TOKEN }}" | npx wrangler secret put TELEGRAM_BOT_TOKEN --env production
@@ -101,7 +101,7 @@ jobs:
           else
             echo "⚠️  TELEGRAM_BOT_TOKEN not found in GitHub secrets"
           fi
-          
+
           # Set Telegram Admin Chat ID
           if [ -n "${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}" ]; then
             echo "${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}" | npx wrangler secret put TELEGRAM_ADMIN_CHAT_ID --env production
@@ -109,7 +109,7 @@ jobs:
           else
             echo "⚠️  TELEGRAM_ADMIN_CHAT_ID not found in GitHub secrets"
           fi
-          
+
           # Set SMTP User
           if [ -n "${{ secrets.SMTP_USER }}" ]; then
             echo "${{ secrets.SMTP_USER }}" | npx wrangler secret put SMTP_USER --env production
@@ -117,7 +117,7 @@ jobs:
           else
             echo "⚠️  SMTP_USER not found in GitHub secrets"
           fi
-          
+
           # Set SMTP Password
           if [ -n "${{ secrets.SMTP_PASS }}" ]; then
             echo "${{ secrets.SMTP_PASS }}" | npx wrangler secret put SMTP_PASS --env production
@@ -125,7 +125,7 @@ jobs:
           else
             echo "⚠️  SMTP_PASS not found in GitHub secrets"
           fi
-          
+
           echo "🔐 All secrets configured for production deployment"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
