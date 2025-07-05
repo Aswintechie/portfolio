@@ -32,4 +32,4 @@ wrangler.toml @Aswin-coder @Aswinmcw
 
 # Build and deployment
 /dist/ @Aswin-coder @Aswinmcw
-worker.js @Aswin-coder @Aswinmcw 
+worker.js @Aswin-coder @Aswinmcw
