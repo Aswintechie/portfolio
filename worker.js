@@ -210,22 +210,27 @@ async function handleContactForm(request) {
     // Send both emails
     // Note: Currently logging email details instead of sending
     // To enable actual email sending, set up MailChannels or another email service
-    await Promise.all([
-      sendEmail(
-        'contact@aswinlocal.in',
-        `New Portfolio Contact from ${name}`,
-        notificationHTML,
-        notificationText,
-        request.headers.get('host') || 'aswinlocal.in'
-      ),
-      sendEmail(
-        email,
-        'Thank you for contacting me!',
-        autoReplyHTML,
-        autoReplyText,
-        request.headers.get('host') || 'aswinlocal.in'
-      ),
-    ]);
+    try {
+      await Promise.all([
+        sendEmail(
+          'contact@aswinlocal.in',
+          `New Portfolio Contact from ${name}`,
+          notificationHTML,
+          notificationText,
+          request.headers.get('host') || 'aswinlocal.in'
+        ),
+        sendEmail(
+          email,
+          'Thank you for contacting me!',
+          autoReplyHTML,
+          autoReplyText,
+          request.headers.get('host') || 'aswinlocal.in'
+        ),
+      ]);
+    } catch (emailError) {
+      console.error('Email sending failed, but form submission succeeded:', emailError);
+      // Continue with success response even if email fails
+    }
 
     return new Response(
       JSON.stringify({
