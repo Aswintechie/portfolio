@@ -94,6 +94,7 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: 'latest'
           workingDirectory: '.'
           command: deploy --compatibility-date=2024-01-01
 

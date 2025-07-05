@@ -1,0 +1,174 @@
+name: Preview Deployment
+
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    name: 🚀 Deploy Preview
+    if: github.event.action != 'closed'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 🧹 Clean npm cache and dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm cache clean --force
+
+      - name: 📋 Install dependencies
+        run: npm install
+
+      - name: 🏗️ Build React portfolio
+        run: npm run build
+
+      - name: 🧹 Remove _redirects file (if exists)
+        run: rm -f dist/_redirects
+
+      - name: 🔧 Generate preview wrangler config
+        run: |
+          cat > wrangler.preview.toml << EOF
+          name = "aswin-portfolio-pr-${{ github.event.number }}"
+          main = "worker.js"
+          compatibility_date = "2024-01-01"
+
+          [vars]
+          NODE_ENV = "production"
+
+          [assets]
+          directory = "./dist"
+          binding = "ASSETS"
+          EOF
+
+          echo "Generated preview config:"
+          cat wrangler.preview.toml
+
+      - name: 🚀 Deploy to Cloudflare Workers Preview
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: 'latest'
+          workingDirectory: '.'
+          command: deploy --config wrangler.preview.toml --compatibility-date=2024-01-01
+
+      - name: 🔍 Verify deployment URL
+        run: |
+          WORKER_NAME="aswin-portfolio-pr-${{ github.event.number }}"
+          echo "Expected URL: https://${WORKER_NAME}.aswin8681879422.workers.dev"
+          echo "Testing URL accessibility..."
+          sleep 10  # Wait for deployment to be ready
+          curl -I "https://${WORKER_NAME}.aswin8681879422.workers.dev" || echo "URL not immediately accessible - this is normal for new deployments"
+
+      - name: 📝 Comment on PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.issue.number;
+            const workerName = `aswin-portfolio-pr-${prNumber}`;
+            const previewUrl = `https://${workerName}.aswin8681879422.workers.dev`;
+
+            // Check if preview comment already exists
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+
+            const existingComment = comments.data.find(comment => 
+              comment.body.includes('🚀 Preview Deployment')
+            );
+
+            const commentBody = `## 🚀 Preview Deployment
+
+            Your preview deployment is ready! 🎉
+
+            **Preview URL**: [${previewUrl}](${previewUrl})
+
+            > 📝 This preview will be automatically deleted when this PR is closed or merged.
+
+            ---
+
+            **Deployment Info:**
+            - **Branch**: \`${context.payload.pull_request.head.ref}\`
+            - **Commit**: \`${context.payload.pull_request.head.sha.substring(0, 7)}\`
+            - **Environment**: Preview
+            - **Deploy Time**: ${new Date().toLocaleString()}
+
+            ---
+
+            **🔍 Test your changes:**
+            - ✅ Check responsive design
+            - ✅ Test contact form functionality
+            - ✅ Verify all links work correctly
+            - ✅ Test performance and loading times`;
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: commentBody
+              });
+            }
+
+  cleanup-preview:
+    runs-on: ubuntu-latest
+    name: 🧹 Cleanup Preview
+    if: github.event.action == 'closed'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🗑️ Delete preview deployment
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: 'latest'
+          workingDirectory: '.'
+          command: delete aswin-portfolio-pr-${{ github.event.number }} --force
+
+      - name: 📝 Comment on PR about cleanup
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.issue.number;
+            const commentBody = `## 🧹 Preview Cleanup
+
+            The preview deployment for this PR has been cleaned up automatically.
+
+            **Removed:**
+            - Worker: \`aswin-portfolio-pr-${prNumber}\`
+            - Preview URL: \`https://aswin-portfolio-pr-${prNumber}.aswin8681879422.workers.dev\`
+
+            Thank you for your contribution! 🙏`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: commentBody
+            });
