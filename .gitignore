@@ -106,4 +106,7 @@ temp/
 *.ntvs*
 *.njsproj
 *.sln
-*.sw? 
+*.sw?
+
+# Cloudflare Workers
+public/_redirects 
