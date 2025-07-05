@@ -99,11 +99,20 @@ function createAutoReplyHTML(name, message) {
 // Type: CNAME, Name: mailchannels, Content: mailchannels.net
 //
 async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
+  console.log('🚀 Starting email send process:', {
+    to,
+    subject,
+    hostname,
+    timestamp: new Date().toISOString(),
+  });
+
   // Validate email format
   if (!isValidEmail(to)) {
     console.error('❌ Invalid email address:', to);
     throw new Error('Invalid email address');
   }
+
+  console.log('✅ Email validation passed');
 
   // Check if we're in a preview environment
   if (hostname.includes('workers.dev')) {
@@ -117,42 +126,72 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
     return true;
   }
 
+  console.log('🌐 Production environment detected, proceeding with MailChannels');
+
   try {
+    console.log('📤 Preparing MailChannels API request...');
+
+    // Prepare the email payload
+    const emailPayload = {
+      personalizations: [
+        {
+          to: [{ email: to }],
+        },
+      ],
+      from: {
+        email: 'contact@aswinlocal.in',
+        name: 'Aswin Portfolio',
+      },
+      subject: subject,
+      content: [
+        {
+          type: 'text/html',
+          value: html,
+        },
+        {
+          type: 'text/plain',
+          value: text,
+        },
+      ],
+    };
+
+    console.log('📋 Email payload prepared:', {
+      to: emailPayload.personalizations[0].to[0].email,
+      from: emailPayload.from.email,
+      subject: emailPayload.subject,
+      htmlLength: emailPayload.content[0].value.length,
+      textLength: emailPayload.content[1].value.length,
+    });
+
     // Send email via MailChannels API
+    console.log('🌐 Making request to MailChannels API...');
     const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        personalizations: [
-          {
-            to: [{ email: to }],
-          },
-        ],
-        from: {
-          email: 'contact@aswinlocal.in',
-          name: 'Aswin Portfolio',
-        },
-        subject: subject,
-        content: [
-          {
-            type: 'text/html',
-            value: html,
-          },
-          {
-            type: 'text/plain',
-            value: text,
-          },
-        ],
-      }),
+      body: JSON.stringify(emailPayload),
+    });
+
+    console.log('📡 MailChannels API response received:', {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ MailChannels error:', response.status, errorText);
+      console.error('❌ MailChannels API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorText: errorText,
+        headers: Object.fromEntries(response.headers.entries()),
+      });
       throw new Error(`MailChannels error: ${response.status} - ${errorText}`);
     }
+
+    const responseText = await response.text();
+    console.log('📨 MailChannels API response body:', responseText);
 
     console.log('✅ Email sent successfully via MailChannels:', {
       to,
@@ -162,11 +201,9 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
 
     return true;
   } catch (error) {
-    console.error('❌ Failed to send email via MailChannels:', error);
-
-    // Log detailed error for debugging
-    console.error('📋 Error details:', {
+    console.error('❌ Failed to send email via MailChannels:', {
       error: error.message,
+      stack: error.stack,
       to,
       subject,
       timestamp: new Date().toISOString(),
@@ -243,17 +280,23 @@ async function handleContactForm(request) {
       This is an automated response. Please do not reply to this email directly.
     `;
 
-    // Send both emails (currently logging only)
-    // TODO: Set up proper email service for actual email delivery
+    // Send both emails via MailChannels
     console.log('📨 Processing contact form submission:', {
       name,
       email,
       messageLength: message.length,
+      hostname: request.headers.get('host') || 'aswinlocal.in',
+      userAgent: request.headers.get('user-agent'),
       timestamp: new Date().toISOString(),
     });
 
+    console.log('📧 Preparing to send notification email to:', 'contact@aswinlocal.in');
+    console.log('📧 Preparing to send auto-reply email to:', email);
+
     try {
-      await Promise.all([
+      console.log('🚀 Starting email sending process...');
+
+      const [notificationResult, autoReplyResult] = await Promise.all([
         sendEmail(
           'contact@aswinlocal.in',
           `New Portfolio Contact from ${name}`,
@@ -269,9 +312,20 @@ async function handleContactForm(request) {
           request.headers.get('host') || 'aswinlocal.in'
         ),
       ]);
-      console.log('✅ Email processing completed (logged to console)');
+
+      console.log('✅ Both emails sent successfully:', {
+        notificationResult,
+        autoReplyResult,
+        timestamp: new Date().toISOString(),
+      });
     } catch (emailError) {
-      console.error('❌ Email processing failed:', emailError);
+      console.error('❌ Email processing failed:', {
+        error: emailError.message,
+        stack: emailError.stack,
+        name,
+        email,
+        timestamp: new Date().toISOString(),
+      });
       // Continue with success response even if email fails
     }
 
