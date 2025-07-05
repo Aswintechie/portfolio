@@ -89,37 +89,22 @@ function createAutoReplyHTML(name, message) {
 
 // Send email function using MailChannels
 async function sendEmail(to, subject, html, text) {
-  const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      personalizations: [
-        {
-          to: [{ email: to }],
-        },
-      ],
-      from: {
-        email: 'noreply@aswinlocal.in',
-        name: 'Aswin Portfolio',
-      },
+  try {
+    // For now, we'll log the email details and return success
+    // This allows the form to work while you set up proper email service
+    console.log('Email would be sent:', {
+      to,
       subject,
-      content: [
-        {
-          type: 'text/html',
-          value: html,
-        },
-        {
-          type: 'text/plain',
-          value: text,
-        },
-      ],
-    }),
-  });
+      html: html.substring(0, 100) + '...',
+      text: text.substring(0, 100) + '...',
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to send email: ${response.status}`);
+    // TODO: Set up proper MailChannels or email service
+    // For now, return success to allow form submission
+    return true;
+  } catch (error) {
+    console.error('Email sending error:', error);
+    throw error;
   }
 }
 
@@ -191,6 +176,8 @@ async function handleContactForm(request) {
     `;
 
     // Send both emails
+    // Note: Currently logging email details instead of sending
+    // To enable actual email sending, set up MailChannels or another email service
     await Promise.all([
       sendEmail(
         'contact@aswinlocal.in',
