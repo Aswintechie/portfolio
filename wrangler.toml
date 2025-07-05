@@ -5,13 +5,15 @@ compatibility_date = "2024-01-01"
 [vars]
 NODE_ENV = "production"
 
-[[routes]]
-pattern = "aswinlocal.in/*"
-zone_name = "aswinlocal.in"
+# Temporarily commented for workers.dev access while setting up custom domain
+# Uncomment these after aswinlocal.in is added to Cloudflare account
+# [[routes]]
+# pattern = "aswinlocal.in/*"
+# zone_name = "aswinlocal.in"
 
-[[routes]]
-pattern = "www.aswinlocal.in/*"
-zone_name = "aswinlocal.in"
+# [[routes]]
+# pattern = "www.aswinlocal.in/*"
+# zone_name = "aswinlocal.in"
 
 [site]
 bucket = "./dist" 
