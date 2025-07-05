@@ -181,12 +181,18 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ MailChannels API error:', {
+      console.error('❌ MailChannels API error details:', {
         status: response.status,
         statusText: response.statusText,
         errorText: errorText,
         headers: Object.fromEntries(response.headers.entries()),
+        url: 'https://api.mailchannels.net/tx/v1/send',
+        method: 'POST',
       });
+
+      // Log the full error text separately for better visibility
+      console.error('📄 Full error response:', errorText);
+
       throw new Error(`MailChannels error: ${response.status} - ${errorText}`);
     }
 
@@ -208,6 +214,12 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
       subject,
       timestamp: new Date().toISOString(),
     });
+
+    // Log the full error message separately
+    console.error('📄 Full error message:', error.message);
+    if (error.stack) {
+      console.error('📄 Full error stack:', error.stack);
+    }
 
     throw error;
   }
