@@ -922,6 +922,9 @@ const Footer = () => {
 
 // Main App Component
 const App = () => {
+  // Only show live chat in production or when backend is available
+  const showLiveChat = import.meta.env.PROD || import.meta.env.VITE_ENABLE_LIVE_CHAT === 'true';
+
   return (
     <div className='App'>
       <Navigation />
@@ -932,7 +935,7 @@ const App = () => {
       <ProjectsSection />
       <ContactSection />
       <Footer />
-      <LiveChatWidget />
+      {showLiveChat && <LiveChatWidget />}
     </div>
   );
 };

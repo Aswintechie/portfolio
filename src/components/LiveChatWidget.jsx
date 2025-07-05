@@ -19,6 +19,19 @@ const LiveChatWidget = () => {
   useEffect(() => {
     if (!open) return;
 
+    // Don't try to connect in preview deployments
+    if (
+      window.location.hostname.includes('workers.dev') ||
+      window.location.hostname.includes('preview')
+    ) {
+      setConnectionStatus('error');
+      setMessages(prev => [
+        ...prev,
+        { type: 'system', text: 'Live chat not available in preview mode' },
+      ]);
+      return;
+    }
+
     if (!socketRef.current) {
       setConnectionStatus('connecting');
       const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001', {
