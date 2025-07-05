@@ -42,6 +42,7 @@ jobs:
 
       - name: 🔧 Generate preview wrangler config
         run: |
+<<<<<<< HEAD
           cat > wrangler.preview.toml << EOF
           name = "aswin-portfolio-pr-${{ github.event.number }}"
           main = "worker.js"
@@ -75,20 +76,41 @@ jobs:
           sleep 10  # Wait for deployment to be ready
           curl -I "https://${WORKER_NAME}.aswin8681879422.workers.dev" || echo "URL not immediately accessible - this is normal for new deployments"
 
+=======
+          cp wrangler.toml wrangler.preview.toml
+          sed -i 's/name = "aswin-portfolio"/name = "aswin-portfolio-pr-${{ github.event.number }}"/g' wrangler.preview.toml
+          sed -i 's/pattern = "aswinlocal.in\/\*"/pattern = "pr-${{ github.event.number }}-portfolio.aswinlocal.in\/*"/g' wrangler.preview.toml
+          sed -i 's/pattern = "www.aswinlocal.in\/\*"/pattern = "pr-${{ github.event.number }}-portfolio.aswinlocal.in\/*"/g' wrangler.preview.toml
+
+      - name: 🚀 Deploy to Cloudflare Workers Preview
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: '.'
+          command: deploy --config wrangler.preview.toml --compatibility-date=2024-01-01
+
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
       - name: 📝 Comment on PR with preview URL
         uses: actions/github-script@v7
         with:
           script: |
             const prNumber = context.issue.number;
+<<<<<<< HEAD
             const workerName = `aswin-portfolio-pr-${prNumber}`;
             const previewUrl = `https://${workerName}.aswin8681879422.workers.dev`;
 
+=======
+            const previewUrl = `https://pr-${prNumber}-portfolio.aswinlocal.in`;
+            const deploymentUrl = `https://aswin-portfolio-pr-${prNumber}.aswinlocal.in`;
+            
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
             // Check if preview comment already exists
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber
             });
+<<<<<<< HEAD
 
             const existingComment = comments.data.find(comment => 
               comment.body.includes('🚀 Preview Deployment')
@@ -104,20 +126,48 @@ jobs:
 
             ---
 
+=======
+            
+            const existingComment = comments.data.find(comment => 
+              comment.body.includes('🚀 Preview Deployment')
+            );
+            
+            const commentBody = `## 🚀 Preview Deployment
+            
+            Your preview deployment is ready! 🎉
+            
+            **Preview URL**: [${previewUrl}](${previewUrl})
+            **Fallback URL**: [${deploymentUrl}](${deploymentUrl})
+            
+            > 📝 This preview will be automatically deleted when this PR is closed or merged.
+            
+            ---
+            
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
             **Deployment Info:**
             - **Branch**: \`${context.payload.pull_request.head.ref}\`
             - **Commit**: \`${context.payload.pull_request.head.sha.substring(0, 7)}\`
             - **Environment**: Preview
             - **Deploy Time**: ${new Date().toLocaleString()}
+<<<<<<< HEAD
 
             ---
 
+=======
+            
+            ---
+            
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
             **🔍 Test your changes:**
             - ✅ Check responsive design
             - ✅ Test contact form functionality
             - ✅ Verify all links work correctly
             - ✅ Test performance and loading times`;
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
             if (existingComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
@@ -147,7 +197,10 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+<<<<<<< HEAD
           wranglerVersion: 'latest'
+=======
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
           workingDirectory: '.'
           command: delete aswin-portfolio-pr-${{ github.event.number }} --force
 
@@ -157,6 +210,7 @@ jobs:
           script: |
             const prNumber = context.issue.number;
             const commentBody = `## 🧹 Preview Cleanup
+<<<<<<< HEAD
 
             The preview deployment for this PR has been cleaned up automatically.
 
@@ -166,9 +220,24 @@ jobs:
 
             Thank you for your contribution! 🙏`;
 
+=======
+            
+            The preview deployment for this PR has been cleaned up automatically.
+            
+            **Removed:**
+            - Worker: \`aswin-portfolio-pr-${prNumber}\`
+            - Preview URL: \`https://pr-${prNumber}-portfolio.aswinlocal.in\`
+            
+            Thank you for your contribution! 🙏`;
+            
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
               body: commentBody
+<<<<<<< HEAD
             });
+=======
+            }); 
+>>>>>>> 281bec4 (feat: fix GitHub username and add preview deployment workflow)
