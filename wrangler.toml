@@ -1,0 +1,13 @@
+name = "aswin-portfolio"
+compatibility_date = "2024-01-01"
+
+[env.production]
+vars = { NODE_ENV = "production" }
+
+[[env.production.routes]]
+pattern = "aswinlocal.in/*"
+zone_name = "aswinlocal.in"
+
+[[env.production.routes]]
+pattern = "www.aswinlocal.in/*"
+zone_name = "aswinlocal.in" 
