@@ -19,22 +19,20 @@ const LiveChatWidget = () => {
   useEffect(() => {
     if (!open) return;
 
-    // Don't try to connect in preview deployments
+    // Use preview backend for preview deployments
+    let socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+
     if (
       window.location.hostname.includes('workers.dev') ||
       window.location.hostname.includes('preview')
     ) {
-      setConnectionStatus('error');
-      setMessages(prev => [
-        ...prev,
-        { type: 'system', text: 'Live chat not available in preview mode' },
-      ]);
-      return;
+      // Use your deployed preview backend URL here
+      socketUrl = 'https://your-preview-backend-url.railway.app'; // Replace with your actual URL
     }
 
     if (!socketRef.current) {
       setConnectionStatus('connecting');
-      const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001', {
+      const socket = io(socketUrl, {
         timeout: 5000,
         reconnection: true,
         reconnectionAttempts: 3,
