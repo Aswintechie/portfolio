@@ -90,9 +90,17 @@ jobs:
       - name: 🧹 Remove _redirects file (if exists)
         run: rm -f dist/_redirects
 
-      - name: 🔐 Set Cloudflare secrets for production
+      - name: 🚀 Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: 'latest'
+          workingDirectory: '.'
+          command: deploy --compatibility-date=2024-01-01
+
+      - name: 🔐 Set Cloudflare secrets
         run: |
-          echo "Setting Cloudflare secrets for production deployment..."
+          echo "Setting Cloudflare secrets after deployment..."
 
           # Set Telegram Bot Token
           if [ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ]; then
@@ -150,17 +158,9 @@ jobs:
             echo "⚠️  CONTACT_EMAIL not found in GitHub secrets"
           fi
 
-          echo "🔐 All secrets configured for production deployment"
+          echo "🔐 All secrets configured successfully"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-      - name: 🚀 Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          wranglerVersion: 'latest'
-          workingDirectory: '.'
-          command: deploy --compatibility-date=2024-01-01
 
       - name: 🎉 Deployment notification
         if: success()
