@@ -1,94 +1,82 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
 
-const LiveChatWidget = () => {
+const LiveChatWidgetWebSocket = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [connectionStatus, setConnectionStatus] = useState('disconnected'); // 'connecting', 'connected', 'disconnected', 'error'
+  const [connectionStatus, setConnectionStatus] = useState('disconnected');
   const [showUserInfo, setShowUserInfo] = useState(true);
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
     phone: '',
   });
-  const [userInfoSubmitted, setUserInfoSubmitted] = useState(false);
-  const socketRef = useRef(null);
+
+  const wsRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
 
-    // Use deployed backend for preview deployments
-    let socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
-
-    if (
-      window.location.hostname.includes('workers.dev') ||
-      window.location.hostname.includes('preview')
-    ) {
-      // Deploy your server/ folder to Railway/Render and use that URL
-      socketUrl = 'https://aswin-portfolio-backend.railway.app'; // Replace with your actual deployed backend URL
-    }
-
-    if (!socketRef.current) {
+    if (!wsRef.current) {
       setConnectionStatus('connecting');
-      const socket = io(socketUrl, {
-        timeout: 5000,
-        reconnection: true,
-        reconnectionAttempts: 3,
-        reconnectionDelay: 1000,
-      });
 
-      socketRef.current = socket;
+      // Get the WebSocket URL from the current domain
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}`;
 
-      socket.on('connect', () => {
+      const ws = new WebSocket(wsUrl);
+
+      wsRef.current = ws;
+
+      ws.onopen = () => {
         setConnectionStatus('connected');
-        socket.emit('register', 'visitor');
+        // Register as visitor
+        ws.send(JSON.stringify({ type: 'register', role: 'visitor' }));
         setMessages(prev => [...prev, { type: 'system', text: 'Connected to chat server' }]);
-      });
+      };
 
-      socket.on('disconnect', reason => {
+      ws.onclose = () => {
         setConnectionStatus('disconnected');
-        let disconnectMsg = 'Disconnected from chat server';
-        if (reason === 'io server disconnect') {
-          disconnectMsg = 'Server disconnected you';
-        } else if (reason === 'ping timeout') {
-          disconnectMsg = 'Connection timeout - server not responding';
-        } else if (reason === 'transport close') {
-          disconnectMsg = 'Connection lost';
-        }
-        setMessages(prev => [...prev, { type: 'system', text: disconnectMsg }]);
-      });
+        setMessages(prev => [...prev, { type: 'system', text: 'Disconnected from chat server' }]);
+      };
 
-      socket.on('connect_error', error => {
+      ws.onerror = () => {
         setConnectionStatus('error');
-        let errorMsg = 'Failed to connect to chat server';
-        if (error.message.includes('xhr poll error')) {
-          errorMsg = 'Cannot reach server - please try again later';
-        } else if (error.message.includes('timeout')) {
-          errorMsg = 'Connection timeout - server may be down';
+        setMessages(prev => [
+          ...prev,
+          { type: 'system', text: 'Failed to connect to chat server' },
+        ]);
+      };
+
+      ws.onmessage = event => {
+        try {
+          const data = JSON.parse(event.data);
+
+          switch (data.type) {
+            case 'system':
+              setMessages(prev => [...prev, { type: 'system', text: data.message }]);
+              break;
+            case 'visitor_id':
+              // Store visitor ID if needed
+              break;
+            case 'chat_message':
+              setMessages(prev => [...prev, { type: 'admin', text: data.message }]);
+              break;
+            case 'user_info':
+              // Handle user info confirmation
+              break;
+          }
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
         }
-        setMessages(prev => [...prev, { type: 'system', text: errorMsg }]);
-      });
-
-      socket.on('reconnect', () => {
-        setConnectionStatus('connected');
-        setMessages(prev => [...prev, { type: 'system', text: 'Reconnected to chat server' }]);
-      });
-
-      socket.on('system', msg => {
-        setMessages(prev => [...prev, { type: 'system', text: msg }]);
-      });
-
-      socket.on('chat message', msg => {
-        setMessages(prev => [...prev, { type: 'admin', text: msg }]);
-      });
+      };
     }
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
       }
     };
   }, [open]);
@@ -101,24 +89,24 @@ const LiveChatWidget = () => {
 
   const handleUserInfoSubmit = e => {
     e.preventDefault();
-    setUserInfoSubmitted(true);
     setShowUserInfo(false);
     // Send user info to server
-    if (socketRef.current && socketRef.current.connected) {
-      socketRef.current.emit('user info', userInfo);
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: 'user_info', userInfo }));
     }
   };
 
   const sendMessage = e => {
     e.preventDefault();
-    if (!input.trim() || !socketRef.current) return;
+    if (!input.trim() || !wsRef.current) return;
 
-    if (socketRef.current.connected) {
-      const messageData = {
-        text: input,
-        userInfo: userInfoSubmitted ? userInfo : null,
-      };
-      socketRef.current.emit('chat message', messageData);
+    if (wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: 'chat_message',
+          message: input,
+        })
+      );
       setMessages(prev => [...prev, { type: 'user', text: input }]);
       setInput('');
     } else {
@@ -179,6 +167,7 @@ const LiveChatWidget = () => {
       >
         💬
       </button>
+
       {/* Chat Window */}
       {open && (
         <div
@@ -293,7 +282,6 @@ const LiveChatWidget = () => {
                   <button
                     type='button'
                     onClick={() => {
-                      setUserInfoSubmitted(true);
                       setShowUserInfo(false);
                     }}
                     style={{
@@ -358,6 +346,7 @@ const LiveChatWidget = () => {
             ))}
             <div ref={messagesEndRef} />
           </div>
+
           <form
             onSubmit={sendMessage}
             style={{ display: 'flex', borderTop: '1px solid #eee', padding: 8 }}
@@ -403,4 +392,4 @@ const LiveChatWidget = () => {
   );
 };
 
-export default LiveChatWidget;
+export default LiveChatWidgetWebSocket;

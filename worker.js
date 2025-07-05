@@ -384,10 +384,146 @@ async function handleContactForm(request, env) {
   }
 }
 
+// In-memory chat storage (for demo purposes - in production you'd use Durable Objects)
+let chatSessions = new Map();
+let adminSocket = null;
+
+// Cloudflare Workers globals
+/* global WebSocketPair */
+
+// WebSocket message handler
+function handleWebSocketMessage(socket, message, env) {
+  try {
+    const data = JSON.parse(message);
+
+    switch (data.type) {
+      case 'register':
+        if (data.role === 'admin') {
+          adminSocket = socket;
+          socket.send(JSON.stringify({ type: 'system', message: 'Admin connected' }));
+        } else {
+          const visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          chatSessions.set(socket.id, { id: visitorId, role: 'visitor' });
+          socket.send(
+            JSON.stringify({ type: 'system', message: 'You are connected as a visitor' })
+          );
+          socket.send(JSON.stringify({ type: 'visitor_id', id: visitorId }));
+        }
+        break;
+
+      case 'user_info': {
+        const session = chatSessions.get(socket.id);
+        if (session && session.role === 'visitor') {
+          session.userInfo = data.userInfo;
+          if (adminSocket) {
+            adminSocket.send(
+              JSON.stringify({
+                type: 'user_info',
+                visitorId: session.id,
+                userInfo: data.userInfo,
+              })
+            );
+          }
+        }
+        break;
+      }
+
+      case 'chat_message': {
+        const visitorSession = chatSessions.get(socket.id);
+        if (visitorSession && visitorSession.role === 'visitor') {
+          // Send to admin if connected
+          if (adminSocket) {
+            adminSocket.send(
+              JSON.stringify({
+                type: 'chat_message',
+                message: data.message,
+                visitorId: visitorSession.id,
+              })
+            );
+          }
+
+          // Send to Telegram if configured
+          if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_ADMIN_CHAT_ID) {
+            sendTelegramMessage(data.message, visitorSession, env);
+          }
+        } else {
+          // Admin message - broadcast to all visitors
+          chatSessions.forEach((session, socketId) => {
+            if (session.role === 'visitor') {
+              // In a real implementation, you'd send to the visitor socket
+              // For now, we'll just log it
+              console.log('Admin message to visitor:', data.message);
+            }
+          });
+        }
+        break;
+      }
+    }
+  } catch (error) {
+    console.error('WebSocket message error:', error);
+  }
+}
+
+// Send Telegram message
+async function sendTelegramMessage(message, session, env) {
+  try {
+    const telegramMsg = `💬 New message from visitor (${session.id}):\n\n${message}`;
+
+    const response = await fetch(
+      `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: env.TELEGRAM_ADMIN_CHAT_ID,
+          text: telegramMsg,
+          parse_mode: 'HTML',
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Telegram API error:', await response.text());
+    }
+  } catch (error) {
+    console.error('Telegram send error:', error);
+  }
+}
+
 // Main worker event handler
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    // Handle WebSocket upgrade for live chat
+    if (request.headers.get('Upgrade') === 'websocket') {
+      const upgradeHeader = request.headers.get('Sec-WebSocket-Key');
+      if (!upgradeHeader) {
+        return new Response('Expected websocket', { status: 400 });
+      }
+
+      const webSocketPair = new WebSocketPair();
+      const [client, server] = Object.values(webSocketPair);
+
+      server.accept();
+
+      server.addEventListener('message', event => {
+        handleWebSocketMessage(server, event.data, env);
+      });
+
+      server.addEventListener('close', () => {
+        // Clean up session
+        if (server === adminSocket) {
+          adminSocket = null;
+        }
+        chatSessions.delete(server.id);
+      });
+
+      return new Response(null, {
+        status: 101,
+        webSocket: client,
+      });
+    }
 
     // Handle API routes
     if (url.pathname === '/api/contact' && request.method === 'POST') {
@@ -413,6 +549,161 @@ export default {
           },
         }
       );
+    }
+
+    // Admin chat interface
+    if (url.pathname === '/admin-chat' && request.method === 'GET') {
+      const adminHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 20px auto; background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; }
+        .header h1 { font-size: 24px; margin-bottom: 8px; }
+        .status { font-size: 14px; opacity: 0.9; }
+        .chat-area { height: 400px; overflow-y: auto; padding: 20px; background: #f8f9fa; }
+        .message { margin-bottom: 12px; padding: 12px; border-radius: 8px; max-width: 80%; }
+        .visitor { background: #e3f2fd; margin-right: auto; }
+        .admin { background: #f3e5f5; margin-left: auto; }
+        .system { background: #fff3e0; font-style: italic; text-align: center; }
+        .input-area { padding: 20px; border-top: 1px solid #eee; display: flex; gap: 12px; }
+        .input-area input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .input-area button { padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .input-area button:hover { background: #5a6fd8; }
+        .visitor-info { background: #f0f8ff; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 12px; }
+        .disconnected { opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Live Chat Admin Panel</h1>
+            <div class="status" id="status">Connecting...</div>
+        </div>
+        <div class="chat-area" id="chatArea">
+            <div class="message system">Welcome to the admin panel. Waiting for visitors...</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+            <button id="sendButton" disabled>Send</button>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let currentVisitor = null;
+        let isConnected = false;
+
+        function updateStatus(text, isConnected = false) {
+            document.getElementById('status').textContent = text;
+            document.getElementById('status').className = 'status ' + (isConnected ? '' : 'disconnected');
+        }
+
+        function addMessage(text, type = 'system') {
+            const chatArea = document.getElementById('chatArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + type;
+            messageDiv.textContent = text;
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function connect() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = protocol + '//' + window.location.host;
+            
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                isConnected = true;
+                updateStatus('🟢 Connected as Admin', true);
+                ws.send(JSON.stringify({ type: 'register', role: 'admin' }));
+                addMessage('Connected to chat server');
+                document.getElementById('messageInput').disabled = false;
+                document.getElementById('sendButton').disabled = false;
+            };
+            
+            ws.onclose = () => {
+                isConnected = false;
+                updateStatus('🔴 Disconnected');
+                addMessage('Disconnected from chat server');
+                document.getElementById('messageInput').disabled = true;
+                document.getElementById('sendButton').disabled = true;
+                
+                // Reconnect after 3 seconds
+                setTimeout(connect, 3000);
+            };
+            
+            ws.onerror = (error) => {
+                updateStatus('🔴 Connection Error');
+                addMessage('Failed to connect to chat server');
+            };
+            
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    switch (data.type) {
+                        case 'system':
+                            addMessage(data.message, 'system');
+                            break;
+                        case 'user_info':
+                            currentVisitor = data.visitorId;
+                            const userInfo = data.userInfo;
+                            const infoText = \`Visitor \${data.visitorId} connected: \${userInfo.name || 'Anonymous'} (\${userInfo.email || 'No email'})\`;
+                            addMessage(infoText, 'system');
+                            break;
+                        case 'chat_message':
+                            currentVisitor = data.visitorId;
+                            addMessage(\`Visitor \${data.visitorId}: \${data.message}\`, 'visitor');
+                            break;
+                    }
+                } catch (error) {
+                    console.error('Error parsing message:', error);
+                }
+            };
+        }
+
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || !isConnected) return;
+            
+            if (currentVisitor) {
+                ws.send(JSON.stringify({ 
+                    type: 'chat_message', 
+                    message: message,
+                    visitorId: currentVisitor 
+                }));
+                addMessage('You: ' + message, 'admin');
+                input.value = '';
+            } else {
+                addMessage('No active visitor to send message to', 'system');
+            }
+        }
+
+        // Connect on page load
+        connect();
+    </script>
+</body>
+</html>`;
+
+      return new Response(adminHTML, {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' },
+      });
     }
 
     // Handle CORS preflight requests
