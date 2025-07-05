@@ -1,5 +1,3 @@
-import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
-
 // Email validation function
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -206,6 +204,70 @@ async function handleContactForm(request) {
   }
 }
 
+// Simple HTML page for temporary use
+const SIMPLE_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aswin - Portfolio Loading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .link {
+            background: rgba(255,255,255,0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        .link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aswin's Portfolio</h1>
+        <p>Software Engineer | Cloud Infrastructure | Electronics Hardware</p>
+        <p>Portfolio is loading... Please check back in a few minutes.</p>
+        <div class="links">
+            <a href="https://github.com/Aswin-coder" class="link">GitHub</a>
+            <a href="https://www.linkedin.com/in/aswin4122001/" class="link">LinkedIn</a>
+            <a href="https://pr-reviewer.aswinlocal.in" class="link">PR Reviewer</a>
+        </div>
+    </div>
+</body>
+</html>`;
+
 // Main worker event handler
 export default {
   async fetch(request, env, ctx) {
@@ -213,7 +275,11 @@ export default {
     
     // Handle API routes
     if (url.pathname === '/api/contact' && request.method === 'POST') {
-      return handleContactForm(request);
+      const response = await handleContactForm(request);
+      response.headers.set('Access-Control-Allow-Origin', '*');
+      response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+      return response;
     }
 
     if (url.pathname === '/api/health' && request.method === 'GET') {
@@ -223,49 +289,32 @@ export default {
         timestamp: new Date().toISOString()
       }), {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
       });
     }
 
-    // Serve static files
-    try {
-      return await getAssetFromKV(
-        {
-          request,
-          waitUntil: ctx.waitUntil,
+    // Handle CORS preflight requests
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
         },
-        {
-          ASSET_NAMESPACE: env.__STATIC_CONTENT,
-          ASSET_MANIFEST: env.__STATIC_CONTENT_MANIFEST,
-        }
-      );
-    } catch (e) {
-      // If the asset isn't found, return the index.html for React Router
-      if (e.status === 404) {
-        try {
-          const response = await getAssetFromKV(
-            {
-              request: new Request(`${url.origin}/index.html`),
-              waitUntil: ctx.waitUntil,
-            },
-            {
-              ASSET_NAMESPACE: env.__STATIC_CONTENT,
-              ASSET_MANIFEST: env.__STATIC_CONTENT_MANIFEST,
-            }
-          );
-          return new Response(response.body, {
-            ...response,
-            headers: {
-              ...response.headers,
-              'Content-Type': 'text/html',
-            },
-          });
-        } catch (e2) {
-          return new Response('Page not found', { status: 404 });
-        }
-      }
-      
-      return new Response('Internal Error', { status: 500 });
+      });
     }
+
+    // Serve a simple HTML page for now
+    return new Response(SIMPLE_HTML, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html',
+        'Cache-Control': 'public, max-age=60',
+      },
+    });
   },
 }; 
