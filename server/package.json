@@ -9,7 +9,12 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["portfolio", "contact", "email", "smtp"],
+  "keywords": [
+    "portfolio",
+    "contact",
+    "email",
+    "smtp"
+  ],
   "author": "Aswin",
   "license": "MIT",
   "dependencies": {
@@ -24,4 +29,4 @@
   "devDependencies": {
     "nodemon": "^3.0.2"
   }
-} 
+}
