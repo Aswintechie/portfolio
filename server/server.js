@@ -48,9 +48,9 @@ async function initializeTelegram() {
       telegramStatus = 'Connection failed - disabled';
     }
   } else {
-    console.log(
-      '⚠️  Telegram bot not configured - add TELEGRAM_BOT_TOKEN and TELEGRAM_ADMIN_CHAT_ID to .env'
-    );
+    console.log('💡 Telegram bot not configured - chat will work in local mode only');
+    telegramEnabled = false;
+    telegramStatus = 'Local mode only';
   }
 }
 
