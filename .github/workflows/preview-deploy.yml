@@ -149,7 +149,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           wranglerVersion: 'latest'
           workingDirectory: '.'
-          command: delete aswin-portfolio-pr-${{ github.event.number }} --force
+          command: delete --name aswin-portfolio-pr-${{ github.event.number }} --force
         continue-on-error: true
 
       - name: 🔄 Fallback cleanup with retry
@@ -157,7 +157,7 @@ jobs:
         run: |
           echo "First cleanup attempt failed, retrying..."
           sleep 5
-          npx wrangler delete aswin-portfolio-pr-${{ github.event.number }} --force || echo "Cleanup failed - worker may already be deleted"
+          npx wrangler delete --name aswin-portfolio-pr-${{ github.event.number }} --force || echo "Cleanup failed - worker may already be deleted"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
