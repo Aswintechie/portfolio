@@ -6,8 +6,8 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { body, validationResult } from 'express-validator';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from parent directory
+dotenv.config({ path: '../.env' });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -39,16 +39,15 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Create reusable transporter object using Gmail SMTP
+// Create reusable transporter object using SMTP configuration from .env
 const createTransporter = () => {
   return nodemailer.createTransporter({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT) || 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.GMAIL_USER, // Your Gmail address
-      pass: process.env.GMAIL_APP_PASSWORD, // Your Gmail App Password
+      user: process.env.SMTP_USER, // SMTP username
+      pass: process.env.SMTP_PASS, // SMTP password
     },
     tls: {
       rejectUnauthorized: false,
@@ -104,8 +103,8 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
 
     // Email to you (notification)
     const mailOptions = {
-      from: `"Portfolio Contact Form" <${process.env.GMAIL_USER}>`,
-      to: process.env.GMAIL_USER, // Your email address
+      from: `"Portfolio Contact Form" <${process.env.SMTP_USER}>`,
+      to: process.env.FEEDBACK_EMAIL, // Your email address
       subject: `New Portfolio Contact from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
@@ -152,7 +151,7 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
 
     // Auto-reply email to the sender
     const autoReplyOptions = {
-      from: `"Aswin - Portfolio" <${process.env.GMAIL_USER}>`,
+      from: `"Aswin - Portfolio" <${process.env.CONTACT_EMAIL}>`,
       to: email,
       subject: 'Thank you for contacting me!',
       html: `
@@ -262,7 +261,9 @@ app.use((err, req, res, next) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Portfolio backend server running on port ${PORT}`);
-  console.log(`📧 Gmail SMTP configured for: ${process.env.GMAIL_USER || 'Not configured'}`);
+  console.log(`📧 SMTP configured for: ${process.env.SMTP_USER || 'Not configured'}`);
+  console.log(`📧 SMTP Host: ${process.env.SMTP_HOST || 'Not configured'}`);
+  console.log(`📧 SMTP Port: ${process.env.SMTP_PORT || 'Not configured'}`);
   console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
   console.log(`⚡ Environment: ${process.env.NODE_ENV || 'development'}`);
 });

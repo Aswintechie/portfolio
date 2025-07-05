@@ -1,0 +1,35 @@
+# Portfolio Project Code Owners
+# This file defines who owns which parts of the codebase
+
+# Global ownership - Aswin owns everything by default
+* @Aswintechie
+
+# Frontend specific files
+/src/ @Aswintechie
+/public/ @Aswintechie
+*.html @Aswintechie
+*.css @Aswintechie
+*.js @Aswintechie
+*.jsx @Aswintechie
+
+# Backend/Server files
+/server/ @Aswintechie
+/scripts/ @Aswintechie
+
+# Configuration files
+*.json @Aswintechie
+*.config.js @Aswintechie
+*.config.ts @Aswintechie
+.env* @Aswintechie
+wrangler.toml @Aswintechie
+
+# GitHub Actions and CI/CD
+/.github/ @Aswintechie
+
+# Documentation
+*.md @Aswintechie
+/docs/ @Aswintechie
+
+# Build and deployment
+/dist/ @Aswintechie
+worker.js @Aswintechie 
