@@ -87,57 +87,31 @@ function createAutoReplyHTML(name, message) {
   `;
 }
 
-// Send email function using MailChannels
+// Send email function - currently logging instead of sending
 async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
-  // For preview deployments, just log the email instead of sending
-  if (hostname.includes('workers.dev')) {
-    console.log('Preview deployment - email would be sent:', {
-      to,
-      subject,
-      from: 'noreply@aswinlocal.in',
-      html: html.substring(0, 100) + '...',
-      text: text.substring(0, 100) + '...',
-    });
-    return true;
-  }
-
-  const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      personalizations: [
-        {
-          to: [{ email: to }],
-        },
-      ],
-      from: {
-        email: 'noreply@aswinlocal.in',
-        name: 'Aswin Portfolio',
-      },
-      subject,
-      content: [
-        {
-          type: 'text/html',
-          value: html,
-        },
-        {
-          type: 'text/plain',
-          value: text,
-        },
-      ],
-    }),
+  // Log the email details for debugging
+  console.log('📧 Email would be sent:', {
+    to,
+    subject,
+    from: 'contact@aswinlocal.in',
+    hostname,
+    timestamp: new Date().toISOString(),
   });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('MailChannels error:', response.status, errorText);
-    throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
-  }
+  // For now, just log the email content (first 200 chars)
+  console.log('📝 Email content preview:', {
+    html: html.substring(0, 200) + (html.length > 200 ? '...' : ''),
+    text: text.substring(0, 200) + (text.length > 200 ? '...' : ''),
+  });
 
-  console.log('Email sent successfully to:', to);
-  return true;
+  // TODO: Set up proper email service
+  // Options:
+  // 1. MailChannels (requires DNS setup)
+  // 2. Resend (simple API)
+  // 3. EmailJS (client-side)
+  // 4. Formspree (form service)
+
+  return true; // Return success for now
 }
 
 // Handle contact form submission
@@ -207,9 +181,15 @@ async function handleContactForm(request) {
       This is an automated response. Please do not reply to this email directly.
     `;
 
-    // Send both emails
-    // Note: Currently logging email details instead of sending
-    // To enable actual email sending, set up MailChannels or another email service
+    // Send both emails (currently logging only)
+    // TODO: Set up proper email service for actual email delivery
+    console.log('📨 Processing contact form submission:', {
+      name,
+      email,
+      messageLength: message.length,
+      timestamp: new Date().toISOString(),
+    });
+
     try {
       await Promise.all([
         sendEmail(
@@ -227,8 +207,9 @@ async function handleContactForm(request) {
           request.headers.get('host') || 'aswinlocal.in'
         ),
       ]);
+      console.log('✅ Email processing completed (logged to console)');
     } catch (emailError) {
-      console.error('Email sending failed, but form submission succeeded:', emailError);
+      console.error('❌ Email processing failed:', emailError);
       // Continue with success response even if email fails
     }
 
