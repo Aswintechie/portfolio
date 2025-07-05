@@ -2,14 +2,48 @@ name: Deploy Portfolio to Cloudflare Workers
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
+  quality-checks:
+    runs-on: ubuntu-latest
+    name: Quality Checks
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run tests
+        run: npm run test:run
+
+      - name: Run security checks
+        run: npm run security:check
+
+      - name: Build project
+        run: npm run build
+
   deploy:
+    needs: quality-checks
     runs-on: ubuntu-latest
     name: Deploy Portfolio
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
       - name: Checkout code
@@ -41,4 +75,4 @@ jobs:
         if: success()
         run: |
           echo "🎉 Portfolio successfully deployed to https://www.aswinlocal.in/"
-          echo "✅ Deployment completed at $(date)" 
+          echo "✅ Deployment completed at $(date)"

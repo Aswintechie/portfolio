@@ -20,18 +20,20 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // limit each IP to 5 requests per windowMs
   message: {
-    error: 'Too many contact form submissions, please try again later.'
+    error: 'Too many contact form submissions, please try again later.',
   },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  })
+);
 
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));
@@ -49,8 +51,8 @@ const createTransporter = () => {
       pass: process.env.GMAIL_APP_PASSWORD, // Your Gmail App Password
     },
     tls: {
-      rejectUnauthorized: false
-    }
+      rejectUnauthorized: false,
+    },
   });
 };
 
@@ -61,16 +63,13 @@ const contactValidation = [
     .withMessage('Name must be between 2 and 100 characters')
     .matches(/^[a-zA-Z\s]+$/)
     .withMessage('Name must contain only letters and spaces'),
-  
-  body('email')
-    .isEmail()
-    .withMessage('Please provide a valid email address')
-    .normalizeEmail(),
-  
+
+  body('email').isEmail().withMessage('Please provide a valid email address').normalizeEmail(),
+
   body('message')
     .isLength({ min: 10, max: 1000 })
     .withMessage('Message must be between 10 and 1000 characters')
-    .trim()
+    .trim(),
 ];
 
 // Health check endpoint
@@ -78,7 +77,7 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
     message: 'Portfolio backend is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -91,7 +90,7 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
-        errors: errors.array()
+        errors: errors.array(),
       });
     }
 
@@ -148,7 +147,7 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
         ${message}
         
         Reply to: ${email}
-      `
+      `,
     };
 
     // Auto-reply email to the sender
@@ -217,29 +216,27 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
         
         ---
         This is an automated response. Please do not reply to this email directly.
-      `
+      `,
     };
 
     // Send both emails
-    await Promise.all([
-      transporter.sendMail(mailOptions),
-      transporter.sendMail(autoReplyOptions)
-    ]);
+    await Promise.all([transporter.sendMail(mailOptions), transporter.sendMail(autoReplyOptions)]);
 
-    console.log(`New contact form submission from ${name} (${email}) at ${new Date().toISOString()}`);
+    console.log(
+      `New contact form submission from ${name} (${email}) at ${new Date().toISOString()}`
+    );
 
     res.status(200).json({
       success: true,
-      message: 'Message sent successfully! Thank you for contacting me.'
+      message: 'Message sent successfully! Thank you for contacting me.',
     });
-
   } catch (error) {
     console.error('Error sending email:', error);
-    
+
     res.status(500).json({
       success: false,
       message: 'Failed to send message. Please try again later.',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
   }
 });
@@ -248,7 +245,7 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Endpoint not found'
+    message: 'Endpoint not found',
   });
 });
 
@@ -258,7 +255,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined,
   });
 });
 
@@ -268,4 +265,4 @@ app.listen(PORT, () => {
   console.log(`📧 Gmail SMTP configured for: ${process.env.GMAIL_USER || 'Not configured'}`);
   console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
   console.log(`⚡ Environment: ${process.env.NODE_ENV || 'development'}`);
-}); 
+});
