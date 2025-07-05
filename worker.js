@@ -98,7 +98,7 @@ function createAutoReplyHTML(name, message) {
 // Type: TXT, Name: _mailchannels, Content: v=mc1
 // Type: CNAME, Name: mailchannels, Content: mailchannels.net
 //
-async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
+async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', env) {
   console.log('🚀 Starting email send process:', {
     to,
     subject,
@@ -166,25 +166,62 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
     // Send email via MailChannels API
     console.log('🌐 Making request to MailChannels API...');
 
-    // MailChannels requires proper authentication
-    // For now, let's log the email and provide instructions for setup
-    console.log('📧 Email would be sent via MailChannels:', {
-      to: emailPayload.personalizations[0].to[0].email,
-      from: emailPayload.from.email,
-      subject: emailPayload.subject,
-      domain: 'aswinlocal.in',
+    // Send email via Resend API
+    console.log('🌐 Making request to Resend API...');
+
+    // Resend API payload
+    const resendPayload = {
+      from: 'contact@aswinlocal.in', // Now using your verified domain
+      to: [to],
+      subject: subject,
+      html: html,
+      text: text,
+    };
+
+    console.log('📧 Resend payload:', JSON.stringify(resendPayload, null, 2));
+
+    // You'll need to add your Resend API key as a secret
+    const RESEND_API_KEY = env.RESEND_API_KEY || 're_placeholder_key';
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify(resendPayload),
     });
 
-    // TODO: Set up proper MailChannels authentication
-    // 1. Go to MailChannels dashboard
-    // 2. Verify domain aswinlocal.in
-    // 3. Get API credentials
-    // 4. Add authentication headers
+    console.log('📡 Resend API response received:', {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+    });
 
-    // For now, return success to avoid breaking the form
-    console.log('✅ Email logged successfully (MailChannels not configured):', {
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Resend API error details:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorText: errorText,
+        headers: Object.fromEntries(response.headers.entries()),
+        url: 'https://api.resend.com/emails',
+        method: 'POST',
+      });
+
+      // Log the full error text separately for better visibility
+      console.error('📄 Full error response:', errorText);
+
+      throw new Error(`Resend error: ${response.status} - ${errorText}`);
+    }
+
+    const responseData = await response.json();
+    console.log('📨 Resend API response body:', responseData);
+
+    console.log('✅ Email sent successfully via Resend:', {
       to,
       subject,
+      id: responseData.id,
       timestamp: new Date().toISOString(),
     });
 
@@ -209,7 +246,7 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
 }
 
 // Handle contact form submission
-async function handleContactForm(request) {
+async function handleContactForm(request, env) {
   try {
     const { name, email, message } = await request.json();
 
@@ -297,14 +334,16 @@ async function handleContactForm(request) {
           `New Portfolio Contact from ${name}`,
           notificationHTML,
           notificationText,
-          request.headers.get('host') || 'aswinlocal.in'
+          request.headers.get('host') || 'aswinlocal.in',
+          env
         ),
         sendEmail(
           email,
           'Thank you for contacting me!',
           autoReplyHTML,
           autoReplyText,
-          request.headers.get('host') || 'aswinlocal.in'
+          request.headers.get('host') || 'aswinlocal.in',
+          env
         ),
       ]);
 
@@ -356,7 +395,7 @@ export default {
 
     // Handle API routes
     if (url.pathname === '/api/contact' && request.method === 'POST') {
-      const response = await handleContactForm(request);
+      const response = await handleContactForm(request, env);
       response.headers.set('Access-Control-Allow-Origin', '*');
       response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
       response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
