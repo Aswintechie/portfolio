@@ -20,10 +20,10 @@ This guide will help you deploy your existing backend (from `server/` folder) to
    - Go to your Railway project settings
    - Add these environment variables:
      ```
-     TELEGRAM_BOT_TOKEN=8117357702:AAGJkJEPhgsM0rBdT9UDuZZ5ugiA02g_dyE
-     TELEGRAM_ADMIN_CHAT_ID=1385954194
+     TELEGRAM_BOT_TOKEN=your_bot_token_here
+     TELEGRAM_ADMIN_CHAT_ID=your_chat_id_here
      NODE_ENV=production
-     FRONTEND_URL=https://aswin-portfolio-pr-15.aswin8681879422.workers.dev
+     FRONTEND_URL=your_frontend_url_here
      ```
 
 4. **Get Your URL**
@@ -67,10 +67,10 @@ server/
 ## Environment Variables Needed
 
 ```env
-TELEGRAM_BOT_TOKEN=8117357702:AAGJkJEPhgsM0rBdT9UDuZZ5ugiA02g_dyE
-TELEGRAM_ADMIN_CHAT_ID=1385954194
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_ADMIN_CHAT_ID=your_chat_id_here
 NODE_ENV=production
-FRONTEND_URL=https://aswin-portfolio-pr-15.aswin8681879422.workers.dev
+FRONTEND_URL=your_frontend_url_here
 ```
 
 ## Testing
