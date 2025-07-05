@@ -91,7 +91,7 @@ jobs:
         run: rm -f dist/_redirects
 
       - name: 🚀 Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: '.'
