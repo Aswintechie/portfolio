@@ -88,7 +88,19 @@ function createAutoReplyHTML(name, message) {
 }
 
 // Send email function using MailChannels
-async function sendEmail(to, subject, html, text) {
+async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
+  // For preview deployments, just log the email instead of sending
+  if (hostname.includes('workers.dev')) {
+    console.log('Preview deployment - email would be sent:', {
+      to,
+      subject,
+      from: 'noreply@aswinlocal.in',
+      html: html.substring(0, 100) + '...',
+      text: text.substring(0, 100) + '...',
+    });
+    return true;
+  }
+
   const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
     method: 'POST',
     headers: {
@@ -203,9 +215,16 @@ async function handleContactForm(request) {
         'contact@aswinlocal.in',
         `New Portfolio Contact from ${name}`,
         notificationHTML,
-        notificationText
+        notificationText,
+        request.headers.get('host') || 'aswinlocal.in'
       ),
-      sendEmail(email, 'Thank you for contacting me!', autoReplyHTML, autoReplyText),
+      sendEmail(
+        email,
+        'Thank you for contacting me!',
+        autoReplyHTML,
+        autoReplyText,
+        request.headers.get('host') || 'aswinlocal.in'
+      ),
     ]);
 
     return new Response(
