@@ -87,36 +87,58 @@ function createAutoReplyHTML(name, message) {
   `;
 }
 
-// Send email function using MailChannels
-async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
-  // For preview deployments, just log the email instead of sending
+// Send email function using Resend API
+//
+// REQUIREMENTS:
+// 1. Resend API key configured as environment variable
+// 2. Domain verification in Resend dashboard (completed)
+// 3. Proper error handling and logging
+//
+async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', env) {
+  console.log('🚀 Starting email send process:', {
+    to,
+    subject,
+    hostname,
+    timestamp: new Date().toISOString(),
+  });
+
+  // Validate email format
+  if (!isValidEmail(to)) {
+    console.error('❌ Invalid email address:', to);
+    throw new Error('Invalid email address');
+  }
+
+  console.log('✅ Email validation passed');
+
+  // Check if we're in a preview environment
   if (hostname.includes('workers.dev')) {
-    console.log('Preview deployment - email would be sent:', {
+    console.log('📧 Preview deployment - email would be sent:', {
       to,
       subject,
-      from: 'noreply@aswinlocal.in',
-      html: html.substring(0, 100) + '...',
-      text: text.substring(0, 100) + '...',
+      from: 'contact@aswinlocal.in',
+      hostname,
+      timestamp: new Date().toISOString(),
     });
     return true;
   }
 
-  const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  console.log('🌐 Production environment detected, proceeding with Resend');
+
+  try {
+    console.log('📤 Preparing Resend API request...');
+
+    // Prepare the email payload
+    const emailPayload = {
       personalizations: [
         {
           to: [{ email: to }],
         },
       ],
       from: {
-        email: 'noreply@aswinlocal.in',
+        email: 'contact@aswinlocal.in',
         name: 'Aswin Portfolio',
       },
-      subject,
+      subject: subject,
       content: [
         {
           type: 'text/html',
@@ -127,21 +149,100 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
           value: text,
         },
       ],
-    }),
-  });
+    };
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('MailChannels error:', response.status, errorText);
-    throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
+    console.log('📋 Resend email payload prepared:', {
+      to: emailPayload.personalizations[0].to[0].email,
+      from: emailPayload.from.email,
+      subject: emailPayload.subject,
+      htmlLength: emailPayload.content[0].value.length,
+      textLength: emailPayload.content[1].value.length,
+    });
+
+    // Send email via MailChannels API
+    console.log('🌐 Making request to MailChannels API...');
+
+    // Send email via Resend API
+    console.log('🌐 Making request to Resend API...');
+
+    // Resend API payload
+    const resendPayload = {
+      from: 'contact@aswinlocal.in', // Now using your verified domain
+      to: [to],
+      subject: subject,
+      html: html,
+      text: text,
+    };
+
+    console.log('📧 Resend payload:', JSON.stringify(resendPayload, null, 2));
+
+    // You'll need to add your Resend API key as a secret
+    const RESEND_API_KEY = env.RESEND_API_KEY || 're_placeholder_key';
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify(resendPayload),
+    });
+
+    console.log('📡 Resend API response received:', {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Resend API error details:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorText: errorText,
+        headers: Object.fromEntries(response.headers.entries()),
+        url: 'https://api.resend.com/emails',
+        method: 'POST',
+      });
+
+      // Log the full error text separately for better visibility
+      console.error('📄 Full error response:', errorText);
+
+      throw new Error(`Resend error: ${response.status} - ${errorText}`);
+    }
+
+    const responseData = await response.json();
+    console.log('📨 Resend API response body:', responseData);
+
+    console.log('✅ Email sent successfully via Resend:', {
+      to,
+      subject,
+      id: responseData.id,
+      timestamp: new Date().toISOString(),
+    });
+
+    return true;
+  } catch (error) {
+    console.error('❌ Failed to send email via Resend:', {
+      error: error.message,
+      stack: error.stack,
+      to,
+      subject,
+      timestamp: new Date().toISOString(),
+    });
+
+    // Log the full error message separately
+    console.error('📄 Full error message:', error.message);
+    if (error.stack) {
+      console.error('📄 Full error stack:', error.stack);
+    }
+
+    throw error;
   }
-
-  console.log('Email sent successfully to:', to);
-  return true;
 }
 
 // Handle contact form submission
-async function handleContactForm(request) {
+async function handleContactForm(request, env) {
   try {
     const { name, email, message } = await request.json();
 
@@ -207,28 +308,54 @@ async function handleContactForm(request) {
       This is an automated response. Please do not reply to this email directly.
     `;
 
-    // Send both emails
-    // Note: Currently logging email details instead of sending
-    // To enable actual email sending, set up MailChannels or another email service
+    // Send both emails via Resend
+    console.log('📨 Processing contact form submission:', {
+      name,
+      email,
+      messageLength: message.length,
+      hostname: request.headers.get('host') || 'aswinlocal.in',
+      userAgent: request.headers.get('user-agent'),
+      timestamp: new Date().toISOString(),
+    });
+
+    console.log('📧 Preparing to send notification email to:', 'contact@aswinlocal.in');
+    console.log('📧 Preparing to send auto-reply email to:', email);
+
     try {
-      await Promise.all([
+      console.log('🚀 Starting email sending process...');
+
+      const [notificationResult, autoReplyResult] = await Promise.all([
         sendEmail(
           'contact@aswinlocal.in',
           `New Portfolio Contact from ${name}`,
           notificationHTML,
           notificationText,
-          request.headers.get('host') || 'aswinlocal.in'
+          request.headers.get('host') || 'aswinlocal.in',
+          env
         ),
         sendEmail(
           email,
           'Thank you for contacting me!',
           autoReplyHTML,
           autoReplyText,
-          request.headers.get('host') || 'aswinlocal.in'
+          request.headers.get('host') || 'aswinlocal.in',
+          env
         ),
       ]);
+
+      console.log('✅ Both emails sent successfully:', {
+        notificationResult,
+        autoReplyResult,
+        timestamp: new Date().toISOString(),
+      });
     } catch (emailError) {
-      console.error('Email sending failed, but form submission succeeded:', emailError);
+      console.error('❌ Email processing failed:', {
+        error: emailError.message,
+        stack: emailError.stack,
+        name,
+        email,
+        timestamp: new Date().toISOString(),
+      });
       // Continue with success response even if email fails
     }
 
@@ -264,7 +391,7 @@ export default {
 
     // Handle API routes
     if (url.pathname === '/api/contact' && request.method === 'POST') {
-      const response = await handleContactForm(request);
+      const response = await handleContactForm(request, env);
       response.headers.set('Access-Control-Allow-Origin', '*');
       response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
       response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
