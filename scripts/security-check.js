@@ -10,7 +10,7 @@ console.log('📦 Running npm audit...');
 try {
   execSync('npm audit --audit-level=moderate', { stdio: 'inherit' });
   console.log('✅ No security vulnerabilities found\n');
-} catch (error) {
+} catch {
   console.log('⚠️  Security vulnerabilities detected. Please run "npm audit fix"\n');
 }
 
