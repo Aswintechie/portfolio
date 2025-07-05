@@ -144,10 +144,16 @@ async function handleContactForm(request) {
     }
 
     if (message.length < 10 || message.length > 1000) {
-      return new Response(JSON.stringify({ success: false, message: 'Message must be between 10 and 1000 characters' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Message must be between 10 and 1000 characters',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Send notification email to you
@@ -186,21 +192,37 @@ async function handleContactForm(request) {
 
     // Send both emails
     await Promise.all([
-      sendEmail('contact@aswinlocal.in', `New Portfolio Contact from ${name}`, notificationHTML, notificationText),
+      sendEmail(
+        'contact@aswinlocal.in',
+        `New Portfolio Contact from ${name}`,
+        notificationHTML,
+        notificationText
+      ),
       sendEmail(email, 'Thank you for contacting me!', autoReplyHTML, autoReplyText),
     ]);
 
-    return new Response(JSON.stringify({ success: true, message: 'Message sent successfully! Thank you for contacting me.' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Message sent successfully! Thank you for contacting me.',
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   } catch (error) {
     console.error('Error handling contact form:', error);
-    return new Response(JSON.stringify({ success: false, message: 'Failed to send message. Please try again later.' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: 'Failed to send message. Please try again later.',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 }
 
@@ -208,7 +230,7 @@ async function handleContactForm(request) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    
+
     // Handle API routes
     if (url.pathname === '/api/contact' && request.method === 'POST') {
       const response = await handleContactForm(request);
@@ -219,17 +241,20 @@ export default {
     }
 
     if (url.pathname === '/api/health' && request.method === 'GET') {
-      return new Response(JSON.stringify({
-        status: 'OK',
-        message: 'Portfolio backend is running on Cloudflare Workers',
-        timestamp: new Date().toISOString()
-      }), {
-        status: 200,
-        headers: { 
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
-      });
+      return new Response(
+        JSON.stringify({
+          status: 'OK',
+          message: 'Portfolio backend is running on Cloudflare Workers',
+          timestamp: new Date().toISOString(),
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
     }
 
     // Handle CORS preflight requests
@@ -247,16 +272,16 @@ export default {
     // Serve static assets using Workers Assets
     try {
       const asset = await env.ASSETS.fetch(request);
-      
+
       if (asset.status === 404) {
         // For SPA routing, serve index.html for non-API routes
         const indexRequest = new Request(new URL('/index.html', request.url).toString(), request);
         return await env.ASSETS.fetch(indexRequest);
       }
-      
+
       return asset;
     } catch (e) {
       return new Response('Asset not found', { status: 404 });
     }
   },
-}; 
+};
