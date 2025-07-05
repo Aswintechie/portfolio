@@ -126,6 +126,30 @@ jobs:
             echo "⚠️  SMTP_PASS not found in GitHub secrets"
           fi
 
+          # Set SMTP Host
+          if [ -n "${{ secrets.SMTP_HOST }}" ]; then
+            echo "${{ secrets.SMTP_HOST }}" | npx wrangler secret put SMTP_HOST --env production
+            echo "✅ SMTP_HOST set for production"
+          else
+            echo "⚠️  SMTP_HOST not found in GitHub secrets"
+          fi
+
+          # Set Feedback Email
+          if [ -n "${{ secrets.FEEDBACK_EMAIL }}" ]; then
+            echo "${{ secrets.FEEDBACK_EMAIL }}" | npx wrangler secret put FEEDBACK_EMAIL --env production
+            echo "✅ FEEDBACK_EMAIL set for production"
+          else
+            echo "⚠️  FEEDBACK_EMAIL not found in GitHub secrets"
+          fi
+
+          # Set Contact Email
+          if [ -n "${{ secrets.CONTACT_EMAIL }}" ]; then
+            echo "${{ secrets.CONTACT_EMAIL }}" | npx wrangler secret put CONTACT_EMAIL --env production
+            echo "✅ CONTACT_EMAIL set for production"
+          else
+            echo "⚠️  CONTACT_EMAIL not found in GitHub secrets"
+          fi
+
           echo "🔐 All secrets configured for production deployment"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
