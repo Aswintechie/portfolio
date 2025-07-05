@@ -23,7 +23,7 @@ const LiveChatWidgetWebSocket = () => {
 
       // Get the WebSocket URL from the current domain
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}`;
+      const wsUrl = `${protocol}//${window.location.host}/ws`;
 
       const ws = new WebSocket(wsUrl);
 
@@ -36,12 +36,12 @@ const LiveChatWidgetWebSocket = () => {
         setMessages(prev => [...prev, { type: 'system', text: 'Connected to chat server' }]);
       };
 
-      ws.onclose = () => {
+      ws.onclose = event => {
         setConnectionStatus('disconnected');
         setMessages(prev => [...prev, { type: 'system', text: 'Disconnected from chat server' }]);
       };
 
-      ws.onerror = () => {
+      ws.onerror = error => {
         setConnectionStatus('error');
         setMessages(prev => [
           ...prev,

@@ -496,33 +496,49 @@ export default {
     const url = new URL(request.url);
 
     // Handle WebSocket upgrade for live chat
-    if (request.headers.get('Upgrade') === 'websocket') {
-      const upgradeHeader = request.headers.get('Sec-WebSocket-Key');
-      if (!upgradeHeader) {
+    const upgradeHeader = request.headers.get('Upgrade');
+    const secWebSocketKey = request.headers.get('Sec-WebSocket-Key');
+
+    // Handle WebSocket upgrade for live chat
+    if (upgradeHeader && upgradeHeader.toLowerCase() === 'websocket' && url.pathname === '/ws') {
+      if (!secWebSocketKey) {
+        console.log('❌ WebSocket request missing Sec-WebSocket-Key');
         return new Response('Expected websocket', { status: 400 });
       }
 
-      const webSocketPair = new WebSocketPair();
-      const [client, server] = Object.values(webSocketPair);
+      try {
+        const webSocketPair = new WebSocketPair();
+        const [client, server] = Object.values(webSocketPair);
 
-      server.accept();
+        server.accept();
 
-      server.addEventListener('message', event => {
-        handleWebSocketMessage(server, event.data, env);
-      });
+        // Send immediate welcome message
+        server.send(JSON.stringify({ type: 'system', message: 'Connected to chat server' }));
 
-      server.addEventListener('close', () => {
-        // Clean up session
-        if (server === adminSocket) {
-          adminSocket = null;
-        }
-        chatSessions.delete(server.id);
-      });
+        server.addEventListener('message', event => {
+          handleWebSocketMessage(server, event.data, env);
+        });
 
-      return new Response(null, {
-        status: 101,
-        webSocket: client,
-      });
+        server.addEventListener('close', () => {
+          // Clean up session
+          if (server === adminSocket) {
+            adminSocket = null;
+          }
+          chatSessions.delete(server.id);
+        });
+
+        server.addEventListener('error', error => {
+          console.error('WebSocket error:', error);
+        });
+
+        return new Response(null, {
+          status: 101,
+          webSocket: client,
+        });
+      } catch (error) {
+        console.error('❌ Error creating WebSocket:', error);
+        return new Response('WebSocket creation failed', { status: 500 });
+      }
     }
 
     // Handle API routes
