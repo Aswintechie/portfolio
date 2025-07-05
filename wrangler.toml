@@ -15,4 +15,24 @@ zone_name = "aswinlocal.in"
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"
+
+[env.production]
+name = "aswin-portfolio"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+NODE_ENV = "production"
+
+[[routes]]
+pattern = "aswinlocal.in/*"
+zone_name = "aswinlocal.in"
+
+[[routes]]
+pattern = "www.aswinlocal.in/*"
+zone_name = "aswinlocal.in"
+
+[assets]
+directory = "./dist"
 binding = "ASSETS" 
