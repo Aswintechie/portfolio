@@ -18,8 +18,16 @@ function getWorkersList() {
 
 // Function to delete a worker
 function deleteWorker(workerName) {
+  // Safety check: Only delete workers that are clearly preview workers
+  if (!workerName.includes('aswin-portfolio-pr-') || workerName === 'aswin-portfolio') {
+    console.error(
+      `❌ SAFETY CHECK FAILED: ${workerName} is not a preview worker. Skipping deletion.`
+    );
+    return false;
+  }
+
   try {
-    console.log(`🗑️  Deleting worker: ${workerName}`);
+    console.log(`🗑️  Deleting preview worker: ${workerName}`);
     execSync(`npx wrangler delete ${workerName} --force`, { stdio: 'inherit' });
     console.log(`✅ Successfully deleted: ${workerName}`);
     return true;
