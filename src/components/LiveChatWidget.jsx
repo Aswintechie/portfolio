@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
-
-const SOCKET_URL = 'ws://localhost:3001';
+import { config } from '../config.js';
 
 const LiveChatWidget = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('disconnected'); // 'connecting', 'connected', 'disconnected', 'error'
+  const [showUserInfo, setShowUserInfo] = useState(true);
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    email: '',
+    phone: '',
+  });
+  const [userInfoSubmitted, setUserInfoSubmitted] = useState(false);
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -16,7 +22,7 @@ const LiveChatWidget = () => {
 
     if (!socketRef.current) {
       setConnectionStatus('connecting');
-      const socket = io(SOCKET_URL, {
+      const socket = io(config.socketUrl, {
         timeout: 5000,
         reconnection: true,
         reconnectionAttempts: 3,
@@ -83,12 +89,26 @@ const LiveChatWidget = () => {
     }
   }, [messages]);
 
+  const handleUserInfoSubmit = e => {
+    e.preventDefault();
+    setUserInfoSubmitted(true);
+    setShowUserInfo(false);
+    // Send user info to server
+    if (socketRef.current && socketRef.current.connected) {
+      socketRef.current.emit('user info', userInfo);
+    }
+  };
+
   const sendMessage = e => {
     e.preventDefault();
     if (!input.trim() || !socketRef.current) return;
 
     if (socketRef.current.connected) {
-      socketRef.current.emit('chat message', input);
+      const messageData = {
+        text: input,
+        userInfo: userInfoSubmitted ? userInfo : null,
+      };
+      socketRef.current.emit('chat message', messageData);
       setMessages(prev => [...prev, { type: 'user', text: input }]);
       setInput('');
     } else {
@@ -193,8 +213,100 @@ const LiveChatWidget = () => {
               ×
             </button>
           </div>
+
+          {/* User Info Form */}
+          {showUserInfo && (
+            <div style={{ padding: 12, borderBottom: '1px solid #eee', background: '#f8fafc' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#374151' }}>
+                Tell us about yourself (optional)
+              </div>
+              <form onSubmit={handleUserInfoSubmit}>
+                <input
+                  type='text'
+                  placeholder='Your name'
+                  value={userInfo.name}
+                  onChange={e => setUserInfo(prev => ({ ...prev, name: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: 8,
+                    marginBottom: 8,
+                    border: '1px solid #d1d5db',
+                    borderRadius: 6,
+                    fontSize: 14,
+                  }}
+                />
+                <input
+                  type='email'
+                  placeholder='Your email'
+                  value={userInfo.email}
+                  onChange={e => setUserInfo(prev => ({ ...prev, email: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: 8,
+                    marginBottom: 8,
+                    border: '1px solid #d1d5db',
+                    borderRadius: 6,
+                    fontSize: 14,
+                  }}
+                />
+                <input
+                  type='tel'
+                  placeholder='Your phone number'
+                  value={userInfo.phone}
+                  onChange={e => setUserInfo(prev => ({ ...prev, phone: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: 8,
+                    marginBottom: 8,
+                    border: '1px solid #d1d5db',
+                    borderRadius: 6,
+                    fontSize: 14,
+                  }}
+                />
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    type='submit'
+                    style={{
+                      flex: 1,
+                      background: '#ec4899',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 6,
+                      padding: 8,
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Start Chat
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setUserInfoSubmitted(true);
+                      setShowUserInfo(false);
+                    }}
+                    style={{
+                      flex: 1,
+                      background: '#6b7280',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 6,
+                      padding: 8,
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Skip
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
           <div style={{ flex: 1, overflowY: 'auto', padding: 12, background: '#f9fafb' }}>
-            {messages.length === 0 && (
+            {messages.length === 0 && !showUserInfo && (
               <div style={{ textAlign: 'center', color: '#6b7280', fontSize: 14, marginTop: 20 }}>
                 {connectionStatus === 'connecting'
                   ? 'Connecting to chat...'
@@ -245,7 +357,7 @@ const LiveChatWidget = () => {
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder={connectionStatus === 'connected' ? 'Type a message...' : 'Connecting...'}
-              disabled={connectionStatus !== 'connected'}
+              disabled={connectionStatus !== 'connected' || showUserInfo}
               style={{
                 flex: 1,
                 border: 'none',
@@ -253,21 +365,23 @@ const LiveChatWidget = () => {
                 fontSize: 15,
                 padding: 8,
                 borderRadius: 6,
-                opacity: connectionStatus === 'connected' ? 1 : 0.5,
+                opacity: connectionStatus === 'connected' && !showUserInfo ? 1 : 0.5,
               }}
             />
             <button
               type='submit'
-              disabled={connectionStatus !== 'connected'}
+              disabled={connectionStatus !== 'connected' || showUserInfo}
               style={{
                 marginLeft: 8,
-                background: connectionStatus === 'connected' ? '#ec4899' : '#9ca3af',
+                background:
+                  connectionStatus === 'connected' && !showUserInfo ? '#ec4899' : '#9ca3af',
                 color: 'white',
                 border: 'none',
                 borderRadius: 6,
                 padding: '0 16px',
                 fontWeight: 600,
-                cursor: connectionStatus === 'connected' ? 'pointer' : 'not-allowed',
+                cursor:
+                  connectionStatus === 'connected' && !showUserInfo ? 'pointer' : 'not-allowed',
               }}
             >
               Send

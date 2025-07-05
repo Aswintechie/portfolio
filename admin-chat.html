@@ -58,6 +58,12 @@
         color: #991b1b;
         border-left: 3px solid #ef4444;
       }
+      .message.user-info {
+        background-color: #dbeafe;
+        color: #1e40af;
+        border-left: 3px solid #3b82f6;
+        font-size: 14px;
+      }
       .input-area {
         display: flex;
         padding: 20px;
@@ -120,12 +126,17 @@
     </div>
 
     <script>
-      const socket = io('http://localhost:3001', {
-        timeout: 5000,
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-      });
+      const socket = io(
+        window.location.hostname === 'localhost'
+          ? 'http://localhost:3001'
+          : `https://${window.location.host}`,
+        {
+          timeout: 5000,
+          reconnection: true,
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000,
+        }
+      );
       const messagesDiv = document.getElementById('messages');
       const messageInput = document.getElementById('messageInput');
       const statusDiv = document.getElementById('status');
@@ -184,6 +195,18 @@
 
       socket.on('chat message', msg => {
         addMessage('Visitor', msg, 'visitor');
+      });
+
+      socket.on('user info', data => {
+        const { visitorId, userInfo } = data;
+        const infoText = Object.entries(userInfo)
+          .filter(([key, value]) => value && value.trim())
+          .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`)
+          .join(', ');
+
+        if (infoText) {
+          addMessage('Visitor Info', `Visitor ${visitorId} - ${infoText}`, 'user-info');
+        }
       });
 
       function sendMessage() {

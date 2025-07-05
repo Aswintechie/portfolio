@@ -425,6 +425,40 @@ io.on('connection', socket => {
     }
   });
 
+  // Handle user info submission
+  socket.on('user info', userInfo => {
+    const session = visitorSessions.get(socket.id);
+    if (session && session.role === 'visitor') {
+      // Store user info in session
+      session.userInfo = userInfo;
+      console.log(`[SOCKET.IO] User info received for ${session.id}:`, userInfo);
+
+      // Notify admin if connected
+      if (adminSocket) {
+        adminSocket.emit('user info', { visitorId: session.id, userInfo });
+      }
+
+      // Send to Telegram if enabled
+      if (telegramEnabled) {
+        const infoText = Object.entries(userInfo)
+          .filter(([key, value]) => value && value.trim())
+          .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`)
+          .join('\n');
+
+        if (infoText) {
+          const telegramMsg = `👤 Visitor info received (${session.id}):\n\n${infoText}`;
+          sendTelegramMessage(telegramMsg)
+            .then(() => {
+              console.log('✅ User info sent to Telegram');
+            })
+            .catch(err => {
+              console.error('❌ Failed to send user info to Telegram:', err.message);
+            });
+        }
+      }
+    }
+  });
+
   // Relay messages
   socket.on('chat message', msg => {
     const session = visitorSessions.get(socket.id);
@@ -439,10 +473,20 @@ io.on('connection', socket => {
     if (session && session.role === 'visitor') {
       console.log('  - This is a visitor message');
 
+      // Extract message text and user info
+      let messageText = msg;
+      let userInfo = null;
+
+      // Check if msg is an object with text and userInfo
+      if (typeof msg === 'object' && msg.text) {
+        messageText = msg.text;
+        userInfo = msg.userInfo;
+      }
+
       // Relay to admin if connected
       if (adminSocket) {
         console.log('  - Relaying to admin');
-        adminSocket.emit('chat message', msg);
+        adminSocket.emit('chat message', messageText);
       } else {
         console.log('  - No admin connected, skipping admin relay');
       }
@@ -450,7 +494,20 @@ io.on('connection', socket => {
       // Forward to Telegram if enabled
       if (telegramEnabled) {
         try {
-          const telegramMsg = `💬 New message from visitor (${session.id}):\n\n${msg}`;
+          let telegramMsg = `💬 New message from visitor (${session.id}):\n\n${messageText}`;
+
+          // Add user info if available
+          if (userInfo && Object.values(userInfo).some(val => val && val.trim())) {
+            const infoText = Object.entries(userInfo)
+              .filter(([key, value]) => value && value.trim())
+              .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`)
+              .join('\n');
+
+            if (infoText) {
+              telegramMsg += `\n\n👤 Visitor Info:\n${infoText}`;
+            }
+          }
+
           console.log('  - Forwarding to Telegram:', telegramMsg);
           sendTelegramMessage(telegramMsg)
             .then(() => {
