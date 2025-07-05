@@ -2,34 +2,34 @@
 # This file defines who owns which parts of the codebase
 
 # Global ownership - Aswin owns everything by default
-* @Aswintechie
+* @Aswintechie @Aswincoder @Aswinmcw
 
 # Frontend specific files
-/src/ @Aswintechie
-/public/ @Aswintechie
-*.html @Aswintechie
-*.css @Aswintechie
-*.js @Aswintechie
-*.jsx @Aswintechie
+/src/ @Aswintechie @Aswincoder @Aswinmcw
+/public/ @Aswintechie @Aswincoder @Aswinmcw
+*.html @Aswintechie @Aswincoder @Aswinmcw
+*.css @Aswintechie @Aswincoder @Aswinmcw
+*.js @Aswintechie @Aswincoder @Aswinmcw
+*.jsx @Aswintechie @Aswincoder @Aswinmcw
 
 # Backend/Server files
-/server/ @Aswintechie
-/scripts/ @Aswintechie
+/server/ @Aswintechie @Aswincoder @Aswinmcw
+/scripts/ @Aswintechie @Aswincoder @Aswinmcw
 
 # Configuration files
-*.json @Aswintechie
-*.config.js @Aswintechie
-*.config.ts @Aswintechie
-.env* @Aswintechie
-wrangler.toml @Aswintechie
+*.json @Aswintechie @Aswincoder @Aswinmcw
+*.config.js @Aswintechie @Aswincoder @Aswinmcw
+*.config.ts @Aswintechie @Aswincoder @Aswinmcw
+.env* @Aswintechie @Aswincoder @Aswinmcw
+wrangler.toml @Aswintechie @Aswincoder @Aswinmcw
 
 # GitHub Actions and CI/CD
-/.github/ @Aswintechie
+/.github/ @Aswintechie @Aswincoder @Aswinmcw
 
 # Documentation
-*.md @Aswintechie
-/docs/ @Aswintechie
+*.md @Aswintechie @Aswincoder @Aswinmcw
+/docs/ @Aswintechie @Aswincoder @Aswinmcw
 
 # Build and deployment
-/dist/ @Aswintechie
-worker.js @Aswintechie 
+/dist/ @Aswintechie @Aswincoder @Aswinmcw
+worker.js @Aswintechie @Aswincoder @Aswinmcw 

@@ -6,8 +6,8 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { body, validationResult } from 'express-validator';
 
-// Load environment variables from parent directory
-dotenv.config({ path: '../.env' });
+// Load environment variables from current directory
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
