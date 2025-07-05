@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { config } from '../config.js';
 
 const LiveChatWidget = () => {
   const [open, setOpen] = useState(false);
@@ -22,7 +21,7 @@ const LiveChatWidget = () => {
 
     if (!socketRef.current) {
       setConnectionStatus('connecting');
-      const socket = io(config.socketUrl, {
+      const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001', {
         timeout: 5000,
         reconnection: true,
         reconnectionAttempts: 3,
