@@ -87,16 +87,12 @@ function createAutoReplyHTML(name, message) {
   `;
 }
 
-// Send email function using MailChannels API
+// Send email function using Resend API
 //
 // REQUIREMENTS:
-// 1. MailChannels DNS records configured (already done)
-// 2. Domain verification in MailChannels dashboard
-// 3. API key from MailChannels (optional for basic setup)
-//
-// DNS RECORDS (already configured):
-// Type: TXT, Name: _mailchannels, Content: v=mc1
-// Type: CNAME, Name: mailchannels, Content: mailchannels.net
+// 1. Resend API key configured as environment variable
+// 2. Domain verification in Resend dashboard (completed)
+// 3. Proper error handling and logging
 //
 async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', env) {
   console.log('🚀 Starting email send process:', {
@@ -126,10 +122,10 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', en
     return true;
   }
 
-  console.log('🌐 Production environment detected, proceeding with MailChannels');
+  console.log('🌐 Production environment detected, proceeding with Resend');
 
   try {
-    console.log('📤 Preparing MailChannels API request...');
+    console.log('📤 Preparing Resend API request...');
 
     // Prepare the email payload
     const emailPayload = {
@@ -155,7 +151,7 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', en
       ],
     };
 
-    console.log('📋 Email payload prepared:', {
+    console.log('📋 Resend email payload prepared:', {
       to: emailPayload.personalizations[0].to[0].email,
       from: emailPayload.from.email,
       subject: emailPayload.subject,
@@ -227,7 +223,7 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', en
 
     return true;
   } catch (error) {
-    console.error('❌ Failed to send email via MailChannels:', {
+    console.error('❌ Failed to send email via Resend:', {
       error: error.message,
       stack: error.stack,
       to,
@@ -312,7 +308,7 @@ async function handleContactForm(request, env) {
       This is an automated response. Please do not reply to this email directly.
     `;
 
-    // Send both emails via MailChannels
+    // Send both emails via Resend
     console.log('📨 Processing contact form submission:', {
       name,
       email,

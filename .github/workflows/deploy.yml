@@ -158,6 +158,14 @@ jobs:
             echo "⚠️  CONTACT_EMAIL not found in GitHub secrets"
           fi
 
+          # Set Resend API Key
+          if [ -n "${{ secrets.RESEND_API_KEY }}" ]; then
+            echo "${{ secrets.RESEND_API_KEY }}" | npx wrangler secret put RESEND_API_KEY
+            echo "✅ RESEND_API_KEY set"
+          else
+            echo "⚠️  RESEND_API_KEY not found in GitHub secrets"
+          fi
+
           echo "🔐 All secrets configured successfully"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
