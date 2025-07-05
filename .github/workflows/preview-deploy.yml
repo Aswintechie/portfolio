@@ -42,10 +42,21 @@ jobs:
 
       - name: 🔧 Generate preview wrangler config
         run: |
-          cp wrangler.toml wrangler.preview.toml
-          sed -i 's/name = "aswin-portfolio"/name = "aswin-portfolio-pr-${{ github.event.number }}"/g' wrangler.preview.toml
-          sed -i 's/pattern = "aswinlocal.in\/\*"/pattern = "pr-${{ github.event.number }}-portfolio.aswinlocal.in\/*"/g' wrangler.preview.toml
-          sed -i 's/pattern = "www.aswinlocal.in\/\*"/pattern = "pr-${{ github.event.number }}-portfolio.aswinlocal.in\/*"/g' wrangler.preview.toml
+          cat > wrangler.preview.toml << EOF
+          name = "aswin-portfolio-pr-${{ github.event.number }}"
+          main = "worker.js"
+          compatibility_date = "2024-01-01"
+          
+          [vars]
+          NODE_ENV = "production"
+          
+          [assets]
+          directory = "./dist"
+          binding = "ASSETS"
+          EOF
+          
+          echo "Generated preview config:"
+          cat wrangler.preview.toml
 
       - name: 🚀 Deploy to Cloudflare Workers Preview
         uses: cloudflare/wrangler-action@v3
@@ -59,8 +70,8 @@ jobs:
         with:
           script: |
             const prNumber = context.issue.number;
-            const previewUrl = `https://pr-${prNumber}-portfolio.aswinlocal.in`;
-            const deploymentUrl = `https://aswin-portfolio-pr-${prNumber}.aswinlocal.in`;
+            const previewUrl = `https://aswin-portfolio-pr-${prNumber}.aswinlocal.workers.dev`;
+            const deploymentUrl = `https://aswin-portfolio-pr-${prNumber}.aswinlocal.workers.dev`;
             
             // Check if preview comment already exists
             const comments = await github.rest.issues.listComments({
@@ -78,7 +89,6 @@ jobs:
             Your preview deployment is ready! 🎉
             
             **Preview URL**: [${previewUrl}](${previewUrl})
-            **Fallback URL**: [${deploymentUrl}](${deploymentUrl})
             
             > 📝 This preview will be automatically deleted when this PR is closed or merged.
             
@@ -141,7 +151,7 @@ jobs:
             
             **Removed:**
             - Worker: \`aswin-portfolio-pr-${prNumber}\`
-            - Preview URL: \`https://pr-${prNumber}-portfolio.aswinlocal.in\`
+            - Preview URL: \`https://aswin-portfolio-pr-${prNumber}.aswinlocal.workers.dev\`
             
             Thank you for your contribution! 🙏`;
             
