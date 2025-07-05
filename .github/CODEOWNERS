@@ -2,34 +2,34 @@
 # This file defines who owns which parts of the codebase
 
 # Global ownership - Aswin owns everything by default
-* @Aswincoder @Aswinmcw
+* @Aswin-coder @Aswinmcw
 
 # Frontend specific files
-/src/ @Aswincoder @Aswinmcw
-/public/ @Aswincoder @Aswinmcw
-*.html @Aswincoder @Aswinmcw
-*.css @Aswincoder @Aswinmcw
-*.js @Aswincoder @Aswinmcw
-*.jsx @Aswincoder @Aswinmcw
+/src/ @Aswin-coder @Aswinmcw
+/public/ @Aswin-coder @Aswinmcw
+*.html @Aswin-coder @Aswinmcw
+*.css @Aswin-coder @Aswinmcw
+*.js @Aswin-coder @Aswinmcw
+*.jsx @Aswin-coder @Aswinmcw
 
 # Backend/Server files
-/server/ @Aswincoder @Aswinmcw
-/scripts/ @Aswincoder @Aswinmcw
+/server/ @Aswin-coder @Aswinmcw
+/scripts/ @Aswin-coder @Aswinmcw
 
 # Configuration files
-*.json @Aswincoder @Aswinmcw
-*.config.js @Aswincoder @Aswinmcw
-*.config.ts @Aswincoder @Aswinmcw
-.env* @Aswincoder @Aswinmcw
-wrangler.toml @Aswincoder @Aswinmcw
+*.json @Aswin-coder @Aswinmcw
+*.config.js @Aswin-coder @Aswinmcw
+*.config.ts @Aswin-coder @Aswinmcw
+.env* @Aswin-coder @Aswinmcw
+wrangler.toml @Aswin-coder @Aswinmcw
 
 # GitHub Actions and CI/CD
-/.github/ @Aswincoder @Aswinmcw
+/.github/ @Aswin-coder @Aswinmcw
 
 # Documentation
-*.md @Aswincoder @Aswinmcw
-/docs/ @Aswincoder @Aswinmcw
+*.md @Aswin-coder @Aswinmcw
+/docs/ @Aswin-coder @Aswinmcw
 
 # Build and deployment
-/dist/ @Aswincoder @Aswinmcw
-worker.js @Aswincoder @Aswinmcw 
+/dist/ @Aswin-coder @Aswinmcw
+worker.js @Aswin-coder @Aswinmcw 
