@@ -46,15 +46,15 @@ jobs:
           name = "aswin-portfolio-pr-${{ github.event.number }}"
           main = "worker.js"
           compatibility_date = "2024-01-01"
-          
+
           [vars]
           NODE_ENV = "production"
-          
+
           [assets]
           directory = "./dist"
           binding = "ASSETS"
           EOF
-          
+
           echo "Generated preview config:"
           cat wrangler.preview.toml
 
@@ -82,42 +82,42 @@ jobs:
             const prNumber = context.issue.number;
             const workerName = `aswin-portfolio-pr-${prNumber}`;
             const previewUrl = `https://${workerName}.aswin8681879422.workers.dev`;
-            
+
             // Check if preview comment already exists
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber
             });
-            
+
             const existingComment = comments.data.find(comment => 
               comment.body.includes('🚀 Preview Deployment')
             );
-            
+
             const commentBody = `## 🚀 Preview Deployment
-            
+
             Your preview deployment is ready! 🎉
-            
+
             **Preview URL**: [${previewUrl}](${previewUrl})
-            
+
             > 📝 This preview will be automatically deleted when this PR is closed or merged.
-            
+
             ---
-            
+
             **Deployment Info:**
             - **Branch**: \`${context.payload.pull_request.head.ref}\`
             - **Commit**: \`${context.payload.pull_request.head.sha.substring(0, 7)}\`
             - **Environment**: Preview
             - **Deploy Time**: ${new Date().toLocaleString()}
-            
+
             ---
-            
+
             **🔍 Test your changes:**
             - ✅ Check responsive design
             - ✅ Test contact form functionality
             - ✅ Verify all links work correctly
             - ✅ Test performance and loading times`;
-            
+
             if (existingComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
@@ -157,18 +157,18 @@ jobs:
           script: |
             const prNumber = context.issue.number;
             const commentBody = `## 🧹 Preview Cleanup
-            
+
             The preview deployment for this PR has been cleaned up automatically.
-            
+
             **Removed:**
             - Worker: \`aswin-portfolio-pr-${prNumber}\`
             - Preview URL: \`https://aswin-portfolio-pr-${prNumber}.aswin8681879422.workers.dev\`
-            
+
             Thank you for your contribution! 🙏`;
-            
+
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
               body: commentBody
-            }); 
+            });
