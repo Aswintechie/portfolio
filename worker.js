@@ -87,31 +87,93 @@ function createAutoReplyHTML(name, message) {
   `;
 }
 
-// Send email function - currently logging instead of sending
+// Send email function using MailChannels API
+//
+// REQUIREMENTS:
+// 1. MailChannels DNS records configured (already done)
+// 2. Domain verification in MailChannels dashboard
+// 3. API key from MailChannels (optional for basic setup)
+//
+// DNS RECORDS (already configured):
+// Type: TXT, Name: _mailchannels, Content: v=mc1
+// Type: CNAME, Name: mailchannels, Content: mailchannels.net
+//
 async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in') {
-  // Log the email details for debugging
-  console.log('📧 Email would be sent:', {
-    to,
-    subject,
-    from: 'contact@aswinlocal.in',
-    hostname,
-    timestamp: new Date().toISOString(),
-  });
+  // Validate email format
+  if (!isValidEmail(to)) {
+    console.error('❌ Invalid email address:', to);
+    throw new Error('Invalid email address');
+  }
 
-  // For now, just log the email content (first 200 chars)
-  console.log('📝 Email content preview:', {
-    html: html.substring(0, 200) + (html.length > 200 ? '...' : ''),
-    text: text.substring(0, 200) + (text.length > 200 ? '...' : ''),
-  });
+  // Check if we're in a preview environment
+  if (hostname.includes('workers.dev')) {
+    console.log('📧 Preview deployment - email would be sent:', {
+      to,
+      subject,
+      from: 'contact@aswinlocal.in',
+      hostname,
+      timestamp: new Date().toISOString(),
+    });
+    return true;
+  }
 
-  // TODO: Set up proper email service
-  // Options:
-  // 1. MailChannels (requires DNS setup)
-  // 2. Resend (simple API)
-  // 3. EmailJS (client-side)
-  // 4. Formspree (form service)
+  try {
+    // Send email via MailChannels API
+    const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        personalizations: [
+          {
+            to: [{ email: to }],
+          },
+        ],
+        from: {
+          email: 'contact@aswinlocal.in',
+          name: 'Aswin Portfolio',
+        },
+        subject: subject,
+        content: [
+          {
+            type: 'text/html',
+            value: html,
+          },
+          {
+            type: 'text/plain',
+            value: text,
+          },
+        ],
+      }),
+    });
 
-  return true; // Return success for now
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ MailChannels error:', response.status, errorText);
+      throw new Error(`MailChannels error: ${response.status} - ${errorText}`);
+    }
+
+    console.log('✅ Email sent successfully via MailChannels:', {
+      to,
+      subject,
+      timestamp: new Date().toISOString(),
+    });
+
+    return true;
+  } catch (error) {
+    console.error('❌ Failed to send email via MailChannels:', error);
+
+    // Log detailed error for debugging
+    console.error('📋 Error details:', {
+      error: error.message,
+      to,
+      subject,
+      timestamp: new Date().toISOString(),
+    });
+
+    throw error;
+  }
 }
 
 // Handle contact form submission
