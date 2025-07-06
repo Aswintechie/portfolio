@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import App from '../../App';
 
@@ -8,31 +8,37 @@ describe('App', () => {
     expect(document.body).toBeInTheDocument();
   });
 
-  it('renders the main portfolio content', () => {
+  it('renders the main portfolio content', async () => {
     render(<App />);
 
-    // Check if the main content loads (using getAllByText for multiple instances)
-    expect(screen.getAllByText('Aswin').length).toBeGreaterThan(0);
+    // Wait for the loading to complete and check if the main content loads
+    await waitFor(() => {
+      expect(screen.getAllByText('Aswin').length).toBeGreaterThan(0);
+    });
   });
 
-  it('renders navigation links', () => {
+  it('renders navigation links', async () => {
     render(<App />);
 
-    // Check if navigation links are present (test by role to avoid duplicates)
-    const navLinks = screen.getAllByRole('link');
-    expect(navLinks.length).toBeGreaterThan(0);
+    // Wait for navigation links to be present
+    await waitFor(() => {
+      const navLinks = screen.getAllByRole('link');
+      expect(navLinks.length).toBeGreaterThan(0);
+    });
 
     // Check for specific navigation items
     expect(screen.getByText('About')).toBeInTheDocument();
     expect(screen.getByText('Skills')).toBeInTheDocument();
   });
 
-  it('renders contact section', () => {
+  it('renders contact section', async () => {
     render(<App />);
 
-    // Check if contact form inputs are present (using placeholder or name attributes)
-    expect(screen.getByPlaceholderText(/your name/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/your email/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/your message/i)).toBeInTheDocument();
+    // Wait for contact form inputs to be present
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText(/your name/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/your email/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/your message/i)).toBeInTheDocument();
+    });
   });
 });
