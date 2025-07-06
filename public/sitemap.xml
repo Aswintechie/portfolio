@@ -43,6 +43,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.aswinlocal.in/privacy</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://pr-reviewer.aswinlocal.in/</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
