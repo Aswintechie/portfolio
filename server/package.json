@@ -12,7 +12,6 @@
   "keywords": [
     "portfolio",
     "contact",
-    "email",
     "email"
   ],
   "author": "Aswin",
@@ -24,9 +23,7 @@
     "express-rate-limit": "^7.5.1",
     "express-validator": "^7.0.1",
     "helmet": "^7.2.0",
-    "node-telegram-bot-api": "^0.66.0",
-    "socket.io": "^4.8.1",
-    "telegraf": "^4.16.3"
+    "resend": "^3.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

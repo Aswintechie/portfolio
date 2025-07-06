@@ -87,15 +87,17 @@ const Navigation = () => {
       <div className='container-custom'>
         <div className='flex items-center justify-between h-16'>
           {/* Logo */}
-          <motion.div
+          <motion.a
+            href='#home'
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`text-2xl font-bold transition-colors duration-300 ${
+            className={`flex items-center space-x-2 text-xl font-bold transition-colors duration-300 hover:scale-105 ${
               scrolled ? 'text-primary-900' : 'text-white'
             }`}
           >
-            Aswin
-          </motion.div>
+            <Code size={24} className='text-secondary-500' />
+            <span>Portfolio</span>
+          </motion.a>
 
           {/* Desktop Navigation */}
           <div className='hidden md:flex items-center space-x-8'>
@@ -187,17 +189,44 @@ const HeroSection = () => {
       {/* Modern gradient background */}
       <div className='absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700'></div>
 
-      {/* Animated background elements */}
-      <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute top-1/4 left-1/4 w-64 h-64 bg-secondary-500/20 rounded-full blur-3xl animate-pulse'></div>
-        <div className='absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl animate-pulse animation-delay-400'></div>
-        <div className='absolute top-3/4 left-3/4 w-48 h-48 bg-secondary-400/15 rounded-full blur-2xl animate-pulse animation-delay-600'></div>
+      {/* Modern geometric pattern overlay */}
+      <div className='absolute inset-0 opacity-10'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(236,72,153,0.3)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.3)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(236,72,153,0.2)_0%,transparent_50%)]'></div>
       </div>
 
-      {/* Modern geometric shapes */}
+      {/* Floating geometric elements */}
       <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute top-20 right-20 w-32 h-32 border border-white/10 rounded-full animate-spin-slow'></div>
-        <div className='absolute bottom-20 left-20 w-24 h-24 border border-secondary-400/20 rounded-full animate-pulse-slow'></div>
+        {/* Top right accent */}
+        <div className='absolute top-10 right-10 w-32 h-32 bg-gradient-to-br from-secondary-500/20 to-accent-500/20 rounded-full blur-2xl animate-pulse'></div>
+
+        {/* Bottom left accent */}
+        <div className='absolute bottom-10 left-10 w-40 h-40 bg-gradient-to-tr from-accent-500/15 to-secondary-500/15 rounded-full blur-3xl animate-pulse animation-delay-400'></div>
+
+        {/* Center accent */}
+        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-secondary-400/5 to-accent-400/5 rounded-full blur-3xl animate-pulse animation-delay-600'></div>
+      </div>
+
+      {/* Modern gradient accents */}
+      <div className='absolute inset-0 overflow-hidden'>
+        {/* Top gradient bar */}
+        <div className='absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary-500/30 to-transparent'></div>
+
+        {/* Bottom gradient bar */}
+        <div className='absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-500/30 to-transparent'></div>
+
+        {/* Left gradient bar */}
+        <div className='absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-secondary-500/20 to-transparent'></div>
+
+        {/* Right gradient bar */}
+        <div className='absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-accent-500/20 to-transparent'></div>
+
+        {/* Diagonal gradient accent */}
+        <div className='absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary-500/10 via-transparent to-accent-500/10 transform rotate-12'></div>
+
+        {/* Corner accent */}
+        <div className='absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent-500/15 via-transparent to-secondary-500/15 transform -rotate-12'></div>
       </div>
 
       <div className='container-custom relative z-10'>
