@@ -18,7 +18,6 @@ import {
   Brain,
   ChevronDown,
 } from 'lucide-react';
-import LiveChatWidgetWebSocket from './components/LiveChatWidgetWebSocket';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -932,7 +931,6 @@ const App = () => {
       <ProjectsSection />
       <ContactSection />
       <Footer />
-      <LiveChatWidgetWebSocket />
     </div>
   );
 };
