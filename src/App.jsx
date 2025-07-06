@@ -683,6 +683,8 @@ const PersonalProjectsSection = () => {
       icon: <Monitor size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
+      domain: 'plex.aswinlocal.in',
+      link: 'https://plex.aswinlocal.in',
     },
     {
       title: 'TrueNAS Storage Server',
@@ -699,6 +701,8 @@ const PersonalProjectsSection = () => {
       icon: <Database size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
+      domain: 'truenas.aswinlocal.in',
+      link: 'https://truenas.aswinlocal.in',
     },
     {
       title: 'Jellyfin Media Server',
@@ -715,6 +719,8 @@ const PersonalProjectsSection = () => {
       icon: <Server size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
+      domain: 'jellyfin.aswinlocal.in',
+      link: 'https://jellyfin.aswinlocal.in',
     },
     {
       title: 'Cloud Storage Server',
@@ -731,6 +737,8 @@ const PersonalProjectsSection = () => {
       icon: <Cloud size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
+      domain: 'cloud.aswinlocal.in',
+      link: 'https://cloud.aswinlocal.in',
     },
   ];
 
@@ -776,8 +784,24 @@ const PersonalProjectsSection = () => {
                 </div>
               </div>
 
-              {/* Project Title */}
-              <h3 className='text-xl font-bold text-gray-900 mb-3'>{project.title}</h3>
+              {/* Project Title and Domain */}
+              <div className='mb-4'>
+                <h3 className='text-xl font-bold text-gray-900 mb-2'>{project.title}</h3>
+                {project.domain && (
+                  <div className='flex items-center justify-between'>
+                    <span className='text-sm text-gray-500 font-mono'>{project.domain}</span>
+                    <a
+                      href={project.link}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='inline-flex items-center px-3 py-1 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-lg hover:from-secondary-600 hover:to-accent-600 transition-all duration-300 transform hover:scale-105 text-xs font-medium'
+                    >
+                      <ExternalLink size={14} className='mr-1' />
+                      Visit
+                    </a>
+                  </div>
+                )}
+              </div>
 
               {/* Project Description */}
               <p className='text-gray-600 leading-relaxed mb-6'>{project.description}</p>
