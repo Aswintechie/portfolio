@@ -49,8 +49,6 @@ jobs:
 
           [vars]
           NODE_ENV = "preview"
-          SMTP_HOST = "smtp.gmail.com"
-          SMTP_PORT = "587"
           WEBHOOK_URL = "https://aswin-portfolio-pr-${{ github.event.number }}.aswin8681879422.workers.dev/api/telegram-webhook"
           FRONTEND_URL = "https://aswin-portfolio-pr-${{ github.event.number }}.aswin8681879422.workers.dev"
 
@@ -82,21 +80,7 @@ jobs:
             echo "⚠️  TELEGRAM_ADMIN_CHAT_ID not found in GitHub secrets"
           fi
 
-          # Set SMTP User
-          if [ -n "${{ secrets.SMTP_USER }}" ]; then
-            echo "${{ secrets.SMTP_USER }}" | npx wrangler secret put SMTP_USER --config wrangler.preview.toml
-            echo "✅ SMTP_USER set"
-          else
-            echo "⚠️  SMTP_USER not found in GitHub secrets"
-          fi
 
-          # Set SMTP Password
-          if [ -n "${{ secrets.SMTP_PASS }}" ]; then
-            echo "${{ secrets.SMTP_PASS }}" | npx wrangler secret put SMTP_PASS --config wrangler.preview.toml
-            echo "✅ SMTP_PASS set"
-          else
-            echo "⚠️  SMTP_PASS not found in GitHub secrets"
-          fi
 
           # Set Resend API Key
           if [ -n "${{ secrets.RESEND_API_KEY }}" ]; then

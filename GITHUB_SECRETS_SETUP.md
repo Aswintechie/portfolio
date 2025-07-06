@@ -43,18 +43,20 @@ You need to add the following secrets to your GitHub repository:
   3. Look for `"chat":{"id":123456789}` in the response
   4. Copy the ID number and add it to GitHub secrets
 
-#### `SMTP_USER`
-- **Description**: Your Gmail address for sending emails
-- **Format**: `your-email@gmail.com`
-- **Note**: Use an App Password if 2FA is enabled
+#### `RESEND_API_KEY`
+- **Description**: Your Resend API key for sending emails
+- **How to get it**:
+  1. Go to [Resend Dashboard](https://resend.com/api-keys)
+  2. Create a new API key
+  3. Copy the key and add it to GitHub secrets
 
-#### `SMTP_PASS`
-- **Description**: Your Gmail password or App Password
-- **How to get App Password** (if 2FA is enabled):
-  1. Go to [Google Account Settings](https://myaccount.google.com/apppasswords)
-  2. Generate an App Password for "Mail"
-  3. Use the 16-character password (without spaces)
-  4. Add it to GitHub secrets
+#### `CONTACT_EMAIL`
+- **Description**: Your email address for receiving contact form messages
+- **Format**: `your-email@domain.com`
+
+#### `FROM_EMAIL`
+- **Description**: Email address to send from (optional, defaults to noreply@aswinlocal.in)
+- **Format**: `noreply@yourdomain.com`
 
 ## How It Works
 
@@ -88,7 +90,7 @@ If you see "⚠️ [SECRET_NAME] not found in GitHub secrets":
 If deployment fails after secrets are set:
 1. Check Cloudflare API token permissions
 2. Verify Telegram bot token is valid
-3. Test SMTP credentials manually
+3. Verify Resend API key is valid
 4. Check Cloudflare Workers logs for errors
 
 ## Testing Secrets

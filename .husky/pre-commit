@@ -8,6 +8,6 @@ npm run pre-commit
 
 # Run security checks
 echo "🔒 Running security checks..."
-npm run security:check
+npm run security:audit
 
 echo "✅ Pre-commit checks completed!"

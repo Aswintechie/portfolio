@@ -90,6 +90,73 @@
 
     <div id="root"></div>
 
+    <!-- Floating Chat Button -->
+    <button
+      id="openChat"
+      title="Chat with us"
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: scale(0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      💬
+    </button>
+
+    <!-- Chat Modal Overlay -->
+    <div
+      id="chatModalOverlay"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      "
+    ></div>
+
+    <!-- Chat Modal -->
+    <div
+      id="chatModal"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 80px;
+        right: 24px;
+        width: 400px;
+        height: 500px;
+        z-index: 10000;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      "
+    >
+      <iframe
+        src="https://chat.aswinlocal.in/"
+        style="width: 100%; height: 100%; border: none"
+      ></iframe>
+    </div>
+
     <script>
       // Hide loading screen after React app loads
       window.addEventListener('load', () => {
@@ -102,6 +169,66 @@
             }, 500);
           }
         }, 1000);
+      });
+
+      // Show chat button after loading screen
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loading = document.getElementById('loading');
+          const chatButton = document.getElementById('openChat');
+          if (loading) {
+            loading.classList.add('fade-out');
+            setTimeout(() => {
+              loading.remove();
+              if (chatButton) {
+                chatButton.style.opacity = '1';
+                chatButton.style.transform = 'scale(1)';
+              }
+            }, 500);
+          }
+        }, 1000);
+      });
+
+      const openChatBtn = document.getElementById('openChat');
+      const chatModal = document.getElementById('chatModal');
+      const chatModalOverlay = document.getElementById('chatModalOverlay');
+
+      function openChat() {
+        chatModalOverlay.style.display = 'block';
+        chatModal.style.display = 'block';
+      }
+
+      function closeChat() {
+        chatModalOverlay.style.display = 'none';
+        chatModal.style.display = 'none';
+      }
+
+      openChatBtn.onclick = function (e) {
+        e.stopPropagation();
+        openChat();
+      };
+
+      // Add hover effects
+      openChatBtn.addEventListener('mouseenter', function () {
+        this.style.transform = 'scale(1.1)';
+        this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
+      });
+      openChatBtn.addEventListener('mouseleave', function () {
+        this.style.transform = 'scale(1)';
+        this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
+      });
+
+      // Close when clicking on the overlay
+      chatModalOverlay.onclick = function (e) {
+        if (e.target === chatModalOverlay) {
+          closeChat();
+        }
+      };
+      // Close when pressing Escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && chatModal.style.display === 'block') {
+          closeChat();
+        }
       });
     </script>
 
