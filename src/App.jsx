@@ -758,6 +758,24 @@ const PersonalProjectsSection = () => {
       domain: 'ubuntu.aswinlocal.in',
       link: 'https://ubuntu.aswinlocal.in',
     },
+    {
+      title: 'qBittorrent Download Server',
+      description:
+        'Web-based BitTorrent client for remote torrent management and file downloads. Provides secure access to download and manage torrents from anywhere with a web interface.',
+      technologies: ['qBittorrent', 'Docker', 'Web UI', 'BitTorrent', 'SSL/TLS', 'Remote Access'],
+      features: [
+        'Web-based torrent management interface',
+        'Remote download monitoring and control',
+        'Automatic download scheduling',
+        'Bandwidth and speed limiting',
+        'Secure remote access via HTTPS',
+      ],
+      icon: <Zap size={48} />,
+      status: 'Active',
+      access: 'Private (requires credentials)',
+      domain: 'torrent.aswinlocal.in',
+      link: 'https://torrent.aswinlocal.in',
+    },
   ];
 
   return (
