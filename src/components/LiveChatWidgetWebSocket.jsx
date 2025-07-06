@@ -25,6 +25,9 @@ const LiveChatWidgetWebSocket = () => {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const wsUrl = `${protocol}//${window.location.host}/ws`;
 
+      // For debugging - log the WebSocket URL
+      console.log('WebSocket URL:', wsUrl);
+
       const ws = new WebSocket(wsUrl);
 
       wsRef.current = ws;
@@ -42,6 +45,7 @@ const LiveChatWidgetWebSocket = () => {
       };
 
       ws.onerror = error => {
+        console.error('WebSocket connection error:', error);
         setConnectionStatus('error');
         setMessages(prev => [
           ...prev,
