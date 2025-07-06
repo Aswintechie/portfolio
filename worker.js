@@ -389,6 +389,37 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // Handle sitemap and robots.txt
+    if (url.pathname === '/sitemap.xml') {
+      try {
+        const sitemap = await env.PUBLIC_ASSETS.fetch(
+          new Request(new URL('/sitemap.xml', request.url))
+        );
+        if (sitemap.status === 200) {
+          const response = new Response(sitemap.body, sitemap);
+          response.headers.set('Content-Type', 'application/xml');
+          return response;
+        }
+      } catch (e) {
+        // Fallback to 404
+      }
+    }
+
+    if (url.pathname === '/robots.txt') {
+      try {
+        const robots = await env.PUBLIC_ASSETS.fetch(
+          new Request(new URL('/robots.txt', request.url))
+        );
+        if (robots.status === 200) {
+          const response = new Response(robots.body, robots);
+          response.headers.set('Content-Type', 'text/plain');
+          return response;
+        }
+      } catch (e) {
+        // Fallback to 404
+      }
+    }
+
     // Handle API routes
     if (url.pathname === '/api/contact' && request.method === 'POST') {
       const response = await handleContactForm(request, env);
@@ -434,10 +465,33 @@ export default {
       if (asset.status === 404) {
         // For SPA routing, serve index.html for non-API routes
         const indexRequest = new Request(new URL('/index.html', request.url).toString(), request);
-        return await env.ASSETS.fetch(indexRequest);
+        const response = await env.ASSETS.fetch(indexRequest);
+
+        // Add security headers for HTML responses
+        if (response.headers.get('content-type')?.includes('text/html')) {
+          const newResponse = new Response(response.body, response);
+          newResponse.headers.set(
+            'Content-Security-Policy',
+            "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com; frame-src 'self' https://chat.aswinlocal.in;"
+          );
+          newResponse.headers.set('X-Content-Type-Options', 'nosniff');
+          newResponse.headers.set('X-Frame-Options', 'DENY');
+          newResponse.headers.set('X-XSS-Protection', '1; mode=block');
+          newResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+          return newResponse;
+        }
+
+        return response;
       }
 
-      return asset;
+      // Add security headers for all responses
+      const newResponse = new Response(asset.body, asset);
+      newResponse.headers.set('X-Content-Type-Options', 'nosniff');
+      newResponse.headers.set('X-Frame-Options', 'DENY');
+      newResponse.headers.set('X-XSS-Protection', '1; mode=block');
+      newResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+      return newResponse;
     } catch (e) {
       return new Response('Asset not found', { status: 404 });
     }

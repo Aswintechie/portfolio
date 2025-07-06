@@ -1,0 +1,56 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="text" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Geometric patterns -->
+  <circle cx="100" cy="100" r="50" fill="#ec4899" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="80" fill="#0ea5e9" opacity="0.1"/>
+  <circle cx="1000" cy="100" r="30" fill="#ec4899" opacity="0.15"/>
+  
+  <!-- Main content -->
+  <g transform="translate(100, 150)">
+    <!-- Name -->
+    <text x="0" y="80" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="700" fill="white">
+      Aswin
+    </text>
+    
+    <!-- Title with gradient -->
+    <text x="0" y="140" font-family="Inter, system-ui, sans-serif" font-size="48" font-weight="600" fill="url(#text)">
+      Software Developer Engineer
+    </text>
+    
+    <!-- Subtitle -->
+    <text x="0" y="180" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="400" fill="#94a3b8">
+      Specializing in software development, performance optimization, and cloud infrastructure
+    </text>
+    
+    <!-- Location -->
+    <text x="0" y="220" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="400" fill="#64748b">
+      Based in Pondicherry, India
+    </text>
+  </g>
+  
+  <!-- Decorative elements -->
+  <g transform="translate(900, 200)">
+    <rect x="0" y="0" width="4" height="60" fill="#ec4899" opacity="0.6"/>
+    <rect x="8" y="0" width="4" height="40" fill="#0ea5e9" opacity="0.6"/>
+    <rect x="16" y="0" width="4" height="80" fill="#ec4899" opacity="0.6"/>
+    <rect x="24" y="0" width="4" height="50" fill="#0ea5e9" opacity="0.6"/>
+  </g>
+  
+  <!-- Website URL -->
+  <text x="100" y="580" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="500" fill="#64748b">
+    www.aswinlocal.in
+  </text>
+</svg> 

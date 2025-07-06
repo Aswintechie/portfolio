@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+
 import {
   Menu,
   X,
@@ -1157,6 +1158,22 @@ const Footer = () => {
         <div className='flex flex-col md:flex-row justify-between items-center'>
           <div className='mb-4 md:mb-0'>
             <p className='text-gray-400'>© {currentYear} Aswin. All rights reserved.</p>
+            <div className='mt-2 flex space-x-4 text-sm'>
+              <a
+                href='/privacy'
+                className='text-gray-500 hover:text-secondary-600 transition-colors duration-200'
+              >
+                Privacy Policy
+              </a>
+              <a
+                href='https://github.com/Aswin-coder/portfolio'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-gray-500 hover:text-secondary-600 transition-colors duration-200'
+              >
+                Source Code
+              </a>
+            </div>
           </div>
           <div className='flex space-x-4'>
             <a

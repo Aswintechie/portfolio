@@ -15,4 +15,9 @@ zone_name = "aswinlocal.in"
 
 [assets]
 directory = "./dist"
-binding = "ASSETS" 
+binding = "ASSETS"
+
+# Serve sitemap and robots.txt
+[[assets]]
+bucket = "./public"
+binding = "PUBLIC_ASSETS" 

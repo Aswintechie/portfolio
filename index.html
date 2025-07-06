@@ -13,6 +13,38 @@
       content="software developer engineer, performance optimization, profiling, benchmarking, pondicherry, multicoreware"
     />
     <meta name="author" content="Aswin" />
+    <link rel="canonical" href="https://www.aswinlocal.in/" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Aswin",
+        "jobTitle": "Software Developer Engineer",
+        "description": "Software Developer Engineer specializing in software development, performance optimization, and profiling. Based in Pondicherry, India.",
+        "url": "https://www.aswinlocal.in",
+        "sameAs": ["https://github.com/Aswin-coder", "https://www.linkedin.com/in/aswin4122001/"],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "MulticoreWare"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Pondicherry",
+          "addressCountry": "IN"
+        },
+        "knowsAbout": [
+          "Software Development",
+          "Performance Optimization",
+          "Cloud Infrastructure",
+          "React",
+          "Node.js",
+          "Python",
+          "Machine Learning"
+        ]
+      }
+    </script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -22,6 +54,10 @@
       property="og:description"
       content="Software Developer Engineer specializing in software development, performance optimization, and profiling."
     />
+    <meta property="og:image" content="https://www.aswinlocal.in/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Aswin - Software Developer Engineer Portfolio" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -31,6 +67,8 @@
       property="twitter:description"
       content="Software Developer Engineer specializing in software development, performance optimization, and profiling."
     />
+    <meta property="twitter:image" content="https://www.aswinlocal.in/og-image.svg" />
+    <meta property="twitter:image:alt" content="Aswin - Software Developer Engineer Portfolio" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -281,5 +319,19 @@
     </script>
 
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Google Analytics (replace GA_MEASUREMENT_ID with your actual ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID', {
+        page_title: 'Aswin Portfolio',
+        page_location: window.location.href,
+      });
+    </script>
   </body>
 </html>
