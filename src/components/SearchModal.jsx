@@ -17,7 +17,6 @@ const SearchModal = ({ isOpen, onClose }) => {
       href: '#personal-projects',
       description: 'See my personal infrastructure projects',
     },
-    { name: 'Testimonials', href: '#testimonials', description: 'Read what others say about me' },
     { name: 'Contact', href: '#contact', description: 'Get in touch with me' },
   ];
 

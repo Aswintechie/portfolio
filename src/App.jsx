@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import {
   Menu,
@@ -26,6 +27,8 @@ import {
   Star,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
+import PrivacyPolicy from './components/PrivacyPolicy.jsx';
+import NotFound from './components/NotFound.jsx';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -101,7 +104,6 @@ const Navigation = React.memo(function Navigation() {
     { name: 'Skills', href: '#skills' },
     { name: 'Projects', href: '#projects' },
     { name: 'Infrastructure', href: '#personal-projects' },
-    { name: 'Testimonials', href: '#testimonials' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -1390,18 +1392,28 @@ const App = () => {
   }
 
   return (
-    <div className='App'>
-      <Navigation />
-      <HeroSection />
-      <AboutSection />
-      <ExperienceSection />
-      <SkillsSection />
-      <ProjectsSection />
-      <PersonalProjectsSection />
-      <TestimonialsSection />
-      <ContactSection />
-      <Footer />
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <div className='App'>
+              <Navigation />
+              <HeroSection />
+              <AboutSection />
+              <ExperienceSection />
+              <SkillsSection />
+              <ProjectsSection />
+              <PersonalProjectsSection />
+              <ContactSection />
+              <Footer />
+            </div>
+          }
+        />
+        <Route path='/privacy' element={<PrivacyPolicy />} />
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 };
 
