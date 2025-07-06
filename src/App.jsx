@@ -17,6 +17,10 @@ import {
   Code,
   Brain,
   ChevronDown,
+  Server,
+  Database,
+  Shield,
+  Monitor,
 } from 'lucide-react';
 
 // Custom hook for experience calculation
@@ -73,6 +77,7 @@ const Navigation = () => {
     { name: 'Experience', href: '#experience' },
     { name: 'Skills', href: '#skills' },
     { name: 'Projects', href: '#projects' },
+    { name: 'Infrastructure', href: '#personal-projects' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -658,6 +663,182 @@ const ProjectsSection = () => {
   );
 };
 
+// Personal Projects Section Component
+const PersonalProjectsSection = () => {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  const personalProjects = [
+    {
+      title: 'Plex Media Server',
+      description:
+        'Self-hosted media streaming server for movies, TV shows, and music. Features transcoding, remote access, and mobile apps for seamless media consumption across all devices.',
+      technologies: ['Docker', 'Linux', 'Media Transcoding', 'Remote Access', 'Mobile Apps'],
+      features: [
+        '4K HDR content streaming',
+        'Automatic media organization',
+        'Remote access from anywhere',
+        'Mobile and TV apps support',
+        'Hardware transcoding enabled',
+      ],
+      icon: <Monitor size={48} />,
+      status: 'Active',
+      access: 'Private (requires credentials)',
+    },
+    {
+      title: 'TrueNAS Storage Server',
+      description:
+        'Enterprise-grade network-attached storage (NAS) system with ZFS file system. Provides reliable data storage, backup solutions, and virtualization capabilities.',
+      technologies: ['ZFS', 'FreeBSD', 'RAID', 'Virtualization', 'Backup Solutions'],
+      features: [
+        'ZFS file system with data integrity',
+        'RAID-Z2 redundancy',
+        'Automated backup scheduling',
+        'Virtual machine hosting',
+        'SMB/NFS file sharing',
+      ],
+      icon: <Database size={48} />,
+      status: 'Active',
+      access: 'Private (requires credentials)',
+    },
+    {
+      title: 'Jellyfin Media Server',
+      description:
+        'Open-source alternative to Plex, providing media streaming without licensing restrictions. Self-hosted solution for personal media library management.',
+      technologies: ['Docker', 'Linux', 'Web Interface', 'Mobile Apps', 'Transcoding'],
+      features: [
+        'No licensing fees or restrictions',
+        'Web-based media interface',
+        'Mobile and TV client apps',
+        'Hardware-accelerated transcoding',
+        'Multi-user support',
+      ],
+      icon: <Server size={48} />,
+      status: 'Active',
+      access: 'Private (requires credentials)',
+    },
+    {
+      title: 'Cloud Storage Server',
+      description:
+        'Personal cloud storage solution with Nextcloud, providing file synchronization, sharing, and collaboration tools similar to Google Drive or Dropbox.',
+      technologies: ['Nextcloud', 'Docker', 'Linux', 'SSL/TLS', 'Database'],
+      features: [
+        'File synchronization across devices',
+        'Secure file sharing and collaboration',
+        'Calendar and contact sync',
+        'Mobile apps for all platforms',
+        'End-to-end encryption support',
+      ],
+      icon: <Cloud size={48} />,
+      status: 'Active',
+      access: 'Private (requires credentials)',
+    },
+  ];
+
+  return (
+    <section id='personal-projects' className='section-padding'>
+      <div className='container-custom'>
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className='text-center mb-16'
+        >
+          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>
+            Personal Infrastructure
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
+            Self-hosted services and infrastructure projects I maintain
+          </p>
+        </motion.div>
+
+        <div className='grid md:grid-cols-2 gap-8'>
+          {personalProjects.map((project, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              className='card p-8 group hover:shadow-xl transition-all duration-300'
+            >
+              {/* Project Header */}
+              <div className='flex items-start justify-between mb-6'>
+                <div className='text-secondary-600 group-hover:text-accent-500 transition-colors duration-300'>
+                  {project.icon}
+                </div>
+                <div className='flex flex-col items-end space-y-1'>
+                  <span className='px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full'>
+                    {project.status}
+                  </span>
+                  <span className='px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full'>
+                    {project.access}
+                  </span>
+                </div>
+              </div>
+
+              {/* Project Title */}
+              <h3 className='text-xl font-bold text-gray-900 mb-3'>{project.title}</h3>
+
+              {/* Project Description */}
+              <p className='text-gray-600 leading-relaxed mb-6'>{project.description}</p>
+
+              {/* Technologies */}
+              <div className='mb-6'>
+                <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                  <Code size={16} className='mr-2 text-secondary-600' />
+                  Technologies
+                </h4>
+                <div className='flex flex-wrap gap-2'>
+                  {project.technologies.map((tech, techIndex) => (
+                    <span
+                      key={techIndex}
+                      className='px-2 py-1 bg-secondary-100 text-secondary-800 text-xs font-medium rounded-full'
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Key Features */}
+              <div>
+                <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                  <Zap size={16} className='mr-2 text-secondary-600' />
+                  Key Features
+                </h4>
+                <div className='space-y-2'>
+                  {project.features.map((feature, featureIndex) => (
+                    <div key={featureIndex} className='flex items-center space-x-2'>
+                      <Shield size={14} className='text-accent-500 flex-shrink-0' />
+                      <span className='text-gray-600 text-sm'>{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Note about access */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className='mt-12 text-center'
+        >
+          <div className='inline-flex items-center px-6 py-4 bg-gray-50 rounded-xl'>
+            <Shield size={20} className='text-gray-600 mr-3' />
+            <p className='text-gray-600'>
+              These services are private and require authentication. Contact me for access
+              credentials.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // Contact Section Component
 const ContactSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -960,6 +1141,7 @@ const App = () => {
       <ExperienceSection />
       <SkillsSection />
       <ProjectsSection />
+      <PersonalProjectsSection />
       <ContactSection />
       <Footer />
     </div>
