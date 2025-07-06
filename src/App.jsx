@@ -740,6 +740,24 @@ const PersonalProjectsSection = () => {
       domain: 'cloud.aswinlocal.in',
       link: 'https://cloud.aswinlocal.in',
     },
+    {
+      title: 'Ubuntu VPS Server',
+      description:
+        'Virtual Private Server running Ubuntu for hosting various services, development environments, and infrastructure management. Provides a robust foundation for self-hosted applications.',
+      technologies: ['Ubuntu', 'SSH', 'Docker', 'Nginx', 'SSL/TLS', 'Server Management'],
+      features: [
+        'Remote server administration via SSH',
+        'Containerized application deployment',
+        'Reverse proxy and load balancing',
+        'Automated SSL certificate management',
+        'System monitoring and maintenance',
+      ],
+      icon: <Cpu size={48} />,
+      status: 'Active',
+      access: 'Private (requires credentials)',
+      domain: 'ubuntu.aswinlocal.in',
+      link: 'https://ubuntu.aswinlocal.in',
+    },
   ];
 
   return (
