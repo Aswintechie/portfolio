@@ -1283,6 +1283,12 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Skip loading in test environment
+    if (process.env.NODE_ENV === 'test') {
+      setIsLoading(false);
+      return;
+    }
+
     // Simulate loading time for better UX
     const timer = setTimeout(() => {
       setIsLoading(false);
