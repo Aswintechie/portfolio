@@ -719,8 +719,8 @@ const PersonalProjectsSection = () => {
       icon: <Server size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'jellyfin.aswinlocal.in',
-      link: 'https://jellyfin.aswinlocal.in',
+      domain: 'watch.aswinlocal.in',
+      link: 'https://watch.aswinlocal.in',
     },
     {
       title: 'Cloud Storage Server',
