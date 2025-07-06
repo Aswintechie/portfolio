@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -16,6 +16,9 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Initialize Resend client
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Initialize Telegram Bot (if configured) - Using curl-based approach
 let telegramEnabled = false;
@@ -97,22 +100,6 @@ app.use(
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Create reusable transporter object using SMTP configuration from .env
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT) || 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.SMTP_USER, // SMTP username
-      pass: process.env.SMTP_PASS, // SMTP password
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-};
 
 // Validation rules for contact form
 const contactValidation = [
@@ -220,140 +207,308 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
 
     const { name, email, message } = req.body;
 
-    // Check if SMTP is configured
-    if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      console.log('SMTP not configured, returning success without sending email');
-      return res.status(200).json({
-        success: true,
-        message: 'Message received! Thank you for contacting me. (Email service not configured)',
-      });
+    // Send email to you (admin)
+    const { error: adminError } = await resend.emails.send({
+      from: process.env.FROM_EMAIL || 'Aswin Portfolio <contact@aswinlocal.in>',
+      to: [process.env.CONTACT_EMAIL],
+      subject: `New Portfolio Contact from ${name}`,
+      replyTo: email,
+      headers: {
+        'X-Priority': '1',
+        'X-MSMail-Priority': 'High',
+        Importance: 'high',
+        'X-Mailer': 'Aswin Portfolio Contact Form',
+      },
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>New Portfolio Contact</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
+          
+          <!-- Header -->
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; margin-bottom: 0;">
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">📧 New Portfolio Contact</h1>
+            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">You have a new message from your portfolio website</p>
+          </div>
+          
+          <!-- Main Content -->
+          <div style="background: white; padding: 40px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            
+            <!-- Contact Details -->
+            <div style="background: #f8fafc; padding: 25px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #667eea;">
+              <h2 style="color: #2d3748; margin: 0 0 20px 0; font-size: 20px;">👤 Contact Information</h2>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                  <strong style="color: #4a5568;">Name:</strong><br>
+                  <span style="color: #2d3748; font-size: 16px;">${name}</span>
+                </div>
+                <div>
+                  <strong style="color: #4a5568;">Email:</strong><br>
+                  <a href="mailto:${email}" style="color: #667eea; text-decoration: none; font-size: 16px;">${email}</a>
+                </div>
+              </div>
+              <div style="margin-top: 15px;">
+                <strong style="color: #4a5568;">Date:</strong><br>
+                <span style="color: #2d3748;">${new Date().toLocaleString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}</span>
+              </div>
+            </div>
+            
+            <!-- Message -->
+            <div style="background: #ffffff; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 30px;">
+              <h2 style="color: #2d3748; margin: 0 0 20px 0; font-size: 20px;">💬 Message</h2>
+              <div style="background: #f7fafc; padding: 20px; border-radius: 6px; border-left: 3px solid #667eea;">
+                <p style="margin: 0; line-height: 1.7; color: #4a5568; font-size: 16px;">${message.replace(/\n/g, '<br>')}</p>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="mailto:${email}?subject=Re: Your portfolio inquiry from ${name}" 
+                 style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 0 10px; transition: transform 0.2s;">
+                ✉️ Reply to ${name}
+              </a>
+              <a href="https://www.aswinlocal.in" 
+                 style="display: inline-block; background: #4a5568; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 0 10px;">
+                🌐 View Portfolio
+              </a>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding-top: 30px; border-top: 1px solid #e2e8f0; margin-top: 30px;">
+              <p style="color: #718096; font-size: 14px; margin: 0;">
+                This email was sent from your portfolio contact form at 
+                <a href="https://www.aswinlocal.in" style="color: #667eea;">aswinlocal.in</a>
+              </p>
+            </div>
+            
+          </div>
+          
+        </body>
+        </html>
+      `,
+      text: `
+New Portfolio Contact from ${name}
+
+Contact Information:
+- Name: ${name}
+- Email: ${email}
+- Date: ${new Date().toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })}
+
+Message:
+${message}
+
+---
+This email was sent from your portfolio contact form at aswinlocal.in
+Reply directly to this email to respond to ${name}.
+      `,
+    });
+
+    if (adminError) {
+      console.error('Resend error (admin email):', adminError);
+      throw new Error('Failed to send admin email');
     }
 
-    // Create transporter
-    const transporter = createTransporter();
-
-    // Verify SMTP connection
-    await transporter.verify();
-
-    // Email to you (notification)
-    const mailOptions = {
-      from: `"Portfolio Contact Form" <${process.env.SMTP_USER}>`,
-      to: process.env.FEEDBACK_EMAIL, // Your email address
-      subject: `New Portfolio Contact from ${name}`,
+    // Send confirmation email to the user
+    const { error: userError } = await resend.emails.send({
+      from: process.env.FROM_EMAIL || 'Aswin <contact@aswinlocal.in>',
+      to: [email],
+      subject: 'Thank you for contacting me - Aswin Portfolio',
+      replyTo: process.env.CONTACT_EMAIL,
+      headers: {
+        'X-Priority': '3',
+        'X-MSMail-Priority': 'Normal',
+        Importance: 'normal',
+        'X-Mailer': 'Aswin Portfolio Contact Form',
+      },
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-          <h2 style="color: #2563eb; text-align: center; margin-bottom: 30px;">
-            📧 New Portfolio Contact Form Submission
-          </h2>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Thank you for contacting Aswin</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
           
-          <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h3 style="color: #374151; margin-top: 0;">Contact Details:</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #2563eb;">${email}</a></p>
-            <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+          <!-- Header -->
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 12px 12px 0 0; text-align: center; margin-bottom: 0;">
+            <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 40px;">🙏</span>
+            </div>
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">Thank You!</h1>
+            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your message has been received</p>
           </div>
           
-          <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-            <h3 style="color: #374151; margin-top: 0;">Message:</h3>
-            <p style="line-height: 1.6; color: #4b5563;">${message.replace(/\n/g, '<br>')}</p>
+          <!-- Main Content -->
+          <div style="background: white; padding: 40px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            
+            <!-- Greeting -->
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h2 style="color: #2d3748; margin: 0 0 15px 0; font-size: 24px;">Hi ${name}! 👋</h2>
+              <p style="color: #4a5568; font-size: 18px; margin: 0; line-height: 1.6;">
+                Thank you for reaching out to me through my portfolio website. I'm excited to hear from you!
+              </p>
+            </div>
+            
+            <!-- Confirmation -->
+            <div style="background: #f0fff4; padding: 25px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #48bb78;">
+              <h3 style="color: #2d3748; margin: 0 0 15px 0; font-size: 20px;">✅ Message Received</h3>
+              <p style="color: #4a5568; margin: 0; font-size: 16px;">
+                I have received your message and will get back to you within <strong>24-48 hours</strong>. 
+                I typically respond much sooner during business hours!
+              </p>
+            </div>
+            
+            <!-- Message Summary -->
+            <div style="background: #f8fafc; padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+              <h3 style="color: #2d3748; margin: 0 0 20px 0; font-size: 20px;">💬 Your Message</h3>
+              <div style="background: white; padding: 20px; border-radius: 6px; border-left: 3px solid #667eea;">
+                <p style="margin: 0; line-height: 1.7; color: #4a5568; font-size: 16px;">${message.replace(/\n/g, '<br>')}</p>
+              </div>
+              <p style="color: #718096; font-size: 14px; margin: 15px 0 0 0; font-style: italic;">
+                Sent on ${new Date().toLocaleString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </p>
+            </div>
+            
+            <!-- What's Next -->
+            <div style="background: #ebf8ff; padding: 25px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #4299e1;">
+              <h3 style="color: #2d3748; margin: 0 0 15px 0; font-size: 20px;">⏰ What's Next?</h3>
+              <ul style="color: #4a5568; margin: 0; padding-left: 20px; font-size: 16px;">
+                <li style="margin-bottom: 8px;">I'll review your message and respond with detailed information</li>
+                <li style="margin-bottom: 8px;">If you have urgent questions, feel free to reach out directly</li>
+                <li style="margin-bottom: 0;">I'll provide relevant examples of my work if applicable</li>
+              </ul>
+            </div>
+            
+            <!-- Contact Info -->
+            <div style="background: #f7fafc; padding: 25px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+              <h3 style="color: #2d3748; margin: 0 0 20px 0; font-size: 20px;">📞 Need to reach me urgently?</h3>
+              <p style="color: #4a5568; margin: 0 0 20px 0; font-size: 16px;">
+                You can also contact me directly at:
+              </p>
+              <a href="mailto:contact@aswinlocal.in" 
+                 style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                ✉️ contact@aswinlocal.in
+              </a>
+            </div>
+            
+            <!-- Social Links -->
+            <div style="text-align: center; margin: 30px 0;">
+              <h3 style="color: #2d3748; margin: 0 0 20px 0; font-size: 20px;">🔗 Connect with me</h3>
+              <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="https://github.com/Aswin-coder" 
+                   style="display: inline-block; background: #24292e; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                  🐙 GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/aswin4122001/" 
+                   style="display: inline-block; background: #0077b5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                  💼 LinkedIn
+                </a>
+                <a href="https://www.aswinlocal.in" 
+                   style="display: inline-block; background: #4a5568; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                  🌐 Portfolio
+                </a>
+              </div>
+            </div>
+            
+            <!-- Signature -->
+            <div style="text-align: center; padding: 30px 0; border-top: 1px solid #e2e8f0; margin-top: 30px;">
+              <p style="color: #4a5568; font-size: 18px; margin: 0 0 10px 0; font-weight: 600;">
+                Best regards,<br>
+                <span style="color: #667eea; font-size: 20px;">Aswin</span>
+              </p>
+              <p style="color: #718096; font-size: 14px; margin: 0;">
+                Software Engineer & Full-Stack Developer
+              </p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 20px;">
+              <p style="color: #a0aec0; font-size: 12px; margin: 0;">
+                This is an automated confirmation email from 
+                <a href="https://www.aswinlocal.in" style="color: #667eea;">Aswin's portfolio website</a>
+              </p>
+            </div>
+            
           </div>
           
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-            <p style="color: #6b7280; font-size: 14px;">
-              This email was sent from your portfolio contact form.
-            </p>
-            <a href="mailto:${email}?subject=Re: Your portfolio inquiry" 
-               style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px;">
-              Reply to ${name}
-            </a>
-          </div>
-        </div>
+        </body>
+        </html>
       `,
       text: `
-        New Portfolio Contact Form Submission
-        
-        Name: ${name}
-        Email: ${email}
-        Date: ${new Date().toLocaleString()}
-        
-        Message:
-        ${message}
-        
-        Reply to: ${email}
-      `,
-    };
+Hi ${name}!
 
-    // Auto-reply email to the sender
-    const autoReplyOptions = {
-      from: `"Aswin - Portfolio" <${process.env.CONTACT_EMAIL}>`,
-      to: email,
-      subject: 'Thank you for contacting me!',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-          <h2 style="color: #2563eb; text-align: center; margin-bottom: 30px;">
-            🙏 Thank You for Reaching Out!
-          </h2>
-          
-          <p style="font-size: 16px; line-height: 1.6; color: #374151;">Hi ${name},</p>
-          
-          <p style="font-size: 16px; line-height: 1.6; color: #374151;">
-            Thank you for contacting me through my portfolio website. I have received your message and will get back to you as soon as possible, usually within 24-48 hours.
-          </p>
-          
-          <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #374151; margin-top: 0;">Your Message Summary:</h3>
-            <p style="color: #6b7280; margin-bottom: 10px;"><strong>Submitted on:</strong> ${new Date().toLocaleString()}</p>
-            <p style="color: #6b7280; font-style: italic;">"${message.length > 100 ? message.substring(0, 100) + '...' : message}"</p>
-          </div>
-          
-          <p style="font-size: 16px; line-height: 1.6; color: #374151;">
-            In the meantime, feel free to check out my work on:
-          </p>
-          
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="https://github.com/Aswin-coder" 
-               style="display: inline-block; background-color: #374151; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px;">
-              GitHub
-            </a>
-            <a href="https://www.linkedin.com/in/aswin4122001/" 
-               style="display: inline-block; background-color: #0077b5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px;">
-              LinkedIn
-            </a>
-          </div>
-          
-          <p style="font-size: 16px; line-height: 1.6; color: #374151;">
-            Best regards,<br>
-            <strong>Aswin</strong><br>
-            Software Engineer
-          </p>
-          
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-            <p style="color: #6b7280; font-size: 12px;">
-              This is an automated response. Please do not reply to this email directly.
-            </p>
-          </div>
-        </div>
-      `,
-      text: `
-        Hi ${name},
-        
-        Thank you for contacting me through my portfolio website. I have received your message and will get back to you as soon as possible, usually within 24-48 hours.
-        
-        Your message was submitted on: ${new Date().toLocaleString()}
-        
-        In the meantime, feel free to check out my work on GitHub (https://github.com/Aswin-coder) or connect with me on LinkedIn (https://www.linkedin.com/in/aswin4122001/).
-        
-        Best regards,
-        Aswin
-        Software Engineer
-        
-        ---
-        This is an automated response. Please do not reply to this email directly.
-      `,
-    };
+Thank you for reaching out to me through my portfolio website. I'm excited to hear from you!
 
-    // Send both emails
-    await Promise.all([transporter.sendMail(mailOptions), transporter.sendMail(autoReplyOptions)]);
+✅ Message Received
+I have received your message and will get back to you within 24-48 hours. I typically respond much sooner during business hours!
+
+💬 Your Message:
+${message}
+
+Sent on ${new Date().toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })}
+
+⏰ What's Next?
+- I'll review your message and respond with detailed information
+- If you have urgent questions, feel free to reach out directly
+- I'll provide relevant examples of my work if applicable
+
+📞 Need to reach me urgently?
+You can also contact me directly at: contact@aswinlocal.in
+
+🔗 Connect with me:
+- GitHub: https://github.com/Aswin-coder
+- LinkedIn: https://www.linkedin.com/in/aswin4122001/
+- Portfolio: https://www.aswinlocal.in
+
+Best regards,
+Aswin
+Software Engineer & Full-Stack Developer
+
+---
+This is an automated confirmation email from Aswin's portfolio website
+      `,
+    });
+
+    if (userError) {
+      console.error('Resend error (user email):', userError);
+      // Don't throw error for user email, just log it
+      console.log(
+        'Failed to send confirmation email to user, but admin email was sent successfully'
+      );
+    }
 
     console.log(
       `New contact form submission from ${name} (${email}) at ${new Date().toISOString()}`
@@ -576,10 +731,8 @@ process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 // Start server
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Portfolio backend server (with live chat) running on port ${PORT}`);
-  console.log(`📧 SMTP configured for: ${process.env.SMTP_USER || 'Not configured'}`);
-  console.log(`📧 SMTP Host: ${process.env.SMTP_HOST || 'Not configured'}`);
-  console.log(`📧 SMTP Port: ${process.env.SMTP_PORT || 'Not configured'}`);
+  console.log(`🚀 Portfolio backend server running on port ${PORT}`);
+  console.log(`📧 Email service: Resend API`);
   console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
   console.log(`🤖 Telegram Bot: ${telegramStatus}`);
   console.log(`⚡ Environment: ${process.env.NODE_ENV || 'development'}`);

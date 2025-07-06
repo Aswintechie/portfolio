@@ -118,29 +118,7 @@ jobs:
             echo "⚠️  TELEGRAM_ADMIN_CHAT_ID not found in GitHub secrets"
           fi
 
-          # Set SMTP User
-          if [ -n "${{ secrets.SMTP_USER }}" ]; then
-            echo "${{ secrets.SMTP_USER }}" | npx wrangler secret put SMTP_USER
-            echo "✅ SMTP_USER set"
-          else
-            echo "⚠️  SMTP_USER not found in GitHub secrets"
-          fi
 
-          # Set SMTP Password
-          if [ -n "${{ secrets.SMTP_PASS }}" ]; then
-            echo "${{ secrets.SMTP_PASS }}" | npx wrangler secret put SMTP_PASS
-            echo "✅ SMTP_PASS set"
-          else
-            echo "⚠️  SMTP_PASS not found in GitHub secrets"
-          fi
-
-          # Set SMTP Host
-          if [ -n "${{ secrets.SMTP_HOST }}" ]; then
-            echo "${{ secrets.SMTP_HOST }}" | npx wrangler secret put SMTP_HOST
-            echo "✅ SMTP_HOST set"
-          else
-            echo "⚠️  SMTP_HOST not found in GitHub secrets"
-          fi
 
           # Set Feedback Email
           if [ -n "${{ secrets.FEEDBACK_EMAIL }}" ]; then

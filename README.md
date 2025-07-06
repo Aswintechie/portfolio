@@ -104,7 +104,7 @@ The contact form uses MailChannels for sending emails:
 
 - **Notifications**: Sent to `contact@aswinlocal.in`
 - **Auto-replies**: Sent to form submitters
-- **No SMTP setup required**: Uses MailChannels API
+- **No SMTP setup required**: Uses Resend API
 
 ## 🌐 Live Website
 
