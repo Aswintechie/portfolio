@@ -24,7 +24,6 @@ import {
   Shield,
   Monitor,
   Search,
-  Star,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
@@ -731,92 +730,6 @@ const ProjectsSection = () => {
 };
 
 // Personal Projects Section Component
-const TestimonialsSection = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const testimonials = [
-    {
-      name: 'John Smith',
-      role: 'Senior Developer',
-      company: 'TechCorp',
-      content:
-        'Aswin is an exceptional developer with a keen eye for detail and a passion for creating high-quality solutions. His infrastructure knowledge is impressive.',
-      rating: 5,
-    },
-    {
-      name: 'Sarah Johnson',
-      role: 'Project Manager',
-      company: 'InnovateLab',
-      content:
-        'Working with Aswin was a great experience. He consistently delivered on time and went above and beyond to ensure project success.',
-      rating: 5,
-    },
-    {
-      name: 'Mike Chen',
-      role: 'DevOps Engineer',
-      company: 'CloudScale',
-      content:
-        "Aswin's understanding of server management and cloud infrastructure is outstanding. He's a valuable asset to any technical team.",
-      rating: 5,
-    },
-  ];
-
-  return (
-    <section id='testimonials' className='py-20 bg-gray-50'>
-      <div className='container-custom'>
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className='text-center mb-16'
-        >
-          <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>What People Say</h2>
-          <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-            Don't just take my word for it. Here's what colleagues and clients have to say about
-            working with me.
-          </p>
-        </motion.div>
-
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className='bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300'
-            >
-              <div className='flex items-center mb-4'>
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={16} className='text-yellow-400 fill-current' />
-                ))}
-              </div>
-
-              <p className='text-gray-600 mb-6 italic'>"{testimonial.content}"</p>
-
-              <div className='flex items-center'>
-                <div className='w-12 h-12 bg-gradient-to-r from-secondary-500 to-accent-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4'>
-                  {testimonial.name.charAt(0)}
-                </div>
-                <div>
-                  <h4 className='font-semibold text-gray-900'>{testimonial.name}</h4>
-                  <p className='text-sm text-gray-500'>
-                    {testimonial.role} at {testimonial.company}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
 const PersonalProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
