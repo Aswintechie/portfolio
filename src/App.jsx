@@ -87,15 +87,17 @@ const Navigation = () => {
       <div className='container-custom'>
         <div className='flex items-center justify-between h-16'>
           {/* Logo */}
-          <motion.div
+          <motion.a
+            href='#home'
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`text-2xl font-bold transition-colors duration-300 ${
+            className={`flex items-center space-x-2 text-xl font-bold transition-colors duration-300 hover:scale-105 ${
               scrolled ? 'text-primary-900' : 'text-white'
             }`}
           >
-            Aswin
-          </motion.div>
+            <Code size={24} className='text-secondary-500' />
+            <span>Portfolio</span>
+          </motion.a>
 
           {/* Desktop Navigation */}
           <div className='hidden md:flex items-center space-x-8'>
@@ -187,17 +189,44 @@ const HeroSection = () => {
       {/* Modern gradient background */}
       <div className='absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700'></div>
 
-      {/* Animated background elements */}
-      <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute top-1/4 left-1/4 w-64 h-64 bg-secondary-500/20 rounded-full blur-3xl animate-pulse'></div>
-        <div className='absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl animate-pulse animation-delay-400'></div>
-        <div className='absolute top-3/4 left-3/4 w-48 h-48 bg-secondary-400/15 rounded-full blur-2xl animate-pulse animation-delay-600'></div>
+      {/* Modern geometric pattern overlay */}
+      <div className='absolute inset-0 opacity-10'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(236,72,153,0.3)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.3)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(236,72,153,0.2)_0%,transparent_50%)]'></div>
       </div>
 
-      {/* Modern geometric shapes */}
+      {/* Floating geometric elements */}
       <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute top-20 right-20 w-32 h-32 border border-white/10 rounded-full animate-spin-slow'></div>
-        <div className='absolute bottom-20 left-20 w-24 h-24 border border-secondary-400/20 rounded-full animate-pulse-slow'></div>
+        {/* Top right accent */}
+        <div className='absolute top-10 right-10 w-32 h-32 bg-gradient-to-br from-secondary-500/20 to-accent-500/20 rounded-full blur-2xl animate-pulse'></div>
+
+        {/* Bottom left accent */}
+        <div className='absolute bottom-10 left-10 w-40 h-40 bg-gradient-to-tr from-accent-500/15 to-secondary-500/15 rounded-full blur-3xl animate-pulse animation-delay-400'></div>
+
+        {/* Center accent */}
+        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-secondary-400/5 to-accent-400/5 rounded-full blur-3xl animate-pulse animation-delay-600'></div>
+      </div>
+
+      {/* Modern gradient accents */}
+      <div className='absolute inset-0 overflow-hidden'>
+        {/* Top gradient bar */}
+        <div className='absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary-500/30 to-transparent'></div>
+
+        {/* Bottom gradient bar */}
+        <div className='absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-500/30 to-transparent'></div>
+
+        {/* Left gradient bar */}
+        <div className='absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-secondary-500/20 to-transparent'></div>
+
+        {/* Right gradient bar */}
+        <div className='absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-accent-500/20 to-transparent'></div>
+
+        {/* Diagonal gradient accent */}
+        <div className='absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary-500/10 via-transparent to-accent-500/10 transform rotate-12'></div>
+
+        {/* Corner accent */}
+        <div className='absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent-500/15 via-transparent to-secondary-500/15 transform -rotate-12'></div>
       </div>
 
       <div className='container-custom relative z-10'>
@@ -210,7 +239,7 @@ const HeroSection = () => {
             className='text-white text-center max-w-4xl'
           >
             <motion.h1
-              className='text-5xl lg:text-6xl font-bold mb-6 leading-tight'
+              className='text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -222,7 +251,7 @@ const HeroSection = () => {
             </motion.h1>
 
             <motion.p
-              className='text-xl lg:text-2xl mb-6 text-gray-200 font-medium'
+              className='text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-6 text-gray-200 font-medium'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -231,7 +260,7 @@ const HeroSection = () => {
             </motion.p>
 
             <motion.p
-              className='text-lg mb-8 text-gray-300 leading-relaxed max-w-2xl mx-auto'
+              className='text-base sm:text-lg mb-6 sm:mb-8 text-gray-300 leading-relaxed max-w-2xl mx-auto px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
@@ -243,33 +272,33 @@ const HeroSection = () => {
             </motion.p>
 
             <motion.div
-              className='flex flex-col sm:flex-row gap-4 mb-8 justify-center'
+              className='flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 justify-center px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <a href='#contact' className='btn btn-primary'>
+              <a href='#contact' className='btn btn-primary w-full sm:w-auto'>
                 Get In Touch
               </a>
-              <a href='#experience' className='btn btn-outline'>
+              <a href='#experience' className='btn btn-outline w-full sm:w-auto'>
                 View My Work
               </a>
             </motion.div>
 
             {/* Social Media Links */}
             <motion.div
-              className='flex flex-col sm:flex-row items-center gap-4 justify-center mb-16'
+              className='flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0 }}
             >
-              <span className='text-gray-300 text-sm'>Connect with me:</span>
-              <div className='flex items-center gap-4'>
+              <span className='text-gray-300 text-sm mb-2 sm:mb-0'>Connect with me:</span>
+              <div className='flex items-center gap-6 sm:gap-4'>
                 <a
                   href='https://www.linkedin.com/in/aswin4122001/'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform'
+                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform p-2'
                 >
                   <Linkedin size={20} />
                   <span className='text-sm'>LinkedIn</span>
@@ -278,7 +307,7 @@ const HeroSection = () => {
                   href='https://github.com/Aswin-coder'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform'
+                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform p-2'
                 >
                   <Github size={20} />
                   <span className='text-sm'>GitHub</span>
@@ -736,33 +765,35 @@ const ContactSection = () => {
           <p className='text-xl text-gray-600 max-w-3xl mx-auto'>Let's discuss your next project</p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-2 gap-16'>
+        <div className='grid lg:grid-cols-2 gap-8 lg:gap-16'>
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className='space-y-8'
+            className='space-y-6 lg:space-y-8 order-2 lg:order-1'
           >
             {contactInfo.map((item, index) => (
               <div
                 key={index}
-                className='flex items-start space-x-4 p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300'
+                className='flex items-start space-x-3 lg:space-x-4 p-4 lg:p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300'
               >
-                <div className='flex-shrink-0 w-12 h-12 bg-gradient-to-r from-secondary-500 to-accent-500 rounded-full flex items-center justify-center text-white'>
+                <div className='flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-secondary-500 to-accent-500 rounded-full flex items-center justify-center text-white'>
                   {item.icon}
                 </div>
                 <div>
-                  <h3 className='text-lg font-semibold text-gray-900 mb-1'>{item.title}</h3>
+                  <h3 className='text-base lg:text-lg font-semibold text-gray-900 mb-1'>
+                    {item.title}
+                  </h3>
                   {item.link ? (
                     <a
                       href={item.link}
-                      className='text-gray-600 hover:text-secondary-600 transition-colors duration-200'
+                      className='text-gray-600 hover:text-secondary-600 transition-colors duration-200 text-sm lg:text-base'
                     >
                       {item.content}
                     </a>
                   ) : (
-                    <p className='text-gray-600'>{item.content}</p>
+                    <p className='text-gray-600 text-sm lg:text-base'>{item.content}</p>
                   )}
                 </div>
               </div>
@@ -774,7 +805,7 @@ const ContactSection = () => {
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className='card p-8'
+            className='card p-6 lg:p-8 order-1 lg:order-2'
           >
             <form onSubmit={handleSubmit} className='space-y-6'>
               {/* Status Messages */}
@@ -824,7 +855,7 @@ const ContactSection = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder='Your Name'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-base'
                   required
                   disabled={isSubmitting}
                 />
@@ -836,7 +867,7 @@ const ContactSection = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder='Your Email'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-base'
                   required
                   disabled={isSubmitting}
                 />
@@ -847,8 +878,8 @@ const ContactSection = () => {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder='Your Message'
-                  rows={5}
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed'
+                  rows={4}
+                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed text-base'
                   required
                   disabled={isSubmitting}
                 ></textarea>

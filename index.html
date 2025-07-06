@@ -81,6 +81,51 @@
         opacity: 0;
         pointer-events: none;
       }
+
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        #openChat {
+          width: 60px !important;
+          height: 60px !important;
+          bottom: 16px !important;
+          right: 16px !important;
+          font-size: 22px !important;
+        }
+
+        #chatModal {
+          bottom: 80px !important;
+          right: 16px !important;
+          left: 16px !important;
+          width: auto !important;
+          height: 60vh !important;
+          max-width: none !important;
+          max-height: none !important;
+        }
+
+        /* Prevent zoom on input focus */
+        input,
+        textarea,
+        select {
+          font-size: 16px !important;
+        }
+
+        /* Better touch targets */
+        button,
+        a {
+          min-height: 44px;
+          min-width: 44px;
+        }
+      }
+
+      /* Prevent horizontal scroll on mobile */
+      body {
+        overflow-x: hidden;
+      }
+
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
     </style>
   </head>
   <body>
@@ -99,14 +144,14 @@
         bottom: 20px;
         right: 20px;
         z-index: 9999;
-        width: 48px;
-        height: 48px;
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: #fff;
         border: none;
         box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-        font-size: 18px;
+        font-size: 20px;
         cursor: pointer;
         transition: all 0.3s ease;
         opacity: 0;
@@ -114,6 +159,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        touch-action: manipulation;
       "
     >
       💬
@@ -149,6 +195,8 @@
         border-radius: 8px;
         box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
         overflow: hidden;
+        max-width: calc(100vw - 48px);
+        max-height: calc(100vh - 120px);
       "
     >
       <iframe
