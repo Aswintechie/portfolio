@@ -150,3 +150,67 @@
   opacity: 1;
   transform: translateX(0);
 }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .section-padding {
+    @apply py-12 lg:py-20;
+  }
+
+  .container-custom {
+    @apply px-4;
+  }
+
+  /* Better touch targets for mobile */
+  .btn {
+    @apply min-h-[44px] min-w-[44px] px-4 py-3;
+  }
+
+  /* Optimize text sizes for mobile */
+  h1 {
+    @apply text-3xl lg:text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl lg:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl lg:text-2xl;
+  }
+
+  /* Improve spacing for mobile */
+  .card {
+    @apply p-4 lg:p-6;
+  }
+
+  /* Better mobile navigation */
+  .mobile-nav {
+    @apply fixed inset-0 bg-white z-50;
+  }
+
+  /* Optimize animations for mobile performance */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Prevent zoom on input focus for iOS */
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Better mobile scrolling */
+@media (max-width: 768px) {
+  html {
+    scroll-padding-top: 80px;
+  }
+}
