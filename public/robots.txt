@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.aswinlocal.in/sitemap.xml
+
+# Disallow admin and API endpoints
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+
+# Allow important files
+Allow: /favicon.svg
+Allow: /sitemap.xml
+Allow: /robots.txt
+
+# Crawl delay (optional)
+Crawl-delay: 1 

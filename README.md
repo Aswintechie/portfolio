@@ -9,8 +9,17 @@ A modern, responsive portfolio website built with React, Vite, and Tailwind CSS.
 - **Smooth Animations**: Powered by Framer Motion
 - **Contact Form**: Working contact form with email notifications
 - **Professional Email**: Auto-replies and notification system
+- **SEO Optimized**: Sitemap, robots.txt, and structured data
+- **Security Headers**: Content Security Policy and security headers
+- **Privacy Policy**: Dedicated privacy policy page at `/privacy`
 - **Fast Loading**: Deployed on Cloudflare Workers edge network
 - **Custom Domain**: Live at [www.aswinlocal.in](https://www.aswinlocal.in)
+- **Accessibility**: ARIA labels, keyboard navigation, and screen reader support
+- **Search Functionality**: Global search with keyboard shortcuts (Cmd/Ctrl + K)
+- **Error Handling**: React Error Boundary for graceful error handling
+- **Custom 404 Page**: Beautiful error page with helpful navigation
+- **Loading States**: Smooth loading animations and transitions
+- **Bundle Analysis**: Tools for performance optimization
 
 ## 🛠️ Technology Stack
 
