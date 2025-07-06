@@ -13,11 +13,5 @@ zone_name = "aswinlocal.in"
 pattern = "www.aswinlocal.in/*"
 zone_name = "aswinlocal.in"
 
-[assets]
-directory = "./dist"
-binding = "ASSETS"
-
-# Serve sitemap and robots.txt
-[[assets]]
-bucket = "./public"
-binding = "PUBLIC_ASSETS" 
+[site]
+bucket = "./build"
