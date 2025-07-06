@@ -105,6 +105,101 @@
       });
     </script>
 
+    <!-- React App -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Floating Chat Button -->
+    <button
+      id="openChat"
+      style="
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        padding: 16px 24px;
+        border-radius: 50%;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        font-size: 24px;
+        cursor: pointer;
+      "
+    >
+      💬
+    </button>
+
+    <!-- Chat Modal Overlay -->
+    <div
+      id="chatModalOverlay"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      "
+    ></div>
+
+    <!-- Chat Modal -->
+    <div
+      id="chatModal"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 80px;
+        right: 24px;
+        width: 400px;
+        height: 500px;
+        z-index: 10000;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      "
+    >
+      <iframe
+        src="https://chat.aswinlocal.in/"
+        style="width: 100%; height: 100%; border: none"
+      ></iframe>
+    </div>
+
+    <script>
+      const openChatBtn = document.getElementById('openChat');
+      const chatModal = document.getElementById('chatModal');
+      const chatModalOverlay = document.getElementById('chatModalOverlay');
+
+      function openChat() {
+        chatModalOverlay.style.display = 'block';
+        chatModal.style.display = 'block';
+      }
+
+      function closeChat() {
+        chatModalOverlay.style.display = 'none';
+        chatModal.style.display = 'none';
+      }
+
+      openChatBtn.onclick = function (e) {
+        e.stopPropagation();
+        openChat();
+      };
+
+      // Close when clicking on the overlay
+      chatModalOverlay.onclick = function (e) {
+        if (e.target === chatModalOverlay) {
+          closeChat();
+        }
+      };
+
+      // Close when pressing Escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && chatModal.style.display === 'block') {
+          closeChat();
+        }
+      });
+    </script>
   </body>
 </html>

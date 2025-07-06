@@ -1,0 +1,20 @@
+{
+  "name": "portfolio-preview-backend",
+  "version": "1.0.0",
+  "description": "Preview backend for portfolio live chat",
+  "main": "preview-backend.js",
+  "type": "module",
+  "scripts": {
+    "start": "node preview-backend.js",
+    "dev": "node preview-backend.js"
+  },
+  "keywords": ["portfolio", "live-chat", "socket.io", "preview"],
+  "author": "Aswin",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "socket.io": "^4.8.1"
+  }
+}
