@@ -466,6 +466,16 @@ export default {
           headers.set(key, value);
         }
 
+        // For HEAD requests, return only headers and status (no body)
+        if (request.method === 'HEAD') {
+          return new Response(null, {
+            status: response.status,
+            statusText: response.statusText,
+            headers,
+          });
+        }
+
+        // For GET requests, return the full response with body
         return new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
