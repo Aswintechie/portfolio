@@ -1,7 +1,7 @@
 // Security headers configuration
 const SECURITY_HEADERS = {
   'Content-Security-Policy':
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:;",
+    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:;",
   'X-Frame-Options': 'DENY',
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
@@ -251,6 +251,102 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', en
   }
 }
 
+// Helper function to add CORS headers to response
+function addCorsHeaders(response, methods = 'GET, POST, OPTIONS') {
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', methods);
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  return response;
+}
+
+// Helper function to handle API routes
+async function handleApiRoutes(pathname, request, env) {
+  if (pathname === '/api/contact' && request.method === 'POST') {
+    const response = await handleContactForm(request, env);
+    return addCorsHeaders(response, 'POST, OPTIONS');
+  }
+
+  if (pathname === '/api/health' && request.method === 'GET') {
+    const response = new Response(
+      JSON.stringify({
+        status: 'OK',
+        message: 'Portfolio backend is running on Cloudflare Workers',
+        timestamp: new Date().toISOString(),
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      }
+    );
+    return response;
+  }
+
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age': '86400',
+      },
+    });
+  }
+
+  return null; // Not an API route
+}
+
+// Helper function to serve static assets
+async function serveStaticAssets(request, env) {
+  try {
+    const asset = await env.ASSETS.fetch(request);
+    if (asset.status !== 404) {
+      return asset;
+    }
+  } catch (error) {
+    console.error('Error fetching asset:', error);
+    return new Response('Internal Server Error', { status: 500 });
+  }
+  return null; // Asset not found
+}
+
+// Helper function to serve SPA with security headers
+async function serveSpa(request, env) {
+  const rootRequest = new Request(new URL('/', request.url).toString(), request);
+  const response = await env.ASSETS.fetch(rootRequest);
+
+  if (response.status === 200) {
+    // Add security headers for HTML responses
+    const headers = new Headers(response.headers);
+    for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+      headers.set(key, value);
+    }
+
+    // For HEAD requests, return only headers and status (no body)
+    if (request.method === 'HEAD') {
+      return new Response(null, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+
+    // For GET requests, return the full response with body
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  }
+
+  return null; // SPA not found
+}
+
 // Handle contact form submission
 async function handleContactForm(request, env) {
   try {
@@ -400,89 +496,29 @@ export default {
     const url = new URL(request.url);
     const pathname = url.pathname;
 
-    // 1. API routes
+    // 1. Handle API routes
     if (pathname.startsWith('/api/')) {
-      if (pathname === '/api/contact' && request.method === 'POST') {
-        const response = await handleContactForm(request, env);
-        response.headers.set('Access-Control-Allow-Origin', '*');
-        response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-        response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-        return response;
-      }
-      if (pathname === '/api/health' && request.method === 'GET') {
-        return new Response(
-          JSON.stringify({
-            status: 'OK',
-            message: 'Portfolio backend is running on Cloudflare Workers',
-            timestamp: new Date().toISOString(),
-          }),
-          {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'GET, OPTIONS',
-              'Access-Control-Allow-Headers': 'Content-Type',
-            },
-          }
-        );
-      }
-      if (request.method === 'OPTIONS') {
-        return new Response(null, {
-          status: 200,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Max-Age': '86400',
-          },
-        });
+      const apiResponse = await handleApiRoutes(pathname, request, env);
+      if (apiResponse) {
+        return apiResponse;
       }
       // Not found in API
       return new Response('Not Found', { status: 404 });
     }
 
-    // 2. Try to serve static asset first
-    let asset;
-    try {
-      asset = await env.ASSETS.fetch(request);
-      if (asset.status !== 404) {
-        return asset;
-      }
-    } catch (error) {
-      console.error('Error fetching asset:', error);
-      return new Response('Internal Server Error', { status: 500 });
+    // 2. Try to serve static assets
+    const assetResponse = await serveStaticAssets(request, env);
+    if (assetResponse) {
+      return assetResponse;
     }
 
-    // 3. For all other GET/HEAD requests, serve index.html (SPA routing)
+    // 3. For GET/HEAD requests, serve SPA with security headers
     if (request.method === 'GET' || request.method === 'HEAD') {
-      // Serve the root path which will give us the SPA
-      const rootRequest = new Request(new URL('/', request.url).toString(), request);
-      const response = await env.ASSETS.fetch(rootRequest);
-      if (response.status === 200) {
-        // Add security headers for HTML responses
-        const headers = new Headers(response.headers);
-        for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
-          headers.set(key, value);
-        }
-
-        // For HEAD requests, return only headers and status (no body)
-        if (request.method === 'HEAD') {
-          return new Response(null, {
-            status: response.status,
-            statusText: response.statusText,
-            headers,
-          });
-        }
-
-        // For GET requests, return the full response with body
-        return new Response(response.body, {
-          status: response.status,
-          statusText: response.statusText,
-          headers,
-        });
+      const spaResponse = await serveSpa(request, env);
+      if (spaResponse) {
+        return spaResponse;
       }
-      // If root path fails, return a 404 error
+      // If SPA not found, return 404
       return new Response('Not Found', { status: 404 });
     }
 
