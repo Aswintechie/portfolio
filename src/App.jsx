@@ -24,11 +24,7 @@ import {
   Shield,
   Monitor,
   Search,
-  Globe,
-  Smartphone,
   Wifi,
-  Lock,
-  Terminal,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
