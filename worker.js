@@ -388,81 +388,66 @@ async function handleContactForm(request, env) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    const pathname = url.pathname;
 
-    // Handle API routes
-    if (url.pathname === '/api/contact' && request.method === 'POST') {
-      const response = await handleContactForm(request, env);
-      response.headers.set('Access-Control-Allow-Origin', '*');
-      response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-      response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-      return response;
-    }
-
-    if (url.pathname === '/api/health' && request.method === 'GET') {
-      return new Response(
-        JSON.stringify({
-          status: 'OK',
-          message: 'Portfolio backend is running on Cloudflare Workers',
-          timestamp: new Date().toISOString(),
-        }),
-        {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      );
-    }
-
-    // Handle CORS preflight requests
-    if (request.method === 'OPTIONS') {
-      return new Response(null, {
-        status: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
-      });
-    }
-
-    // Serve static assets using Workers Assets
-    try {
-      const asset = await env.ASSETS.fetch(request);
-
-      if (asset.status === 404) {
-        // For SPA routing, serve index.html for non-API routes
-        const indexRequest = new Request(new URL('/index.html', request.url).toString(), request);
-        const response = await env.ASSETS.fetch(indexRequest);
-
-        // Add security headers for HTML responses
-        if (response.headers.get('content-type')?.includes('text/html')) {
-          const newResponse = new Response(response.body, response);
-          newResponse.headers.set(
-            'Content-Security-Policy',
-            "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com; frame-src 'self' https://chat.aswinlocal.in;"
-          );
-          newResponse.headers.set('X-Content-Type-Options', 'nosniff');
-          newResponse.headers.set('X-Frame-Options', 'DENY');
-          newResponse.headers.set('X-XSS-Protection', '1; mode=block');
-          newResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-          return newResponse;
-        }
-
+    // 1. API routes
+    if (pathname.startsWith('/api/')) {
+      if (pathname === '/api/contact' && request.method === 'POST') {
+        const response = await handleContactForm(request, env);
+        response.headers.set('Access-Control-Allow-Origin', '*');
+        response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+        response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
         return response;
       }
-
-      // Add security headers for all responses
-      const newResponse = new Response(asset.body, asset);
-      newResponse.headers.set('X-Content-Type-Options', 'nosniff');
-      newResponse.headers.set('X-Frame-Options', 'DENY');
-      newResponse.headers.set('X-XSS-Protection', '1; mode=block');
-      newResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-      return newResponse;
-    } catch (e) {
-      return new Response('Asset not found', { status: 404 });
+      if (pathname === '/api/health' && request.method === 'GET') {
+        return new Response(
+          JSON.stringify({
+            status: 'OK',
+            message: 'Portfolio backend is running on Cloudflare Workers',
+            timestamp: new Date().toISOString(),
+          }),
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+            },
+          }
+        );
+      }
+      if (request.method === 'OPTIONS') {
+        return new Response(null, {
+          status: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+          },
+        });
+      }
+      // Not found in API
+      return new Response('Not Found', { status: 404 });
     }
+
+    // 2. Try to serve static asset first
+    const asset = await env.ASSETS.fetch(request);
+    if (asset.status !== 404) {
+      return asset;
+    }
+
+    // 3. For all other GET/HEAD requests, serve index.html (SPA routing)
+    if (request.method === 'GET' || request.method === 'HEAD') {
+      // Serve the root path which will give us the SPA
+      const rootRequest = new Request(new URL('/', request.url).toString(), request);
+      const response = await env.ASSETS.fetch(rootRequest);
+      if (response.status === 200) {
+        return new Response(response.body, response);
+      }
+      // If root path fails, return a 404 error
+      return new Response('Not Found', { status: 404 });
+    }
+
+    // 4. All other requests: 404
+    return new Response('Not Found', { status: 404 });
   },
 };
