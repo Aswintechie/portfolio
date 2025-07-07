@@ -50,7 +50,7 @@ jobs:
         run: npm run security:check
 
       - name: 🏗️ Test build
-        run: npm run build
+        run: npm run build:deploy
 
       - name: 📈 Upload test coverage
         uses: actions/upload-artifact@v4
@@ -84,11 +84,11 @@ jobs:
       - name: 📋 Install dependencies
         run: npm install
 
-      - name: 🏗️ Build React portfolio
-        run: npm run build
+      - name: 🏗️ Build and prepare deployment assets
+        run: npm run build:deploy
 
       - name: 🧹 Remove _redirects file (if exists)
-        run: rm -f dist/_redirects
+        run: rm -f build/_redirects
 
       - name: 🚀 Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
