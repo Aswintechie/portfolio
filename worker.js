@@ -1,3 +1,13 @@
+// Security headers configuration
+const SECURITY_HEADERS = {
+  'Content-Security-Policy':
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:;",
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+};
+
 // Email validation function
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -411,6 +421,8 @@ export default {
             headers: {
               'Content-Type': 'application/json',
               'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET, OPTIONS',
+              'Access-Control-Allow-Headers': 'Content-Type',
             },
           }
         );
@@ -431,9 +443,15 @@ export default {
     }
 
     // 2. Try to serve static asset first
-    const asset = await env.ASSETS.fetch(request);
-    if (asset.status !== 404) {
-      return asset;
+    let asset;
+    try {
+      asset = await env.ASSETS.fetch(request);
+      if (asset.status !== 404) {
+        return asset;
+      }
+    } catch (error) {
+      console.error('Error fetching asset:', error);
+      return new Response('Internal Server Error', { status: 500 });
     }
 
     // 3. For all other GET/HEAD requests, serve index.html (SPA routing)
@@ -443,21 +461,16 @@ export default {
       const response = await env.ASSETS.fetch(rootRequest);
       if (response.status === 200) {
         // Add security headers for HTML responses
-        const securityHeaders = {
-          'Content-Security-Policy':
-            "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:;",
-          'X-Frame-Options': 'DENY',
-          'X-Content-Type-Options': 'nosniff',
-          'Referrer-Policy': 'strict-origin-when-cross-origin',
-          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-        };
-
         const headers = new Headers(response.headers);
-        for (const [key, value] of Object.entries(securityHeaders)) {
+        for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
           headers.set(key, value);
         }
 
-        return new Response(response.body, { ...response, headers });
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers,
+        });
       }
       // If root path fails, return a 404 error
       return new Response('Not Found', { status: 404 });
