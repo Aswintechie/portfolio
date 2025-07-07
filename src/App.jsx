@@ -24,6 +24,7 @@ import {
   Shield,
   Monitor,
   Search,
+  Wifi,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
@@ -103,6 +104,7 @@ const Navigation = React.memo(function Navigation() {
     { name: 'Skills', href: '#skills' },
     { name: 'Projects', href: '#projects' },
     { name: 'Infrastructure', href: '#personal-projects' },
+    { name: 'Technologies', href: '#technologies' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -966,6 +968,134 @@ const PersonalProjectsSection = () => {
   );
 };
 
+// Technologies & Platforms Section Component
+const TechnologiesSection = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const technologies = [
+    {
+      category: 'Cloud Platforms',
+      icon: Cloud,
+      items: [
+        { name: 'Microsoft Azure', description: 'Cloud computing services and solutions' },
+        { name: 'Cloudflare', description: 'CDN, DNS, and edge computing platform' },
+        { name: 'Vercel', description: 'Frontend deployment and hosting platform' },
+        { name: 'Koyeb', description: 'Serverless deployment platform' },
+      ],
+    },
+    {
+      category: 'Operating Systems',
+      icon: Monitor,
+      items: [
+        { name: 'Ubuntu', description: 'Linux server administration and development' },
+        { name: 'Windows', description: 'Desktop and server environments' },
+        { name: 'macOS', description: 'Apple ecosystem development and administration' },
+        { name: 'Android', description: 'Mobile development and customization' },
+      ],
+    },
+    {
+      category: 'Networking & Security',
+      icon: Wifi,
+      items: [
+        { name: 'Tailscale', description: 'Zero-config VPN and mesh networking' },
+        { name: 'VPN', description: 'Virtual Private Network setup and management' },
+        { name: 'OpenWrt', description: 'Open-source router firmware and networking' },
+        { name: 'Network Administration', description: 'Network infrastructure and protocols' },
+      ],
+    },
+    {
+      category: 'Infrastructure',
+      icon: Server,
+      items: [
+        { name: 'VPS Management', description: 'Virtual Private Server setup and maintenance' },
+        { name: 'Server Administration', description: 'Server deployment and management' },
+        { name: 'Infrastructure as Code', description: 'Automated infrastructure deployment' },
+        { name: 'DevOps Practices', description: 'CI/CD and deployment automation' },
+      ],
+    },
+  ];
+
+  return (
+    <section id='technologies' className='py-20 bg-gray-50'>
+      <div className='container-custom'>
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className='text-center mb-16'
+        >
+          <h2 className='text-4xl md:text-5xl font-bold text-primary-900 mb-6'>
+            Technologies & Platforms
+          </h2>
+          <p className='text-xl text-primary-700 max-w-3xl mx-auto'>
+            Comprehensive experience across cloud platforms, operating systems, networking, and
+            infrastructure technologies.
+          </p>
+        </motion.div>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+          {technologies.map((category, categoryIndex) => {
+            const IconComponent = category.icon;
+            return (
+              <motion.div
+                key={category.category}
+                initial={{ opacity: 0, y: 30 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+                className='bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 border border-gray-100'
+              >
+                <h3 className='text-2xl font-bold text-primary-900 mb-6 flex items-center'>
+                  <IconComponent className='w-8 h-8 text-secondary-500 mr-3' />
+                  {category.category}
+                </h3>
+
+                <div className='space-y-4'>
+                  {category.items.map((item, itemIndex) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={inView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.4, delay: categoryIndex * 0.1 + itemIndex * 0.05 }}
+                      className='flex items-start space-x-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200'
+                    >
+                      <div className='flex-shrink-0 w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center'>
+                        <IconComponent className='w-5 h-5 text-secondary-600' />
+                      </div>
+                      <div className='flex-1'>
+                        <h4 className='font-semibold text-primary-900 mb-1'>{item.name}</h4>
+                        <p className='text-sm text-primary-600'>{item.description}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className='text-center mt-12'
+        >
+          <div className='bg-gradient-to-r from-secondary-500 to-accent-500 p-8 rounded-2xl text-white'>
+            <h3 className='text-2xl font-bold mb-4'>Continuous Learning</h3>
+            <p className='text-lg opacity-90 max-w-2xl mx-auto'>
+              I'm constantly exploring new technologies and platforms to stay current with industry
+              trends and expand my technical capabilities across different domains.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 // Contact Section Component
 const ContactSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -1324,6 +1454,7 @@ const App = () => {
               <SkillsSection />
               <ProjectsSection />
               <PersonalProjectsSection />
+              <TechnologiesSection />
               <ContactSection />
               <Footer />
             </div>
