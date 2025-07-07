@@ -422,6 +422,7 @@ export default {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '86400',
           },
         });
       }
@@ -441,7 +442,22 @@ export default {
       const rootRequest = new Request(new URL('/', request.url).toString(), request);
       const response = await env.ASSETS.fetch(rootRequest);
       if (response.status === 200) {
-        return new Response(response.body, response);
+        // Add security headers for HTML responses
+        const securityHeaders = {
+          'Content-Security-Policy':
+            "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https:;",
+          'X-Frame-Options': 'DENY',
+          'X-Content-Type-Options': 'nosniff',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+        };
+
+        const headers = new Headers(response.headers);
+        for (const [key, value] of Object.entries(securityHeaders)) {
+          headers.set(key, value);
+        }
+
+        return new Response(response.body, { ...response, headers });
       }
       // If root path fails, return a 404 error
       return new Response('Not Found', { status: 404 });
