@@ -384,8 +384,6 @@ async function handleContactForm(request, env) {
   }
 }
 
-import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
-
 // Main worker event handler
 export default {
   async fetch(request, env, ctx) {
@@ -429,52 +427,42 @@ export default {
       });
     }
 
-    // Serve static assets using getAssetFromKV
+    // Serve static assets using Workers Assets
     try {
-      const response = await getAssetFromKV({ request, waitUntil: ctx.waitUntil });
+      const asset = await env.ASSETS.fetch(request);
+
+      if (asset.status === 404) {
+        // For SPA routing, serve index.html for non-API routes
+        const indexRequest = new Request(new URL('/index.html', request.url).toString(), request);
+        const response = await env.ASSETS.fetch(indexRequest);
+
+        // Add security headers for HTML responses
+        if (response.headers.get('content-type')?.includes('text/html')) {
+          const newResponse = new Response(response.body, response);
+          newResponse.headers.set(
+            'Content-Security-Policy',
+            "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com; frame-src 'self' https://chat.aswinlocal.in;"
+          );
+          newResponse.headers.set('X-Content-Type-Options', 'nosniff');
+          newResponse.headers.set('X-Frame-Options', 'DENY');
+          newResponse.headers.set('X-XSS-Protection', '1; mode=block');
+          newResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+          return newResponse;
+        }
+
+        return response;
+      }
 
       // Add security headers for all responses
-      const newResponse = new Response(response.body, response);
+      const newResponse = new Response(asset.body, asset);
       newResponse.headers.set('X-Content-Type-Options', 'nosniff');
       newResponse.headers.set('X-Frame-Options', 'DENY');
       newResponse.headers.set('X-XSS-Protection', '1; mode=block');
       newResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-      // Add CSP headers for HTML responses
-      if (response.headers.get('content-type')?.includes('text/html')) {
-        newResponse.headers.set(
-          'Content-Security-Policy',
-          "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com; frame-src 'self' https://chat.aswinlocal.in;"
-        );
-      }
-
       return newResponse;
     } catch (e) {
-      // For SPA routing, try serving index.html for non-API routes
-      if (!url.pathname.startsWith('/api/')) {
-        try {
-          const indexRequest = new Request(new URL('/index.html', request.url).toString(), request);
-          const response = await getAssetFromKV({
-            request: indexRequest,
-            waitUntil: ctx.waitUntil,
-          });
-
-          const newResponse = new Response(response.body, response);
-          newResponse.headers.set('X-Content-Type-Options', 'nosniff');
-          newResponse.headers.set('X-Frame-Options', 'DENY');
-          newResponse.headers.set('X-XSS-Protection', '1; mode=block');
-          newResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-          newResponse.headers.set(
-            'Content-Security-Policy',
-            "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com; frame-src 'self' https://chat.aswinlocal.in;"
-          );
-          return newResponse;
-        } catch {
-          return new Response('Not found', { status: 404 });
-        }
-      }
-
-      return new Response('Not found', { status: 404 });
+      return new Response('Asset not found', { status: 404 });
     }
   },
 };

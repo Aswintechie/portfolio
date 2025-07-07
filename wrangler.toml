@@ -13,5 +13,6 @@ zone_name = "aswinlocal.in"
 pattern = "www.aswinlocal.in/*"
 zone_name = "aswinlocal.in"
 
-[site]
-bucket = "./build"
+[assets]
+directory = "./build"
+binding = "ASSETS"
