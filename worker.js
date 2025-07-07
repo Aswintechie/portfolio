@@ -306,7 +306,33 @@ async function serveStaticAssets(request, env) {
   try {
     const asset = await env.ASSETS.fetch(request);
     if (asset.status !== 404) {
-      return asset;
+      // Add security headers to static assets
+      const headers = new Headers(asset.headers);
+
+      // Apply security headers based on content type
+      const contentType = headers.get('content-type') || '';
+
+      if (
+        contentType.includes('text/html') ||
+        contentType.includes('application/javascript') ||
+        contentType.includes('text/css')
+      ) {
+        // Apply full security headers for HTML, JS, and CSS files
+        for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+          headers.set(key, value);
+        }
+      } else {
+        // Apply basic security headers for other assets (images, fonts, etc.)
+        headers.set('X-Content-Type-Options', 'nosniff');
+        headers.set('X-Frame-Options', 'DENY');
+        headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+      }
+
+      return new Response(asset.body, {
+        status: asset.status,
+        statusText: asset.statusText,
+        headers,
+      });
     }
   } catch (error) {
     console.error('Error fetching asset:', error);
