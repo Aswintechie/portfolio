@@ -63,6 +63,7 @@ ExperienceEntry.propTypes = {
 
 ExperienceEntry.defaultProps = {
   delay: 0.1,
+  inView: false,
 };
 
 export default ExperienceEntry;
