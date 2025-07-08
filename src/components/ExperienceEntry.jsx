@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 
 // Experience Entry Component
 const ExperienceEntry = ({
@@ -47,5 +48,21 @@ const ExperienceEntry = ({
     </div>
   </motion.div>
 );
+
+// PropTypes for type safety
+ExperienceEntry.propTypes = {
+  period: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  company: PropTypes.string.isRequired,
+  logo: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  experience: PropTypes.string.isRequired,
+  inView: PropTypes.bool,
+  delay: PropTypes.number,
+};
+
+ExperienceEntry.defaultProps = {
+  delay: 0.1,
+};
 
 export default ExperienceEntry;
