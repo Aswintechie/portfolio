@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useId } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -17,7 +17,6 @@ import {
   GitPullRequest,
   Zap,
   Code,
-  Brain,
   ChevronDown,
   Server,
   Database,
@@ -31,6 +30,7 @@ import PrivacyPolicy from './components/PrivacyPolicy.jsx';
 import NotFound from './components/NotFound.jsx';
 import ExperienceEntry from './components/ExperienceEntry.jsx';
 import { getExperienceData } from './data/experienceData.js';
+import { featuredProjects, allProjects } from './data/projects.jsx';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -594,31 +594,15 @@ const SkillsSection = () => {
 const ProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  const projects = [
-    {
-      title: 'PR Reviewer',
-      domain: 'pr-reviewer.aswinlocal.in',
-      description:
-        'ML-trained application that intelligently analyzes pull requests to determine the minimum person approval required for merging. Features prediction algorithms to identify reviewers who will approve faster, optimizing development workflows.',
-      technologies: ['Machine Learning', 'Python', 'React', 'Node.js', 'Cloud'],
-      features: [
-        'Intelligent PR analysis',
-        'Approval prediction algorithms',
-        'Fast reviewer identification',
-        'Development workflow optimization',
-        'Real-time PR insights',
-      ],
-      icon: <Brain size={48} />,
-      link: 'https://pr-reviewer.aswinlocal.in',
-      status: 'Live',
-    },
-  ];
+  const [showMoreProjects, setShowMoreProjects] = useState(false);
+
+  const id = useId();
+  const projectsSectionListId = `projects-list-${id}`;
 
   return (
-    <section id='projects' className='section-padding bg-gray-50'>
+    <section id='projects' className='section-padding bg-gray-50' ref={ref}>
       <div className='container-custom'>
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
@@ -630,10 +614,10 @@ const ProjectsSection = () => {
           </p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-1 gap-8'>
-          {projects.map((project, index) => (
+        <div className='grid lg:grid-cols-1 gap-8' id={projectsSectionListId}>
+          {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
             <motion.div
-              key={index}
+              key={project.id}
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
@@ -714,6 +698,27 @@ const ProjectsSection = () => {
             </motion.div>
           ))}
         </div>
+        {/* View More/Less Projects Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className='text-center mt-8'
+        >
+          <button
+            type='button'
+            onClick={() => setShowMoreProjects(!showMoreProjects)}
+            aria-expanded={showMoreProjects}
+            aria-controls={projectsSectionListId}
+            className='inline-flex items-center gap-1 text-secondary-600 underline cursor-pointer text-base font-medium hover:text-accent-600 transition-colors duration-200 select-none bg-transparent border-0 p-0 shadow-none'
+          >
+            {showMoreProjects ? 'View Less Projects' : 'View More Projects'}
+            <ChevronDown
+              className={`h-4 w-4 transition-transform duration-200 ${showMoreProjects ? 'rotate-180' : ''}`}
+              aria-hidden='true'
+            />
+          </button>
+        </motion.div>
       </div>
     </section>
   );
