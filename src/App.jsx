@@ -761,14 +761,25 @@ const ProjectsSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className='text-center mt-12'
+            className='text-center mt-8'
           >
             <button
+              type='button'
               onClick={() => setShowMoreProjects(true)}
-              className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-xl hover:from-secondary-600 hover:to-accent-600 transition-all duration-300 transform hover:scale-105 font-medium text-lg shadow-lg hover:shadow-xl'
+              className='inline-flex items-center gap-1 text-secondary-600 underline cursor-pointer text-base font-medium hover:text-accent-600 transition-colors duration-200 select-none bg-transparent border-0 p-0 shadow-none'
+              style={{ userSelect: 'none' }}
             >
-              <ExternalLink size={20} className='mr-2' />
               View More Projects
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-4 w-4 transition-transform duration-200'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+                strokeWidth={2}
+              >
+                <path strokeLinecap='round' strokeLinejoin='round' d='M19 9l-7 7-7-7' />
+              </svg>
             </button>
           </motion.div>
         )}
