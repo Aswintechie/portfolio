@@ -31,7 +31,7 @@ import PrivacyPolicy from './components/PrivacyPolicy.jsx';
 import NotFound from './components/NotFound.jsx';
 import ExperienceEntry from './components/ExperienceEntry.jsx';
 import { getExperienceData } from './data/experienceData.js';
-import { featuredProjects, additionalProjects, allProjects } from './data/projects.js';
+import { featuredProjects, allProjects } from './data/projects.js';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
