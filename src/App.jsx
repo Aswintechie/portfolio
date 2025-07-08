@@ -596,13 +596,12 @@ const ProjectsSection = () => {
 
   const [showMoreProjects, setShowMoreProjects] = useState(false);
 
-  const projectsSectionListId = useId();
+  const projectsSectionListId = `projects-list-${useId()}`;
 
   return (
     <section id='projects' className='section-padding bg-gray-50' ref={ref}>
       <div className='container-custom'>
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
