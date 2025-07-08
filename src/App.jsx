@@ -531,7 +531,7 @@ const ExperienceSection = () => {
             ></div>
 
             {/* Experience Entries */}
-            {experienceData.map((entry, index) => (
+            {experienceData.map(entry => (
               <ExperienceEntry
                 key={`${entry.company}-${entry.period}`}
                 {...entry}
