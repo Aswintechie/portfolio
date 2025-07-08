@@ -596,7 +596,8 @@ const ProjectsSection = () => {
 
   const [showMoreProjects, setShowMoreProjects] = useState(false);
 
-  const projectsSectionListId = `projects-list-${useId()}`;
+  const id = useId();
+  const projectsSectionListId = `projects-list-${id}`;
 
   return (
     <section id='projects' className='section-padding bg-gray-50' ref={ref}>
