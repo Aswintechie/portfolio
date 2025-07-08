@@ -1356,7 +1356,7 @@ const Footer = () => {
                 Privacy Policy
               </a>
               <a
-                href='https://github.com/Aswin-coder/portfolio'
+                href='https://github.com/Aswintechie/portfolio'
                 target='_blank'
                 rel='noopener noreferrer'
                 className='text-gray-500 hover:text-secondary-600 transition-colors duration-200'
