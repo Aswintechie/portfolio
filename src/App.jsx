@@ -612,7 +612,7 @@ const ProjectsSection = () => {
           </p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-1 gap-8' id='projects-list'>
+        <div className='grid lg:grid-cols-1 gap-8' id='projects-section-list'>
           {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
             <motion.div
               key={project.id}
@@ -707,21 +707,14 @@ const ProjectsSection = () => {
             type='button'
             onClick={() => setShowMoreProjects(!showMoreProjects)}
             aria-expanded={showMoreProjects}
-            aria-controls='projects-list'
+            aria-controls='projects-section-list'
             className='inline-flex items-center gap-1 text-secondary-600 underline cursor-pointer text-base font-medium hover:text-accent-600 transition-colors duration-200 select-none bg-transparent border-0 p-0 shadow-none'
           >
             {showMoreProjects ? 'View Less Projects' : 'View More Projects'}
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
+            <ChevronDown
               className={`h-4 w-4 transition-transform duration-200 ${showMoreProjects ? 'rotate-180' : ''}`}
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-              strokeWidth={2}
               aria-hidden='true'
-            >
-              <path strokeLinecap='round' strokeLinejoin='round' d='M19 9l-7 7-7-7' />
-            </svg>
+            />
           </button>
         </motion.div>
       </div>
