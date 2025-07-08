@@ -596,6 +596,10 @@ const ProjectsSection = () => {
 
   const [showMoreProjects, setShowMoreProjects] = useState(false);
 
+  const projectList = useMemo(() => {
+    return showMoreProjects ? allProjects : featuredProjects;
+  }, [showMoreProjects]);
+
   return (
     <section id='projects' className='section-padding bg-gray-50'>
       <div className='container-custom'>
@@ -613,7 +617,7 @@ const ProjectsSection = () => {
         </motion.div>
 
         <div className='grid lg:grid-cols-1 gap-8' id='projects-list'>
-          {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
+          {projectList.map((project, index) => (
             <motion.div
               key={project.domain}
               initial={{ opacity: 0, y: 50 }}
