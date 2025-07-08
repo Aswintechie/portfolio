@@ -19,7 +19,10 @@ const ExperienceEntry = ({
     className='relative mb-12'
   >
     {/* Timeline dot */}
-    <div className='absolute left-6 top-8 w-5 h-5 bg-secondary-600 rounded-full border-4 border-white shadow-lg z-10'></div>
+    <div
+      aria-hidden='true'
+      className='absolute left-6 top-8 w-5 h-5 bg-secondary-600 rounded-full border-4 border-white shadow-lg z-10'
+    ></div>
 
     <div className='ml-20 card p-8'>
       <div className='text-sm text-secondary-600 font-semibold mb-2'>{period}</div>
@@ -27,8 +30,8 @@ const ExperienceEntry = ({
         <img
           src={logo}
           alt={`Logo of ${company}`}
-          width='48'
-          height='48'
+          width={48}
+          height={48}
           loading='lazy'
           className='w-12 h-12 object-contain rounded-lg shadow-sm'
         />
