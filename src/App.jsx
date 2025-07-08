@@ -671,10 +671,10 @@ const ProjectsSection = () => {
           </p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-1 gap-8'>
+        <div className='grid lg:grid-cols-1 gap-8' id='projects-list'>
           {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
             <motion.div
-              key={index}
+              key={project.domain}
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
@@ -766,8 +766,9 @@ const ProjectsSection = () => {
             <button
               type='button'
               onClick={() => setShowMoreProjects(true)}
+              aria-expanded={showMoreProjects}
+              aria-controls='projects-list'
               className='inline-flex items-center gap-1 text-secondary-600 underline cursor-pointer text-base font-medium hover:text-accent-600 transition-colors duration-200 select-none bg-transparent border-0 p-0 shadow-none'
-              style={{ userSelect: 'none' }}
             >
               View More Projects
               <svg
