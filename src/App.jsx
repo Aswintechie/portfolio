@@ -596,6 +596,11 @@ const ProjectsSection = () => {
 
   const [showMoreProjects, setShowMoreProjects] = useState(false);
 
+  const projectsSectionListId = useMemo(
+    () => `projects-section-list-${Math.random().toString(36).substr(2, 9)}`,
+    []
+  );
+
   return (
     <section id='projects' className='section-padding bg-gray-50'>
       <div className='container-custom'>
@@ -612,7 +617,7 @@ const ProjectsSection = () => {
           </p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-1 gap-8' id='projects-section-list'>
+        <div className='grid lg:grid-cols-1 gap-8' id={projectsSectionListId}>
           {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
             <motion.div
               key={project.id}
@@ -707,7 +712,7 @@ const ProjectsSection = () => {
             type='button'
             onClick={() => setShowMoreProjects(!showMoreProjects)}
             aria-expanded={showMoreProjects}
-            aria-controls='projects-section-list'
+            aria-controls={projectsSectionListId}
             className='inline-flex items-center gap-1 text-secondary-600 underline cursor-pointer text-base font-medium hover:text-accent-600 transition-colors duration-200 select-none bg-transparent border-0 p-0 shadow-none'
           >
             {showMoreProjects ? 'View Less Projects' : 'View More Projects'}
