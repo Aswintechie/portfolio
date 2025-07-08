@@ -755,6 +755,23 @@ const ProjectsSection = () => {
             </motion.div>
           ))}
         </div>
+        {/* View More Projects Button */}
+        {!showMoreProjects && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className='text-center mt-12'
+          >
+            <button
+              onClick={() => setShowMoreProjects(true)}
+              className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-xl hover:from-secondary-600 hover:to-accent-600 transition-all duration-300 transform hover:scale-105 font-medium text-lg shadow-lg hover:shadow-xl'
+            >
+              <ExternalLink size={20} className='mr-2' />
+              View More Projects
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   );
