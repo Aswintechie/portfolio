@@ -594,7 +594,9 @@ const SkillsSection = () => {
 const ProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  const projects = [
+  const [showMoreProjects, setShowMoreProjects] = useState(false);
+
+  const featuredProjects = [
     {
       title: 'PR Reviewer',
       domain: 'pr-reviewer.aswinlocal.in',
@@ -612,6 +614,9 @@ const ProjectsSection = () => {
       link: 'https://pr-reviewer.aswinlocal.in',
       status: 'Live',
     },
+  ];
+
+  const additionalProjects = [
     {
       title: 'Mirror Download Bot',
       domain: 't.me/your_mirror_bot',
@@ -629,7 +634,26 @@ const ProjectsSection = () => {
       link: 'https://t.me/your_mirror_bot',
       status: 'Live',
     },
+    {
+      title: 'Word Chain Game Bot',
+      domain: 't.me/your_word_chain_bot',
+      description:
+        'An interactive Telegram bot where players take turns creating words starting with the last letter of the previous word. Features multiplayer support, scoring system, and word validation.',
+      technologies: ['Python', 'Telegram Bot API', 'SQLite', 'Game Logic', 'Multiplayer Support'],
+      features: [
+        'Multiplayer word chain game',
+        'Word validation and scoring',
+        'Turn-based gameplay',
+        'Game statistics tracking',
+        'Custom game rules and settings',
+      ],
+      icon: <Brain size={48} />,
+      link: 'https://t.me/your_word_chain_bot',
+      status: 'Live',
+    },
   ];
+
+  const allProjects = [...featuredProjects, ...additionalProjects];
 
   return (
     <section id='projects' className='section-padding bg-gray-50'>
@@ -648,7 +672,7 @@ const ProjectsSection = () => {
         </motion.div>
 
         <div className='grid lg:grid-cols-1 gap-8'>
-          {projects.map((project, index) => (
+          {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 50 }}
@@ -848,24 +872,6 @@ const PersonalProjectsSection = () => {
       access: 'Private (requires credentials)',
       domain: 'torrent.aswinlocal.in',
       link: 'https://torrent.aswinlocal.in',
-    },
-    {
-      title: 'Word Chain Game Bot',
-      description:
-        'An interactive word chain game bot where players take turns creating words starting with the last letter of the previous word. Features multiplayer support, scoring system, and word validation.',
-      technologies: ['Python', 'Telegram Bot API', 'SQLite', 'Game Logic', 'Multiplayer Support'],
-      features: [
-        'Multiplayer word chain game',
-        'Word validation and scoring',
-        'Turn-based gameplay',
-        'Game statistics tracking',
-        'Custom game rules and settings',
-      ],
-      icon: <Brain size={48} />,
-      status: 'Active',
-      access: 'Public (Telegram)',
-      domain: 't.me/your_word_chain_bot',
-      link: 'https://t.me/your_word_chain_bot',
     },
   ];
 
