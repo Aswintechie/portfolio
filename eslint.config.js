@@ -7,7 +7,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist', 'node_modules', 'script.js', 'style.css', '.wrangler'],
+    ignores: ['dist', 'build', 'node_modules', 'script.js', 'style.css', '.wrangler'],
   },
   {
     files: ['**/*.{js,jsx}'],
