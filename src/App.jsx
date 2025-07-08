@@ -615,7 +615,7 @@ const ProjectsSection = () => {
         <div className='grid lg:grid-cols-1 gap-8' id='projects-list'>
           {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
             <motion.div
-              key={project.domain}
+              key={project.id}
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}

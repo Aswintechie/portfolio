@@ -2,6 +2,7 @@ import { Brain, Zap, Gamepad2 } from 'lucide-react';
 
 export const featuredProjects = [
   {
+    id: 'pr-reviewer',
     title: 'PR Reviewer',
     domain: 'pr-reviewer.aswinlocal.in',
     description:
@@ -22,6 +23,7 @@ export const featuredProjects = [
 
 export const additionalProjects = [
   {
+    id: 'mirror-download-bot',
     title: 'Mirror Download Bot',
     domain: 't.me/Testdownload123bot',
     description:
@@ -39,6 +41,7 @@ export const additionalProjects = [
     status: 'Live',
   },
   {
+    id: 'word-chain-game-bot',
     title: 'Word Chain Game Bot',
     domain: 't.me/gamebotbyashbot',
     description:
