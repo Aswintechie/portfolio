@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -29,6 +29,8 @@ import {
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
 import NotFound from './components/NotFound.jsx';
+import ExperienceEntry from './components/ExperienceEntry.jsx';
+import { getExperienceData } from './data/experienceData.js';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -484,6 +486,8 @@ const ExperienceSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const experience = useExperienceCalculator();
 
+  const experienceData = useMemo(() => getExperienceData(experience), [experience]);
+
   return (
     <section id='experience' className='section-padding'>
       <div className='container-custom'>
@@ -506,64 +510,14 @@ const ExperienceSection = () => {
               style={{ height: 'calc(100% - 4rem)', bottom: '2rem' }}
             ></div>
 
-            {/* MulticoreWare Experience */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className='relative mb-12'
-            >
-              {/* Timeline dot */}
-              <div className='absolute left-6 top-8 w-5 h-5 bg-secondary-600 rounded-full border-4 border-white shadow-lg z-10'></div>
-
-              <div className='ml-20 card p-8'>
-                <div className='text-sm text-secondary-600 font-semibold mb-2'>
-                  June 2023 - Present
-                </div>
-                <h3 className='text-2xl font-bold text-gray-900 mb-2'>
-                  Software Developer Engineer
-                </h3>
-                <h4 className='text-lg text-gray-600 mb-4'>MulticoreWare Pvt Ltd</h4>
-                <p className='text-gray-700 leading-relaxed mb-6'>
-                  Working on software development projects focusing on performance optimization,
-                  profiling, and benchmarking. Responsible for developing efficient software
-                  solutions and analyzing performance metrics to improve application performance.
-                </p>
-                <div className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-full text-sm font-medium'>
-                  {experience}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Lenovo Experience */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className='relative'
-            >
-              {/* Timeline dot */}
-              <div className='absolute left-6 top-8 w-5 h-5 bg-secondary-600 rounded-full border-4 border-white shadow-lg z-10'></div>
-
-              <div className='ml-20 card p-8'>
-                <div className='text-sm text-secondary-600 font-semibold mb-2'>
-                  June 2022 - May 2023
-                </div>
-                <h3 className='text-2xl font-bold text-gray-900 mb-2'>
-                  Industrial Project Engineer
-                </h3>
-                <h4 className='text-lg text-gray-600 mb-4'>Lenovo Pvt Ltd</h4>
-                <p className='text-gray-700 leading-relaxed mb-6'>
-                  Developed and maintained smart attendance system using face recognition technology
-                  and ESD tester with database integration. Worked on computer vision algorithms,
-                  biometric authentication systems, and real-time data processing for employee
-                  attendance tracking and ESD testing workflows.
-                </p>
-                <div className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-full text-sm font-medium'>
-                  1 year
-                </div>
-              </div>
-            </motion.div>
+            {/* Experience Entries */}
+            {experienceData.map(entry => (
+              <ExperienceEntry
+                key={`${entry.company}-${entry.period}`}
+                {...entry}
+                inView={inView}
+              />
+            ))}
           </div>
         </div>
       </div>
