@@ -31,6 +31,7 @@ import PrivacyPolicy from './components/PrivacyPolicy.jsx';
 import NotFound from './components/NotFound.jsx';
 import ExperienceEntry from './components/ExperienceEntry.jsx';
 import { getExperienceData } from './data/experienceData.js';
+import { featuredProjects, additionalProjects, allProjects } from './data/projects.js';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -595,65 +596,6 @@ const ProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   const [showMoreProjects, setShowMoreProjects] = useState(false);
-
-  const featuredProjects = [
-    {
-      title: 'PR Reviewer',
-      domain: 'pr-reviewer.aswinlocal.in',
-      description:
-        'ML-trained application that intelligently analyzes pull requests to determine the minimum person approval required for merging. Features prediction algorithms to identify reviewers who will approve faster, optimizing development workflows.',
-      technologies: ['Machine Learning', 'Python', 'React', 'Node.js', 'Cloud'],
-      features: [
-        'Intelligent PR analysis',
-        'Approval prediction algorithms',
-        'Fast reviewer identification',
-        'Development workflow optimization',
-        'Real-time PR insights',
-      ],
-      icon: <Brain size={48} />,
-      link: 'https://pr-reviewer.aswinlocal.in',
-      status: 'Live',
-    },
-  ];
-
-  const additionalProjects = [
-    {
-      title: 'Mirror Download Bot',
-      domain: 't.me/Testdownload123bot',
-      description:
-        'A powerful Telegram bot for downloading content from various sources including torrents, direct links, and YouTube videos. Features automated downloads, progress tracking, and file management.',
-      technologies: ['Python', 'Telegram Bot API', 'aria2', 'yt-dlp', 'Cloud Storage'],
-      features: [
-        'Torrent download support',
-        'YouTube video downloading',
-        'Direct link processing',
-        'Download progress tracking',
-        'File organization and management',
-      ],
-      icon: <Zap size={48} />,
-      link: 'https://t.me/Testdownload123bot',
-      status: 'Live',
-    },
-    {
-      title: 'Word Chain Game Bot',
-      domain: 't.me/gamebotbyashbot',
-      description:
-        'An interactive Telegram bot where players take turns creating words starting with the last letter of the previous word. Features multiplayer support, scoring system, and word validation.',
-      technologies: ['Python', 'Telegram Bot API', 'SQLite', 'Game Logic', 'Multiplayer Support'],
-      features: [
-        'Multiplayer word chain game',
-        'Word validation and scoring',
-        'Turn-based gameplay',
-        'Game statistics tracking',
-        'Custom game rules and settings',
-      ],
-      icon: <Brain size={48} />,
-      link: 'https://t.me/gamebotbyashbot',
-      status: 'Live',
-    },
-  ];
-
-  const allProjects = [...featuredProjects, ...additionalProjects];
 
   return (
     <section id='projects' className='section-padding bg-gray-50'>
