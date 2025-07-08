@@ -1,4 +1,4 @@
-import { Brain, Zap } from 'lucide-react';
+import { Brain, Zap, Gamepad2 } from 'lucide-react';
 
 export const featuredProjects = [
   {
@@ -51,7 +51,7 @@ export const additionalProjects = [
       'Game statistics tracking',
       'Custom game rules and settings',
     ],
-    icon: <Brain size={48} />,
+    icon: <Gamepad2 size={48} />,
     link: 'https://t.me/gamebotbyashbot',
     status: 'Live',
   },
