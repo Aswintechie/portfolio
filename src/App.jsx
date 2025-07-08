@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useId } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -596,13 +596,10 @@ const ProjectsSection = () => {
 
   const [showMoreProjects, setShowMoreProjects] = useState(false);
 
-  const projectsSectionListId = useMemo(
-    () => `projects-section-list-${Math.random().toString(36).substr(2, 9)}`,
-    []
-  );
+  const projectsSectionListId = useId();
 
   return (
-    <section id='projects' className='section-padding bg-gray-50'>
+    <section id='projects' className='section-padding bg-gray-50' ref={ref}>
       <div className='container-custom'>
         <motion.div
           ref={ref}
