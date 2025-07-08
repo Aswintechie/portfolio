@@ -520,10 +520,19 @@ const ExperienceSection = () => {
                 <div className='text-sm text-secondary-600 font-semibold mb-2'>
                   June 2023 - Present
                 </div>
-                <h3 className='text-2xl font-bold text-gray-900 mb-2'>
-                  Software Developer Engineer
-                </h3>
-                <h4 className='text-lg text-gray-600 mb-4'>MulticoreWare Pvt Ltd</h4>
+                <div className='flex items-center gap-4 mb-4'>
+                  <img
+                    src='/MulticoreWare_Logo.jpg'
+                    alt='MulticoreWare Logo'
+                    className='w-12 h-12 object-contain rounded-lg shadow-sm'
+                  />
+                  <div>
+                    <h3 className='text-2xl font-bold text-gray-900 mb-1'>
+                      Software Developer Engineer
+                    </h3>
+                    <h4 className='text-lg text-gray-600'>MulticoreWare Pvt Ltd</h4>
+                  </div>
+                </div>
                 <p className='text-gray-700 leading-relaxed mb-6'>
                   Working on software development projects focusing on performance optimization,
                   profiling, and benchmarking. Responsible for developing efficient software
@@ -549,10 +558,19 @@ const ExperienceSection = () => {
                 <div className='text-sm text-secondary-600 font-semibold mb-2'>
                   June 2022 - May 2023
                 </div>
-                <h3 className='text-2xl font-bold text-gray-900 mb-2'>
-                  Industrial Project Engineer
-                </h3>
-                <h4 className='text-lg text-gray-600 mb-4'>Lenovo Pvt Ltd</h4>
+                <div className='flex items-center gap-4 mb-4'>
+                  <img
+                    src='/Lenovo_Global_Corporate_Logo.png'
+                    alt='Lenovo Logo'
+                    className='w-12 h-12 object-contain rounded-lg shadow-sm'
+                  />
+                  <div>
+                    <h3 className='text-2xl font-bold text-gray-900 mb-1'>
+                      Industrial Project Engineer
+                    </h3>
+                    <h4 className='text-lg text-gray-600'>Lenovo Pvt Ltd</h4>
+                  </div>
+                </div>
                 <p className='text-gray-700 leading-relaxed mb-6'>
                   Developed and maintained smart attendance system using face recognition technology
                   and ESD tester with database integration. Worked on computer vision algorithms,
