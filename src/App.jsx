@@ -612,6 +612,23 @@ const ProjectsSection = () => {
       link: 'https://pr-reviewer.aswinlocal.in',
       status: 'Live',
     },
+    {
+      title: 'Portfolio Assistant Bot',
+      domain: 't.me/your_portfolio_bot',
+      description:
+        'A Telegram bot that serves as an interactive portfolio assistant, providing information about my skills, projects, and experience. Features include project showcases, skill demonstrations, and direct contact options.',
+      technologies: ['Python', 'Telegram Bot API', 'SQLite', 'Cloud Deployment'],
+      features: [
+        'Interactive portfolio navigation',
+        'Project showcase with media',
+        'Skill demonstrations',
+        'Direct contact integration',
+        'Real-time responses',
+      ],
+      icon: <Wifi size={48} />,
+      link: 'https://t.me/your_portfolio_bot',
+      status: 'In Development',
+    },
   ];
 
   return (
@@ -831,6 +848,24 @@ const PersonalProjectsSection = () => {
       access: 'Private (requires credentials)',
       domain: 'torrent.aswinlocal.in',
       link: 'https://torrent.aswinlocal.in',
+    },
+    {
+      title: 'Telegram Bot Framework',
+      description:
+        'A comprehensive Telegram bot development framework with multiple specialized bots for different purposes. Includes portfolio assistant, notification system, and utility bots.',
+      technologies: ['Python', 'Telegram Bot API', 'SQLite', 'Docker', 'Webhooks', 'Redis'],
+      features: [
+        'Multi-bot architecture',
+        'Interactive command system',
+        'Database integration',
+        'Webhook-based deployment',
+        'Custom inline keyboards',
+      ],
+      icon: <Wifi size={48} />,
+      status: 'Active',
+      access: 'Public (Telegram)',
+      domain: 't.me/aswin_bots',
+      link: 'https://t.me/aswin_bots',
     },
   ];
 
