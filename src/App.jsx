@@ -17,7 +17,6 @@ import {
   GitPullRequest,
   Zap,
   Code,
-  Brain,
   ChevronDown,
   Server,
   Database,
