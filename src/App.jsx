@@ -30,6 +30,49 @@ import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
 import NotFound from './components/NotFound.jsx';
 
+// Experience Entry Component
+const ExperienceEntry = ({
+  period,
+  title,
+  company,
+  logo,
+  description,
+  experience,
+  inView,
+  delay = 0.1,
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    animate={inView ? { opacity: 1, y: 0 } : {}}
+    transition={{ duration: 0.8, delay }}
+    className='relative mb-12'
+  >
+    {/* Timeline dot */}
+    <div className='absolute left-6 top-8 w-5 h-5 bg-secondary-600 rounded-full border-4 border-white shadow-lg z-10'></div>
+
+    <div className='ml-20 card p-8'>
+      <div className='text-sm text-secondary-600 font-semibold mb-2'>{period}</div>
+      <div className='flex items-center gap-4 mb-4'>
+        <img
+          src={logo}
+          alt={`Logo of ${company}`}
+          width='48'
+          height='48'
+          className='w-12 h-12 object-contain rounded-lg shadow-sm'
+        />
+        <div>
+          <h3 className='text-2xl font-bold text-gray-900 mb-1'>{title}</h3>
+          <h4 className='text-lg text-gray-600'>{company}</h4>
+        </div>
+      </div>
+      <p className='text-gray-700 leading-relaxed mb-6'>{description}</p>
+      <div className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-full text-sm font-medium'>
+        {experience}
+      </div>
+    </div>
+  </motion.div>
+);
+
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
   const [experience, setExperience] = useState('');
@@ -506,82 +549,28 @@ const ExperienceSection = () => {
               style={{ height: 'calc(100% - 4rem)', bottom: '2rem' }}
             ></div>
 
-            {/* MulticoreWare Experience */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className='relative mb-12'
-            >
-              {/* Timeline dot */}
-              <div className='absolute left-6 top-8 w-5 h-5 bg-secondary-600 rounded-full border-4 border-white shadow-lg z-10'></div>
+            {/* Experience Entries */}
+            <ExperienceEntry
+              period='June 2023 - Present'
+              title='Software Developer Engineer'
+              company='MulticoreWare Pvt Ltd'
+              logo='/MulticoreWare_Logo.jpg'
+              description='Working on software development projects focusing on performance optimization, profiling, and benchmarking. Responsible for developing efficient software solutions and analyzing performance metrics to improve application performance.'
+              experience={experience}
+              inView={inView}
+              delay={0.1}
+            />
 
-              <div className='ml-20 card p-8'>
-                <div className='text-sm text-secondary-600 font-semibold mb-2'>
-                  June 2023 - Present
-                </div>
-                <div className='flex items-center gap-4 mb-4'>
-                  <img
-                    src='/MulticoreWare_Logo.jpg'
-                    alt='MulticoreWare Logo'
-                    className='w-12 h-12 object-contain rounded-lg shadow-sm'
-                  />
-                  <div>
-                    <h3 className='text-2xl font-bold text-gray-900 mb-1'>
-                      Software Developer Engineer
-                    </h3>
-                    <h4 className='text-lg text-gray-600'>MulticoreWare Pvt Ltd</h4>
-                  </div>
-                </div>
-                <p className='text-gray-700 leading-relaxed mb-6'>
-                  Working on software development projects focusing on performance optimization,
-                  profiling, and benchmarking. Responsible for developing efficient software
-                  solutions and analyzing performance metrics to improve application performance.
-                </p>
-                <div className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-full text-sm font-medium'>
-                  {experience}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Lenovo Experience */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className='relative'
-            >
-              {/* Timeline dot */}
-              <div className='absolute left-6 top-8 w-5 h-5 bg-secondary-600 rounded-full border-4 border-white shadow-lg z-10'></div>
-
-              <div className='ml-20 card p-8'>
-                <div className='text-sm text-secondary-600 font-semibold mb-2'>
-                  June 2022 - May 2023
-                </div>
-                <div className='flex items-center gap-4 mb-4'>
-                  <img
-                    src='/Lenovo_Global_Corporate_Logo.png'
-                    alt='Lenovo Logo'
-                    className='w-12 h-12 object-contain rounded-lg shadow-sm'
-                  />
-                  <div>
-                    <h3 className='text-2xl font-bold text-gray-900 mb-1'>
-                      Industrial Project Engineer
-                    </h3>
-                    <h4 className='text-lg text-gray-600'>Lenovo Pvt Ltd</h4>
-                  </div>
-                </div>
-                <p className='text-gray-700 leading-relaxed mb-6'>
-                  Developed and maintained smart attendance system using face recognition technology
-                  and ESD tester with database integration. Worked on computer vision algorithms,
-                  biometric authentication systems, and real-time data processing for employee
-                  attendance tracking and ESD testing workflows.
-                </p>
-                <div className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-full text-sm font-medium'>
-                  1 year
-                </div>
-              </div>
-            </motion.div>
+            <ExperienceEntry
+              period='June 2022 - May 2023'
+              title='Industrial Project Engineer'
+              company='Lenovo Pvt Ltd'
+              logo='/Lenovo_Global_Corporate_Logo.png'
+              description='Developed and maintained smart attendance system using face recognition technology and ESD tester with database integration. Worked on computer vision algorithms, biometric authentication systems, and real-time data processing for employee attendance tracking and ESD testing workflows.'
+              experience='1 year'
+              inView={inView}
+              delay={0.2}
+            />
           </div>
         </div>
       </div>
