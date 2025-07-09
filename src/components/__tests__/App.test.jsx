@@ -36,9 +36,9 @@ describe('App', () => {
 
     // Wait for contact form inputs to be present
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/your name/i)).toBeInTheDocument();
-      expect(screen.getByPlaceholderText(/your email/i)).toBeInTheDocument();
-      expect(screen.getByPlaceholderText(/your message/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/enter your full name/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/enter your email address/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/tell me about your project/i)).toBeInTheDocument();
     });
   });
 });

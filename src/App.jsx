@@ -24,6 +24,12 @@ import {
   Monitor,
   Search,
   Wifi,
+  Sparkles,
+  Star,
+  Circle,
+  Home,
+  User,
+  Folder,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
@@ -31,6 +37,247 @@ import NotFound from './components/NotFound.jsx';
 import ExperienceEntry from './components/ExperienceEntry.jsx';
 import { getExperienceData } from './data/experienceData.js';
 import { featuredProjects, allProjects } from './data/projects.jsx';
+
+// Optimized Animated Background Particles Component
+const AnimatedParticles = React.memo(() => {
+  // Reduce particles from 50 to 20 for better performance
+  const particles = React.useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 3 + 1, // Reduced max size
+        duration: Math.random() * 15 + 8, // Reduced duration range
+        delay: Math.random() * 3, // Reduced delay range
+      })),
+    []
+  );
+
+  return (
+    <div className='absolute inset-0 overflow-hidden pointer-events-none'>
+      {particles.map(particle => (
+        <motion.div
+          key={particle.id}
+          className='absolute rounded-full bg-white/8' // Reduced opacity
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+          }}
+          animate={{
+            y: [0, -15, 0], // Reduced movement
+            opacity: [0.2, 0.6, 0.2], // Reduced opacity range
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+});
+
+AnimatedParticles.displayName = 'AnimatedParticles';
+
+// Performance-optimized Floating Elements Component
+const FloatingElements = React.memo(() => {
+  return (
+    <div className='absolute inset-0 overflow-hidden pointer-events-none'>
+      {/* Main gradient orbs */}
+      <motion.div
+        className='absolute w-64 h-64 rounded-full opacity-12'
+        style={{
+          background:
+            'radial-gradient(circle, rgba(236,72,153,0.3) 0%, rgba(14,165,233,0.15) 50%, transparent 100%)',
+          top: '10%',
+          right: '10%',
+        }}
+        animate={{
+          scale: [1, 1.05, 1],
+          rotate: [0, 360],
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      {/* Secondary gradient orb */}
+      <motion.div
+        className='absolute w-48 h-48 rounded-full opacity-8'
+        style={{
+          background:
+            'radial-gradient(circle, rgba(14,165,233,0.25) 0%, rgba(236,72,153,0.12) 50%, transparent 100%)',
+          top: '60%',
+          left: '5%',
+        }}
+        animate={{
+          scale: [1, 1.08, 1],
+          rotate: [360, 0],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      {/* Floating geometric shapes */}
+      <motion.div
+        className='absolute w-8 h-8 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full'
+        style={{ top: '25%', left: '15%' }}
+        animate={{
+          y: [0, -15, 0],
+          x: [0, 10, 0],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-6 h-6 bg-gradient-to-br from-secondary-400/15 to-accent-400/15 rounded-full'
+        style={{ top: '50%', right: '25%' }}
+        animate={{
+          y: [0, -20, 0],
+        }}
+        transition={{
+          duration: 18,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      {/* Additional floating elements */}
+      <motion.div
+        className='absolute w-4 h-4 bg-gradient-to-br from-cyan-400/25 to-blue-400/25 rounded-full'
+        style={{ top: '35%', right: '8%' }}
+        animate={{
+          y: [0, -12, 0],
+          x: [0, -8, 0],
+        }}
+        transition={{
+          duration: 22,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-5 h-5 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full'
+        style={{ top: '75%', left: '20%' }}
+        animate={{
+          y: [0, -18, 0],
+          rotate: [0, 180, 360],
+        }}
+        transition={{
+          duration: 24,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      {/* Subtle diamond shapes */}
+      <motion.div
+        className='absolute w-3 h-3 bg-gradient-to-br from-yellow-400/15 to-orange-400/15 transform rotate-45'
+        style={{ top: '15%', left: '80%' }}
+        animate={{
+          y: [0, -10, 0],
+          rotate: [45, 225, 45],
+        }}
+        transition={{
+          duration: 16,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-2 h-2 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 transform rotate-45'
+        style={{ top: '80%', right: '15%' }}
+        animate={{
+          y: [0, -8, 0],
+          rotate: [45, 405, 45],
+        }}
+        transition={{
+          duration: 19,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      {/* Animated lines/streaks */}
+      <motion.div
+        className='absolute w-px h-16 bg-gradient-to-b from-transparent via-cyan-400/30 to-transparent'
+        style={{ top: '20%', left: '70%' }}
+        animate={{
+          opacity: [0, 1, 0],
+          scaleY: [0.5, 1, 0.5],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-px h-12 bg-gradient-to-b from-transparent via-pink-400/25 to-transparent'
+        style={{ top: '65%', right: '30%' }}
+        animate={{
+          opacity: [0, 1, 0],
+          scaleY: [0.5, 1, 0.5],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: 2,
+        }}
+      />
+
+      {/* Pulsing dots */}
+      <motion.div
+        className='absolute w-1 h-1 bg-blue-400/40 rounded-full'
+        style={{ top: '40%', left: '25%' }}
+        animate={{
+          scale: [1, 1.5, 1],
+          opacity: [0.4, 0.8, 0.4],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-1 h-1 bg-purple-400/40 rounded-full'
+        style={{ top: '70%', right: '40%' }}
+        animate={{
+          scale: [1, 1.3, 1],
+          opacity: [0.4, 0.7, 0.4],
+        }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: 1,
+        }}
+      />
+    </div>
+  );
+});
+
+FloatingElements.displayName = 'FloatingElements';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -66,157 +313,211 @@ const useExperienceCalculator = () => {
   return experience;
 };
 
-// Navigation Component
+// Optimized throttle function for scroll events
+const useThrottledScroll = (callback, delay = 16) => {
+  const callbackRef = React.useRef(callback);
+  const throttleRef = React.useRef(null);
+
+  React.useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (throttleRef.current) return;
+
+      throttleRef.current = setTimeout(() => {
+        callbackRef.current();
+        throttleRef.current = null;
+      }, delay);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (throttleRef.current) {
+        clearTimeout(throttleRef.current);
+      }
+    };
+  }, [delay]);
+};
+
+// Performance-optimized Navigation component
 const Navigation = React.memo(function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+  // Optimized scroll handler with throttling
+  const handleScroll = React.useCallback(() => {
+    const isScrolled = window.scrollY > 50;
+    setScrolled(isScrolled);
+  }, []);
 
-    const handleKeyDown = e => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-      if (e.key === 'Escape' && isSearchOpen) {
-        setIsSearchOpen(false);
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsSearchOpen(true);
-      }
-    };
+  useThrottledScroll(handleScroll);
 
-    window.addEventListener('scroll', handleScroll);
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, isSearchOpen]);
-
-  const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Infrastructure', href: '#personal-projects' },
-    { name: 'Technologies', href: '#technologies' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  // Memoized navigation items
+  const navigationItems = React.useMemo(
+    () => [
+      { href: '#home', label: 'Home', icon: Home },
+      { href: '#about', label: 'About', icon: User },
+      { href: '#experience', label: 'Experience', icon: Briefcase },
+      { href: '#skills', label: 'Skills', icon: Code },
+      { href: '#projects', label: 'Projects', icon: Folder },
+      { href: '#contact', label: 'Contact', icon: Mail },
+    ],
+    []
+  );
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-gray-200/50'
-          : 'bg-black/20 backdrop-blur-sm'
+          ? 'bg-white/85 backdrop-blur-md shadow-lg border-b border-gray-200/20'
+          : 'bg-black/5 backdrop-blur-sm'
       }`}
     >
       <div className='container-custom'>
         <div className='flex items-center justify-between h-16'>
-          {/* Logo */}
+          {/* Optimized Logo */}
           <motion.a
             href='#home'
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`flex items-center space-x-2 text-xl font-bold transition-colors duration-300 hover:scale-105 ${
+            className={`flex items-center space-x-3 text-xl font-bold transition-all duration-200 hover:scale-105 ${
               scrolled ? 'text-primary-900' : 'text-white'
             }`}
           >
-            <Code size={24} className='text-secondary-500' />
-            <span>Portfolio</span>
+            <div className='relative'>
+              <Code size={28} className='text-secondary-500' />
+              <motion.div
+                className='absolute -top-1 -right-1 w-3 h-3 bg-accent-400 rounded-full'
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.8, 1, 0.8],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+            </div>
+            <span className='bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent'>
+              Portfolio
+            </span>
           </motion.a>
 
           {/* Desktop Navigation */}
-          <div className='hidden md:flex items-center space-x-8'>
-            {navItems.map((item, index) => (
+          <div className='hidden md:flex items-center space-x-1 transition-all duration-300'>
+            {navigationItems.map((item, index) => (
               <motion.a
-                key={item.name}
+                key={item.href}
                 href={item.href}
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`font-medium transition-colors duration-200 relative group ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${
                   scrolled
-                    ? 'text-primary-700 hover:text-secondary-600'
-                    : 'text-white/90 hover:text-white'
+                    ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
               >
-                {item.name}
-                <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-secondary-500 to-accent-500 group-hover:w-full transition-all duration-300'></span>
+                <item.icon size={16} />
+                <span>{item.label}</span>
               </motion.a>
             ))}
+          </div>
 
-            {/* Search Button */}
+          {/* Optimized Action Buttons */}
+          <div className='flex items-center space-x-3'>
             <motion.button
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
               onClick={() => setIsSearchOpen(true)}
-              aria-label='Open search'
-              className={`p-2 rounded-lg transition-colors duration-200 ${
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`p-2 rounded-xl transition-all duration-300 ${
                 scrolled
-                  ? 'text-primary-700 hover:text-secondary-600 hover:bg-gray-100'
+                  ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
                   : 'text-white/90 hover:text-white hover:bg-white/10'
               }`}
+              aria-label='Search'
             >
               <Search size={20} />
             </motion.button>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <div className='md:hidden'>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={isOpen}
-              aria-controls='mobile-menu'
-              className={`focus:outline-none transition-colors duration-200 ${
+            {/* Header Chat Button - Shows when at top of page */}
+            <motion.button
+              onClick={() => {
+                // We'll need to access the FloatingChatButton's openChat function
+                // For now, we'll use a custom event
+                window.dispatchEvent(new CustomEvent('openChat'));
+              }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{
+                opacity: scrolled ? 0 : 1,
+                scale: scrolled ? 0.8 : 1,
+              }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              whileHover={{
+                scale: scrolled ? 0.8 : 1.05,
+                boxShadow: scrolled ? 'none' : '0 4px 20px rgba(102,126,234,0.4)',
+              }}
+              whileTap={{ scale: scrolled ? 0.8 : 0.95 }}
+              className={`hidden md:flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                 scrolled
-                  ? 'text-primary-700 hover:text-secondary-600'
-                  : 'text-white hover:text-white/80'
+                  ? 'pointer-events-none'
+                  : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-purple-700'
               }`}
+              style={{
+                pointerEvents: scrolled ? 'none' : 'auto',
+                boxShadow: scrolled ? 'none' : '0 4px 15px rgba(102,126,234,0.3)',
+              }}
+              aria-label='Open live chat'
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              <span className='text-lg'>💬</span>
+              <span>Live Chat</span>
+            </motion.button>
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`md:hidden p-2 rounded-xl transition-all duration-200 ${
+                scrolled
+                  ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                  : 'text-white/90 hover:text-white hover:bg-white/10'
+              }`}
+              aria-label='Toggle menu'
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </motion.button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Optimized Mobile Menu */}
         <AnimatePresence>
-          {isOpen && (
+          {isMenuOpen && (
             <motion.div
-              id='mobile-menu'
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className='md:hidden bg-white border-t border-gray-200'
-              role='navigation'
-              aria-label='Mobile navigation'
+              transition={{ duration: 0.2 }}
+              className='md:hidden border-t border-gray-200/20 bg-white/90 backdrop-blur-sm'
             >
-              <div className='py-2'>
-                {navItems.map((item, index) => (
+              <div className='py-4 space-y-2'>
+                {navigationItems.map((item, index) => (
                   <motion.a
-                    key={item.name}
+                    key={item.href}
                     href={item.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className='block px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-inset'
-                    onClick={() => setIsOpen(false)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        setIsOpen(false);
-                      }
-                    }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => setIsMenuOpen(false)}
+                    className='flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-secondary-600 hover:bg-secondary-50 rounded-xl transition-all duration-200'
                   >
-                    {item.name}
+                    <item.icon size={18} />
+                    <span className='font-medium'>{item.label}</span>
                   </motion.a>
                 ))}
               </div>
@@ -225,207 +526,276 @@ const Navigation = React.memo(function Navigation() {
         </AnimatePresence>
       </div>
 
-      {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </nav>
   );
 });
 
-// Hero Section Component
+// Modern Hero Section Component
 const HeroSection = React.memo(function HeroSection() {
   const experience = useExperienceCalculator();
-  const [scrolled, setScrolled] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Optimized scroll handler with throttling
+  const handleScrollIndicator = React.useCallback(() => {
+    const shouldShow = window.scrollY <= 50;
+    setShowScrollIndicator(shouldShow);
   }, []);
+
+  useThrottledScroll(handleScrollIndicator);
 
   return (
     <section
       id='home'
-      className='min-h-screen flex items-center justify-center relative overflow-hidden'
+      className='min-h-screen flex items-center justify-center relative overflow-hidden pt-16 md:pt-0'
     >
-      {/* Modern gradient background */}
-      <div className='absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700'></div>
-
-      {/* Modern geometric pattern overlay */}
-      <div className='absolute inset-0 opacity-10'>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(236,72,153,0.3)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.3)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(236,72,153,0.2)_0%,transparent_50%)]'></div>
+      {/* Optimized Gradient Background - Extended to prevent white bars */}
+      <div className='absolute inset-0'>
+        <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'></div>
+        <div className='absolute inset-0 bg-gradient-to-tr from-blue-900/40 via-transparent to-pink-900/40'></div>
       </div>
 
-      {/* Floating geometric elements */}
-      <div className='absolute inset-0 overflow-hidden'>
-        {/* Top right accent */}
-        <div className='absolute top-10 right-10 w-32 h-32 bg-gradient-to-br from-secondary-500/20 to-accent-500/20 rounded-full blur-2xl animate-pulse'></div>
+      {/* Additional background extension to prevent white bars */}
+      <div className='absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none'></div>
 
-        {/* Bottom left accent */}
-        <div className='absolute bottom-10 left-10 w-40 h-40 bg-gradient-to-tr from-accent-500/15 to-secondary-500/15 rounded-full blur-3xl animate-pulse animation-delay-400'></div>
+      {/* Animated Particles */}
+      <AnimatedParticles />
 
-        {/* Center accent */}
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-secondary-400/5 to-accent-400/5 rounded-full blur-3xl animate-pulse animation-delay-600'></div>
+      {/* Floating Elements */}
+      <FloatingElements />
+
+      {/* Enhanced Mesh Gradient Overlay */}
+      <div className='absolute inset-0 opacity-25'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(236,72,153,0.25)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.25)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_60%_80%,rgba(168,85,247,0.2)_0%,transparent_40%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_10%_10%,rgba(34,197,94,0.15)_0%,transparent_35%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_90%_90%,rgba(251,146,60,0.18)_0%,transparent_45%)]'></div>
       </div>
 
-      {/* Modern gradient accents */}
-      <div className='absolute inset-0 overflow-hidden'>
-        {/* Top gradient bar */}
-        <div className='absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary-500/30 to-transparent'></div>
-
-        {/* Bottom gradient bar */}
-        <div className='absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-500/30 to-transparent'></div>
-
-        {/* Left gradient bar */}
-        <div className='absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-secondary-500/20 to-transparent'></div>
-
-        {/* Right gradient bar */}
-        <div className='absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-accent-500/20 to-transparent'></div>
-
-        {/* Diagonal gradient accent */}
-        <div className='absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary-500/10 via-transparent to-accent-500/10 transform rotate-12'></div>
-
-        {/* Corner accent */}
-        <div className='absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent-500/15 via-transparent to-secondary-500/15 transform -rotate-12'></div>
-      </div>
-
+      {/* Content */}
       <div className='container-custom relative z-10'>
         <div className='flex items-center justify-center'>
-          {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className='text-white text-center max-w-4xl'
+            className='text-white text-center max-w-5xl'
           >
+            {/* Modern Greeting */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className='flex items-center justify-center space-x-2 mb-4'
+            >
+              <motion.div
+                animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
+                transition={{ duration: 1.5, delay: 1, repeat: Infinity, repeatDelay: 3 }}
+                className='text-2xl'
+              >
+                👋
+              </motion.div>
+              <span className='text-xl font-medium text-gray-300'>Hello, I'm</span>
+            </motion.div>
+
+            {/* Modern Name with Enhanced Gradient */}
             <motion.h1
-              className='text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight'
+              className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 md:mb-6 leading-tight'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              Hi, I'm{' '}
-              <span className='bg-gradient-to-r from-secondary-400 to-accent-400 bg-clip-text text-transparent'>
-                Aswin
+              <span className='relative'>
+                <span className='bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-pulse'>
+                  Aswin
+                </span>
+                <motion.div
+                  className='absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-r from-pink-400 to-cyan-400 rounded-full'
+                  animate={{
+                    scale: [1, 1.5, 1],
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
               </span>
             </motion.h1>
 
-            <motion.p
-              className='text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-6 text-gray-200 font-medium'
+            {/* Modern Title with Typing Effect */}
+            <motion.div
+              className='text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 md:mb-6 font-bold'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              Software Developer Engineer
-            </motion.p>
+              <span className='bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent'>
+                Software Developer Engineer
+              </span>
+              <motion.span
+                className='inline-block w-1 h-8 bg-gradient-to-r from-pink-400 to-cyan-400 ml-1'
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
+            </motion.div>
 
+            {/* Enhanced Description */}
             <motion.p
-              className='text-base sm:text-lg mb-6 sm:mb-8 text-gray-300 leading-relaxed max-w-2xl mx-auto px-4 sm:px-0'
+              className='text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-gray-300 leading-relaxed max-w-3xl mx-auto px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              Passionate about software development and modern technologies. Specializing in
-              building efficient software solutions with a keen interest in cloud infrastructure.
-              Based in the beautiful city of Pondicherry with {experience} of professional
+              Passionate about{' '}
+              <span className='text-pink-400 font-semibold'>software development</span> and{' '}
+              <span className='text-cyan-400 font-semibold'>modern technologies</span>. Specializing
+              in building efficient software solutions with a keen interest in{' '}
+              <span className='text-purple-400 font-semibold'>cloud infrastructure</span>. Based in
+              the beautiful city of Pondicherry with{' '}
+              <span className='text-emerald-400 font-semibold'>{experience}</span> of professional
               experience.
             </motion.p>
 
+            {/* Modern CTA Buttons */}
             <motion.div
-              className='flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 justify-center px-4 sm:px-0'
+              className='flex flex-col sm:flex-row gap-3 md:gap-4 mb-6 md:mb-8 justify-center px-4 sm:px-0 hero-buttons'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <a
+              <motion.a
                 href='#contact'
-                className='btn btn-primary w-full sm:w-auto'
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className='group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-pink-500/25 transition-all duration-300 overflow-hidden'
                 aria-label='Navigate to contact section'
               >
-                Get In Touch
-              </a>
-              <a
+                <span className='relative z-10 flex items-center justify-center space-x-2'>
+                  <Sparkles size={20} />
+                  <span>Get In Touch</span>
+                </span>
+                <motion.div
+                  className='absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-700'
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '0%' }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.a>
+
+              <motion.a
                 href='#experience'
-                className='btn btn-outline w-full sm:w-auto'
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className='group relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
                 aria-label='Navigate to experience section'
               >
-                View My Work
-              </a>
+                <span className='flex items-center justify-center space-x-2'>
+                  <Star size={20} />
+                  <span>View My Work</span>
+                </span>
+              </motion.a>
             </motion.div>
 
-            {/* Social Media Links */}
+            {/* Modern Social Links */}
             <motion.div
-              className='flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 px-4 sm:px-0'
+              className='flex items-center gap-4 md:gap-6 justify-center mb-8 md:mb-16 px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0 }}
             >
-              <span className='text-gray-300 text-sm mb-2 sm:mb-0'>Connect with me:</span>
-              <div className='flex items-center gap-6 sm:gap-4'>
-                <a
-                  href='https://www.linkedin.com/in/aswin4122001/'
+              {[
+                { icon: Github, href: 'https://github.com/Aswin-coder', label: 'GitHub' },
+                {
+                  icon: Linkedin,
+                  href: 'https://www.linkedin.com/in/aswin4122001/',
+                  label: 'LinkedIn',
+                },
+                { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email' },
+              ].map((social, index) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
                   target='_blank'
                   rel='noopener noreferrer'
-                  aria-label="Visit Aswin's LinkedIn profile"
-                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform p-2'
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0 + index * 0.1 }}
+                  whileHover={{ scale: 1.2, y: -5 }}
+                  className='group relative p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
+                  aria-label={`Visit ${social.label} profile`}
                 >
-                  <Linkedin size={20} />
-                  <span className='text-sm'>LinkedIn</span>
-                </a>
-                <a
-                  href='https://github.com/Aswin-coder'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  aria-label="Visit Aswin's GitHub profile"
-                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform p-2'
-                >
-                  <Github size={20} />
-                  <span className='text-sm'>GitHub</span>
-                </a>
-              </div>
+                  <social.icon
+                    size={24}
+                    className='text-white group-hover:text-pink-400 transition-colors duration-300'
+                  />
+                  <motion.div className='absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+                </motion.a>
+              ))}
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        <AnimatePresence>
-          {!scrolled && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 1.2 }}
-              className='fixed bottom-4 left-1/2 transform -translate-x-1/2 text-white/80 z-20 bg-black/20 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm'
-            >
-              <div className='flex flex-col items-center space-y-1'>
-                <span className='text-xs font-medium'>Scroll down</span>
-                <ChevronDown size={18} className='animate-bounce' />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Modern Scroll Indicator - Positioned right after social links */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: showScrollIndicator ? 1 : 0 }}
+        transition={{ delay: showScrollIndicator ? 1.5 : 0, duration: 0.5 }}
+        className='absolute bottom-12 md:bottom-8 left-1/2 transform -translate-x-1/2 z-40'
+      >
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className='flex flex-col items-center space-y-2 text-white/90'
+        >
+          <span className='text-sm md:text-sm font-medium'>Scroll to explore</span>
+          <motion.div className='w-6 h-9 md:w-6 md:h-10 border-2 border-white/60 rounded-full flex justify-center'>
+            <motion.div
+              className='w-1 h-3 md:h-3 bg-white/90 rounded-full mt-2 md:mt-2'
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 });
 
-// About Section Component
-const AboutSection = () => {
+// Modern About Section Component
+const AboutSection = React.memo(() => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const experience = useExperienceCalculator();
 
   const stats = [
-    { number: experience, label: 'Years Experience' },
-    { number: 'Software', label: 'Development' },
-    { number: 'Cloud', label: 'Technologies' },
+    {
+      number: experience,
+      label: 'Years Experience',
+      icon: <Briefcase size={24} />,
+      color: 'from-blue-500 to-cyan-500',
+    },
+    {
+      number: 'Software',
+      label: 'Development',
+      icon: <Code size={24} />,
+      color: 'from-purple-500 to-pink-500',
+    },
+    {
+      number: 'Cloud',
+      label: 'Technologies',
+      icon: <Cloud size={24} />,
+      color: 'from-emerald-500 to-teal-500',
+    },
   ];
 
   return (
-    <section id='about' className='section-padding bg-gray-50'>
+    <section
+      id='about'
+      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50'
+    >
       <div className='container-custom'>
         <motion.div
           ref={ref}
@@ -434,52 +804,131 @@ const AboutSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>About Me</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
-            Learn more about my background and interests
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Circle size={8} className='text-blue-500 fill-current' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              About Me
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent'>
+              Crafting Digital Excellence
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Passionate about building innovative solutions that make a difference
           </p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-2 gap-16 items-center'>
+        <div className='grid lg:grid-cols-2 gap-16 items-start'>
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
+            className='relative h-full flex flex-col justify-center'
           >
             <div className='space-y-6 text-lg text-gray-700 leading-relaxed'>
-              <p>
-                I'm a passionate Software Developer Engineer based in Pondicherry, specializing in
-                software development and modern application architecture. My expertise lies in
-                developing efficient software solutions, building scalable applications, and
-                implementing best practices in software engineering.
-              </p>
-              <p>
-                I have a keen interest in cloud technologies and enjoy exploring modern deployment
-                strategies. I combine software engineering skills with cloud infrastructure to
-                create high-quality, scalable applications that leverage the power of cloud
-                computing.
-              </p>
+              <div className='relative'>
+                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 rounded-full'></div>
+                <p className='pl-8'>
+                  I'm a passionate{' '}
+                  <span className='font-semibold text-blue-600'>Software Developer Engineer</span>{' '}
+                  based in Pondicherry, specializing in software development and modern application
+                  architecture. My expertise lies in developing efficient software solutions,
+                  building scalable applications, and implementing best practices in software
+                  engineering.
+                </p>
+              </div>
+
+              <div className='relative'>
+                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500 rounded-full'></div>
+                <p className='pl-8'>
+                  I have a keen interest in{' '}
+                  <span className='font-semibold text-purple-600'>cloud technologies</span> and
+                  enjoy exploring modern deployment strategies. I combine software engineering
+                  skills with cloud infrastructure to create high-quality, scalable applications
+                  that leverage the power of{' '}
+                  <span className='font-semibold text-pink-600'>cloud computing</span>.
+                </p>
+              </div>
+
+              <div className='relative'>
+                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-pink-500 to-emerald-500 rounded-full'></div>
+                <p className='pl-8'>
+                  My approach focuses on{' '}
+                  <span className='font-semibold text-emerald-600'>continuous learning</span> and
+                  staying updated with the latest industry trends. I believe in writing clean,
+                  maintainable code and creating solutions that not only work efficiently but also
+                  provide excellent user experiences and long-term value.
+                </p>
+              </div>
             </div>
+
+            {/* Removed decorative elements that were causing layout issues */}
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className='grid grid-cols-1 sm:grid-cols-3 gap-6'
+            className='grid grid-cols-1 gap-6'
           >
             {stats.map((stat, index) => (
-              <div key={index} className='card p-6 text-center'>
-                <div className='text-3xl font-bold text-secondary-600 mb-2'>{stat.number}</div>
-                <div className='text-sm text-gray-600 font-medium'>{stat.label}</div>
-              </div>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                className='group relative bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-white/20 overflow-hidden'
+              >
+                {/* Simplified gradient background */}
+                <div className='absolute inset-0 opacity-20'>
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-30`}
+                  ></div>
+                  <div className='absolute inset-0 bg-gradient-to-r from-white/40 via-transparent to-white/10'></div>
+                </div>
+
+                {/* Hover gradient */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
+                ></div>
+
+                {/* Icon */}
+                <div
+                  className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} mb-3 text-white shadow-lg`}
+                >
+                  {stat.icon}
+                </div>
+
+                {/* Content */}
+                <div className='relative z-10'>
+                  <div
+                    className={`text-3xl font-black mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
+                  >
+                    {stat.number}
+                  </div>
+                  <div className='text-gray-600 font-semibold text-base'>{stat.label}</div>
+                </div>
+
+                {/* Simplified decorative elements */}
+                <div className='absolute top-3 right-3 w-6 h-6 border border-gray-200 rounded-full opacity-20 group-hover:opacity-30 transition-opacity duration-300'></div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
       </div>
     </section>
   );
-};
+});
+
+AboutSection.displayName = 'AboutSection';
 
 // Experience Section Component
 const ExperienceSection = () => {
@@ -498,15 +947,34 @@ const ExperienceSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Experience</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>My professional journey</p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Briefcase size={16} className='text-blue-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Professional Journey
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent'>
+              Experience
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Building innovative solutions and driving technological excellence across diverse
+            industries
+          </p>
         </motion.div>
 
         <div className='max-w-4xl mx-auto'>
           <div className='relative' style={{ minHeight: '400px' }}>
-            {/* Timeline line - properly contained */}
+            {/* Timeline line - properly contained and mobile responsive */}
             <div
-              className='absolute left-8 top-8 w-0.5 bg-secondary-200'
+              className='absolute left-5 md:left-8 top-8 w-0.5 bg-secondary-200'
               style={{ height: 'calc(100% - 4rem)', bottom: '2rem' }}
             ></div>
 
@@ -525,7 +993,7 @@ const ExperienceSection = () => {
   );
 };
 
-// Skills Section Component
+// Modern Skills Section Component
 const SkillsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -534,26 +1002,34 @@ const SkillsSection = () => {
       icon: <Code size={48} />,
       title: 'Software Development',
       description: 'Full-stack development, application architecture, and software engineering',
+      color: 'from-blue-500 to-indigo-600',
+      bgColor: 'from-blue-50 to-indigo-50',
     },
     {
       icon: <Zap size={48} />,
       title: 'Performance Optimization',
       description: 'Profiling, benchmarking, and performance analysis for applications',
+      color: 'from-purple-500 to-pink-600',
+      bgColor: 'from-purple-50 to-pink-50',
     },
     {
       icon: <Cpu size={48} />,
       title: 'System Analysis',
       description: 'System profiling, resource optimization, and performance tuning',
+      color: 'from-emerald-500 to-teal-600',
+      bgColor: 'from-emerald-50 to-teal-50',
     },
     {
       icon: <Cloud size={48} />,
       title: 'Cloud Technologies',
       description: 'Cloud deployment, infrastructure, and modern deployment strategies',
+      color: 'from-orange-500 to-red-600',
+      bgColor: 'from-orange-50 to-red-50',
     },
   ];
 
   return (
-    <section id='skills' className='section-padding bg-gray-50'>
+    <section id='skills' className='section-padding bg-white'>
       <div className='container-custom'>
         <motion.div
           ref={ref}
@@ -562,9 +1038,25 @@ const SkillsSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Skills & Interests</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
-            Technologies and areas I'm passionate about
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Sparkles size={16} className='text-purple-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Skills & Expertise
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent'>
+              What I Do Best
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Passionate about technologies that drive innovation and create meaningful impact
           </p>
         </motion.div>
 
@@ -575,13 +1067,36 @@ const SkillsSection = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className='card p-8 text-center group'
+              className='group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-100 overflow-hidden'
             >
-              <div className='text-secondary-600 mb-6 group-hover:text-accent-500 transition-colors duration-300'>
+              {/* Simplified background gradient overlay */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${skill.bgColor} opacity-0 group-hover:opacity-80 transition-opacity duration-300`}
+              ></div>
+
+              {/* Optimized floating background elements */}
+              <div className='absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br from-gray-200/15 to-gray-300/15 rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-200'></div>
+              <div className='absolute -bottom-4 -left-4 w-8 h-8 bg-gradient-to-br from-gray-100/20 to-gray-200/20 rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-200'></div>
+
+              {/* Icon container */}
+              <div
+                className={`relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${skill.color} mb-6 text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}
+              >
                 {skill.icon}
               </div>
-              <h3 className='text-xl font-bold text-gray-900 mb-4'>{skill.title}</h3>
-              <p className='text-gray-600 leading-relaxed'>{skill.description}</p>
+
+              {/* Content */}
+              <div className='relative z-10'>
+                <h3 className='text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-300'>
+                  {skill.title}
+                </h3>
+                <p className='text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300'>
+                  {skill.description}
+                </p>
+              </div>
+
+              {/* Simplified decorative corner element */}
+              <div className='absolute top-4 right-4 w-2 h-2 bg-gray-300 rounded-full opacity-30 group-hover:opacity-50 transition-opacity duration-300'></div>
             </motion.div>
           ))}
         </div>
@@ -593,104 +1108,172 @@ const SkillsSection = () => {
 // Projects Section Component
 const ProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
   const [showMoreProjects, setShowMoreProjects] = useState(false);
+  const [hoveredProject, setHoveredProject] = useState(null);
 
   const id = useId();
   const projectsSectionListId = `projects-list-${id}`;
 
   return (
-    <section id='projects' className='section-padding bg-gray-50' ref={ref}>
-      <div className='container-custom'>
+    <section id='projects' className='section-padding relative overflow-hidden' ref={ref}>
+      {/* Modern Background */}
+      <div className='absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100'></div>
+      <div className='absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.05),transparent_50%)]'></div>
+      <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,119,198,0.05),transparent_50%)]'></div>
+
+      <div className='container-custom relative z-10'>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className='text-center mb-16'
+          className='text-center mb-20'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Featured Projects</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
-            Innovative solutions powered by machine learning and modern technology
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 backdrop-blur-sm rounded-full px-8 py-4 mb-8 border border-emerald-200/50'
+          >
+            <Sparkles size={18} className='text-emerald-500' />
+            <span className='text-sm font-bold text-gray-700 uppercase tracking-wider'>
+              Featured Work
+            </span>
+          </motion.div>
+
+          <h2 className='text-5xl lg:text-6xl font-black mb-8 text-gray-900 leading-tight'>
+            <span className='bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 bg-clip-text text-transparent'>
+              Featured Projects
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed'>
+            Innovative solutions powered by machine learning and cutting-edge technology
           </p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-1 gap-8' id={projectsSectionListId}>
+        <div className='grid gap-12' id={projectsSectionListId}>
           {(showMoreProjects ? allProjects : featuredProjects).map((project, index) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 60 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className='card p-8 lg:p-12 group hover:shadow-xl transition-all duration-300'
+              onMouseEnter={() => setHoveredProject(project.id)}
+              onMouseLeave={() => setHoveredProject(null)}
+              className='group relative'
             >
-              <div className='grid lg:grid-cols-3 gap-8 lg:gap-12'>
-                {/* Project Icon and Title */}
-                <div className='lg:col-span-1'>
-                  <div className='flex items-center justify-center lg:justify-start mb-6'>
-                    <div className='text-secondary-600 group-hover:text-accent-500 transition-colors duration-300'>
-                      {project.icon}
+              {/* Optimized Glassmorphism Card */}
+              <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/30 shadow-xl hover:shadow-2xl transition-shadow duration-300 overflow-hidden'>
+                {/* Optimized Background Gradient */}
+                <div className='absolute inset-0 bg-gradient-to-br from-secondary-500/3 via-accent-500/3 to-emerald-500/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+
+                {/* Optimized Floating Orbs - Reduced blur */}
+                <div className='absolute -top-20 -right-20 w-32 h-32 bg-gradient-to-br from-secondary-400/15 to-accent-400/15 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                <div className='absolute -bottom-20 -left-20 w-24 h-24 bg-gradient-to-br from-emerald-400/15 to-teal-400/15 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+
+                <div className='relative z-10 grid lg:grid-cols-5 gap-8 lg:gap-12'>
+                  {/* Project Icon and Title */}
+                  <div className='lg:col-span-2'>
+                    <div className='flex items-center justify-center lg:justify-start mb-6'>
+                      <motion.div
+                        animate={hoveredProject === project.id ? { scale: 1.05 } : { scale: 1 }}
+                        transition={{ duration: 0.2 }}
+                        className='relative p-4 bg-gradient-to-br from-secondary-500 to-accent-500 rounded-2xl text-white shadow-lg'
+                      >
+                        {project.icon}
+                        <div className='absolute inset-0 bg-white/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
+                      </motion.div>
                     </div>
-                  </div>
-                  <h3 className='text-2xl lg:text-3xl font-bold text-gray-900 mb-2 text-center lg:text-left'>
-                    {project.title}
-                  </h3>
-                  <div className='flex items-center justify-center lg:justify-start space-x-2 mb-4'>
-                    <span className='text-sm text-gray-500'>{project.domain}</span>
-                    <span className='px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full'>
-                      {project.status}
-                    </span>
-                  </div>
-                  <div className='flex justify-center lg:justify-start'>
-                    <a
-                      href={project.link}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      aria-label={`Visit ${project.title} project`}
-                      className='inline-flex items-center px-6 py-3 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-lg hover:from-secondary-600 hover:to-accent-600 transition-all duration-300 transform hover:scale-105'
-                    >
-                      <ExternalLink size={18} className='mr-2' />
-                      View Project
-                    </a>
-                  </div>
-                </div>
 
-                {/* Project Details */}
-                <div className='lg:col-span-2'>
-                  <p className='text-gray-600 text-lg leading-relaxed mb-6'>
-                    {project.description}
-                  </p>
+                    <h3 className='text-3xl lg:text-4xl font-black text-gray-900 mb-3 text-center lg:text-left group-hover:text-secondary-600 transition-colors duration-300'>
+                      {project.title}
+                    </h3>
 
-                  {/* Technologies */}
-                  <div className='mb-6'>
-                    <h4 className='text-lg font-semibold text-gray-900 mb-3 flex items-center'>
-                      <Code size={20} className='mr-2 text-secondary-600' />
-                      Technologies
-                    </h4>
-                    <div className='flex flex-wrap gap-2'>
-                      {project.technologies.map((tech, techIndex) => (
-                        <span
-                          key={techIndex}
-                          className='px-3 py-1 bg-secondary-100 text-secondary-800 text-sm font-medium rounded-full'
-                        >
-                          {tech}
+                    <div className='flex items-center justify-center lg:justify-start space-x-3 mb-6'>
+                      <span className='text-sm text-gray-500 font-medium'>{project.domain}</span>
+                      <div className='flex items-center space-x-1'>
+                        <Circle size={8} className='text-green-500 fill-current' />
+                        <span className='px-3 py-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs font-bold rounded-full border border-green-200'>
+                          {project.status}
                         </span>
-                      ))}
+                      </div>
+                    </div>
+
+                    <div className='flex justify-center lg:justify-start'>
+                      <motion.a
+                        href={project.link}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        aria-label={`Visit ${project.title} project`}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary-500 via-accent-500 to-secondary-600 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-shadow duration-200 group/button'
+                      >
+                        <ExternalLink
+                          size={20}
+                          className='mr-2 group-hover/button:rotate-6 transition-transform duration-200'
+                        />
+                        View Project
+                        <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-200'></div>
+                      </motion.a>
                     </div>
                   </div>
 
-                  {/* Key Features */}
-                  <div>
-                    <h4 className='text-lg font-semibold text-gray-900 mb-3 flex items-center'>
-                      <Zap size={20} className='mr-2 text-secondary-600' />
-                      Key Features
-                    </h4>
-                    <div className='grid md:grid-cols-2 gap-2'>
-                      {project.features.map((feature, featureIndex) => (
-                        <div key={featureIndex} className='flex items-center space-x-2'>
-                          <GitPullRequest size={16} className='text-accent-500 flex-shrink-0' />
-                          <span className='text-gray-600'>{feature}</span>
+                  {/* Project Details */}
+                  <div className='lg:col-span-3'>
+                    <p className='text-gray-700 text-lg leading-relaxed mb-8 font-medium'>
+                      {project.description}
+                    </p>
+
+                    {/* Technologies */}
+                    <div className='mb-8'>
+                      <h4 className='text-xl font-bold text-gray-900 mb-4 flex items-center'>
+                        <div className='p-2 bg-gradient-to-br from-secondary-500 to-accent-500 rounded-lg mr-3'>
+                          <Code size={18} className='text-white' />
                         </div>
-                      ))}
+                        Technologies
+                      </h4>
+                      <div className='flex flex-wrap gap-3'>
+                        {project.technologies.map((tech, techIndex) => (
+                          <motion.span
+                            key={techIndex}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={inView ? { opacity: 1, scale: 1 } : {}}
+                            transition={{ duration: 0.3, delay: index * 0.05 + techIndex * 0.02 }}
+                            className='px-4 py-2 bg-gradient-to-r from-secondary-100 to-accent-100 text-secondary-800 text-sm font-bold rounded-full border border-secondary-200 hover:shadow-md transition-shadow duration-200'
+                          >
+                            {tech}
+                          </motion.span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Key Features */}
+                    <div>
+                      <h4 className='text-xl font-bold text-gray-900 mb-4 flex items-center'>
+                        <div className='p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg mr-3'>
+                          <Star size={18} className='text-white' />
+                        </div>
+                        Key Features
+                      </h4>
+                      <div className='grid md:grid-cols-2 gap-3'>
+                        {project.features.map((feature, featureIndex) => (
+                          <motion.div
+                            key={featureIndex}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={inView ? { opacity: 1, x: 0 } : {}}
+                            transition={{
+                              duration: 0.3,
+                              delay: index * 0.05 + featureIndex * 0.05,
+                            }}
+                            className='flex items-center space-x-3 p-3 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-sm transition-shadow duration-200'
+                          >
+                            <div className='p-1 bg-gradient-to-br from-accent-500 to-emerald-500 rounded-full'>
+                              <GitPullRequest size={14} className='text-white' />
+                            </div>
+                            <span className='text-gray-700 font-medium'>{feature}</span>
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -698,26 +1281,29 @@ const ProjectsSection = () => {
             </motion.div>
           ))}
         </div>
-        {/* View More/Less Projects Button */}
+
+        {/* Enhanced View More/Less Projects Button */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className='text-center mt-8'
+          className='text-center mt-16'
         >
-          <button
+          <motion.button
             type='button'
             onClick={() => setShowMoreProjects(!showMoreProjects)}
             aria-expanded={showMoreProjects}
             aria-controls={projectsSectionListId}
-            className='inline-flex items-center gap-1 text-secondary-600 underline cursor-pointer text-base font-medium hover:text-accent-600 transition-colors duration-200 select-none bg-transparent border-0 p-0 shadow-none'
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className='inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-shadow duration-200 group/btn'
           >
             {showMoreProjects ? 'View Less Projects' : 'View More Projects'}
             <ChevronDown
-              className={`h-4 w-4 transition-transform duration-200 ${showMoreProjects ? 'rotate-180' : ''}`}
+              className={`h-5 w-5 transition-transform duration-200 group-hover/btn:scale-105 ${showMoreProjects ? 'rotate-180' : ''}`}
               aria-hidden='true'
             />
-          </button>
+          </motion.button>
         </motion.div>
       </div>
     </section>
@@ -727,6 +1313,7 @@ const ProjectsSection = () => {
 // Personal Projects Section Component
 const PersonalProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [hoveredProject, setHoveredProject] = useState(null);
 
   const personalProjects = [
     {
@@ -840,20 +1427,42 @@ const PersonalProjectsSection = () => {
   ];
 
   return (
-    <section id='personal-projects' className='section-padding'>
-      <div className='container-custom'>
+    <section id='personal-projects' className='section-padding relative overflow-hidden'>
+      {/* Modern Background */}
+      <div className='absolute inset-0 bg-gradient-to-br from-orange-50 via-red-50 to-orange-50'></div>
+      <div className='absolute top-0 left-0 w-full h-full'>
+        <div className='absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-orange-400/10 to-red-400/10 rounded-full blur-2xl'></div>
+        <div className='absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-br from-red-400/10 to-orange-400/10 rounded-full blur-2xl'></div>
+      </div>
+
+      <div className='container-custom relative z-10'>
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>
-            Personal Infrastructure
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-orange-200/50'
+          >
+            <Server size={16} className='text-orange-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Self-Hosted Solutions
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent'>
+              Personal Infrastructure
+            </span>
           </h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
-            Self-hosted services and infrastructure projects I maintain
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Self-hosted services and infrastructure projects I maintain with enterprise-grade
+            reliability
           </p>
         </motion.div>
 
@@ -863,78 +1472,121 @@ const PersonalProjectsSection = () => {
               key={index}
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-              className='card p-8 group hover:shadow-xl transition-all duration-300'
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className='group relative h-full'
+              onMouseEnter={() => setHoveredProject(index)}
+              onMouseLeave={() => setHoveredProject(null)}
             >
-              {/* Project Header */}
-              <div className='flex items-start justify-between mb-6'>
-                <div className='text-secondary-600 group-hover:text-accent-500 transition-colors duration-300'>
-                  {project.icon}
-                </div>
-                <div className='flex flex-col items-end space-y-1'>
-                  <span className='px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full'>
-                    {project.status}
-                  </span>
-                  <span className='px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full'>
-                    {project.access}
-                  </span>
-                </div>
-              </div>
+              {/* Glassmorphism Card */}
+              <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col'>
+                {/* Animated Background Gradient */}
+                <div className='absolute inset-0 bg-gradient-to-br from-orange-500/5 via-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
-              {/* Project Title and Domain */}
-              <div className='mb-4'>
-                <h3 className='text-xl font-bold text-gray-900 mb-2'>{project.title}</h3>
-                {project.domain && (
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-gray-500 font-mono'>{project.domain}</span>
-                    <a
-                      href={project.link}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      aria-label={`Visit ${project.title} infrastructure`}
-                      className='inline-flex items-center px-3 py-1 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-lg hover:from-secondary-600 hover:to-accent-600 transition-all duration-300 transform hover:scale-105 text-xs font-medium'
-                    >
-                      <ExternalLink size={14} className='mr-1' />
-                      Visit
-                    </a>
-                  </div>
-                )}
-              </div>
+                {/* Floating Orbs */}
+                <div className='absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                <div className='absolute -bottom-16 -left-16 w-24 h-24 bg-gradient-to-br from-red-400/20 to-orange-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700'></div>
 
-              {/* Project Description */}
-              <p className='text-gray-600 leading-relaxed mb-6'>{project.description}</p>
-
-              {/* Technologies */}
-              <div className='mb-6'>
-                <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                  <Code size={16} className='mr-2 text-secondary-600' />
-                  Technologies
-                </h4>
-                <div className='flex flex-wrap gap-2'>
-                  {project.technologies.map((tech, techIndex) => (
-                    <span
-                      key={techIndex}
-                      className='px-2 py-1 bg-secondary-100 text-secondary-800 text-xs font-medium rounded-full'
-                    >
-                      {tech}
+                {/* Project Header */}
+                <div className='flex items-start justify-between mb-6 relative z-10'>
+                  <motion.div
+                    animate={hoveredProject === index ? { scale: 1.02 } : { scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    className='relative p-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl text-white shadow-lg'
+                  >
+                    {project.icon}
+                    <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
+                  </motion.div>
+                  <div className='flex flex-col items-end space-y-2'>
+                    <span className='px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full border border-green-200'>
+                      {project.status}
                     </span>
-                  ))}
+                    <span className='px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full border border-gray-200'>
+                      {project.access}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Key Features */}
-              <div>
-                <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                  <Zap size={16} className='mr-2 text-secondary-600' />
-                  Key Features
-                </h4>
-                <div className='space-y-2'>
-                  {project.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className='flex items-center space-x-2'>
-                      <Shield size={14} className='text-accent-500 flex-shrink-0' />
-                      <span className='text-gray-600 text-sm'>{feature}</span>
+                {/* Project Title and Domain */}
+                <div className='mb-6 relative z-10'>
+                  <h3 className='text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-200'>
+                    {project.title}
+                  </h3>
+                  {project.domain && (
+                    <div className='flex items-center justify-between mb-4'>
+                      <span className='text-sm text-gray-500 font-mono bg-gray-100 px-3 py-1 rounded-lg border'>
+                        {project.domain}
+                      </span>
+                      <motion.a
+                        href={project.link}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        aria-label={`Visit ${project.title} infrastructure`}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-200 group/button'
+                      >
+                        <ExternalLink
+                          size={16}
+                          className='mr-2 group-hover/button:rotate-3 transition-transform duration-200'
+                        />
+                        Visit
+                        <div className='absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-200'></div>
+                      </motion.a>
                     </div>
-                  ))}
+                  )}
+                </div>
+
+                {/* Project Description */}
+                <p className='text-gray-600 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
+                  {project.description}
+                </p>
+
+                {/* Content Area - Flexible */}
+                <div className='flex-1 flex flex-col relative z-10'>
+                  {/* Technologies */}
+                  <div className='mb-6'>
+                    <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                      <Code size={16} className='mr-2 text-orange-600' />
+                      Technologies
+                    </h4>
+                    <div className='flex flex-wrap gap-2'>
+                      {project.technologies.map((tech, techIndex) => (
+                        <motion.span
+                          key={techIndex}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={inView ? { opacity: 1, scale: 1 } : {}}
+                          transition={{ duration: 0.3, delay: index * 0.1 + techIndex * 0.03 }}
+                          className='px-3 py-1 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 text-sm font-bold rounded-full border border-orange-200 hover:shadow-sm transition-all duration-200'
+                        >
+                          {tech}
+                        </motion.span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Key Features */}
+                  <div className='flex-1'>
+                    <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                      <Zap size={16} className='mr-2 text-red-600' />
+                      Key Features
+                    </h4>
+                    <div className='space-y-2'>
+                      {project.features.map((feature, featureIndex) => (
+                        <motion.div
+                          key={featureIndex}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={inView ? { opacity: 1, x: 0 } : {}}
+                          transition={{ duration: 0.3, delay: index * 0.1 + featureIndex * 0.05 }}
+                          className='flex items-center space-x-3 p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:shadow-sm transition-all duration-200'
+                        >
+                          <div className='p-1 bg-gradient-to-br from-red-500 to-orange-500 rounded-full'>
+                            <Shield size={12} className='text-white' />
+                          </div>
+                          <span className='text-gray-700 font-medium text-sm'>{feature}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -945,12 +1597,12 @@ const PersonalProjectsSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className='mt-12 text-center'
         >
-          <div className='inline-flex items-center px-6 py-4 bg-gray-50 rounded-xl'>
-            <Shield size={20} className='text-gray-600 mr-3' />
-            <p className='text-gray-600'>
+          <div className='inline-flex items-center px-8 py-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-orange-200/50 shadow-lg'>
+            <Shield size={20} className='text-orange-600 mr-3' />
+            <p className='text-gray-700 font-medium'>
               These services are private and require authentication. Contact me for access
               credentials.
             </p>
@@ -967,6 +1619,7 @@ const TechnologiesSection = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
+  const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const technologies = [
     {
@@ -1012,8 +1665,15 @@ const TechnologiesSection = () => {
   ];
 
   return (
-    <section id='technologies' className='py-20 bg-gray-50'>
-      <div className='container-custom'>
+    <section id='technologies' className='section-padding relative overflow-hidden'>
+      {/* Modern Background */}
+      <div className='absolute inset-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-indigo-50'></div>
+      <div className='absolute top-0 left-0 w-full h-full'>
+        <div className='absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full blur-2xl'></div>
+        <div className='absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-br from-purple-400/10 to-indigo-400/10 rounded-full blur-2xl'></div>
+      </div>
+
+      <div className='container-custom relative z-10'>
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -1021,10 +1681,24 @@ const TechnologiesSection = () => {
           transition={{ duration: 0.6 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl md:text-5xl font-bold text-primary-900 mb-6'>
-            Technologies & Platforms
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-indigo-200/50'
+          >
+            <Monitor size={16} className='text-indigo-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Technical Stack
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl md:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent'>
+              Technologies & Platforms
+            </span>
           </h2>
-          <p className='text-xl text-primary-700 max-w-3xl mx-auto'>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
             Comprehensive experience across cloud platforms, operating systems, networking, and
             infrastructure technologies.
           </p>
@@ -1039,31 +1713,61 @@ const TechnologiesSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-                className='bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 border border-gray-100'
+                className='group relative'
+                onMouseEnter={() => setHoveredCategory(categoryIndex)}
+                onMouseLeave={() => setHoveredCategory(null)}
               >
-                <h3 className='text-2xl font-bold text-primary-900 mb-6 flex items-center'>
-                  <IconComponent className='w-8 h-8 text-secondary-500 mr-3' />
-                  {category.category}
-                </h3>
+                {/* Glassmorphism Card */}
+                <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden'>
+                  {/* Animated Background Gradient */}
+                  <div className='absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
-                <div className='space-y-4'>
-                  {category.items.map((item, itemIndex) => (
+                  {/* Floating Orbs */}
+                  <div className='absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                  <div className='absolute -bottom-16 -left-16 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-indigo-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700'></div>
+
+                  {/* Category Header */}
+                  <div className='relative z-10 mb-6'>
                     <motion.div
-                      key={item.name}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={inView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.4, delay: categoryIndex * 0.1 + itemIndex * 0.05 }}
-                      className='flex items-start space-x-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200'
+                      animate={hoveredCategory === categoryIndex ? { scale: 1.02 } : { scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                      className='flex items-center mb-4'
                     >
-                      <div className='flex-shrink-0 w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center'>
-                        <IconComponent className='w-5 h-5 text-secondary-600' />
+                      <div className='relative p-3 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl text-white shadow-lg mr-4'>
+                        <IconComponent className='w-6 h-6' />
+                        <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
                       </div>
-                      <div className='flex-1'>
-                        <h4 className='font-semibold text-primary-900 mb-1'>{item.name}</h4>
-                        <p className='text-sm text-primary-600'>{item.description}</p>
-                      </div>
+                      <h3 className='text-2xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors duration-200'>
+                        {category.category}
+                      </h3>
                     </motion.div>
-                  ))}
+                  </div>
+
+                  {/* Technology Items */}
+                  <div className='space-y-3 relative z-10'>
+                    {category.items.map((item, itemIndex) => (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={inView ? { opacity: 1, x: 0 } : {}}
+                        transition={{
+                          duration: 0.4,
+                          delay: categoryIndex * 0.1 + itemIndex * 0.05,
+                        }}
+                        className='flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-white/80 to-gray-50/80 border border-gray-100/50 hover:shadow-md transition-all duration-200 backdrop-blur-sm'
+                      >
+                        <div className='flex-shrink-0 w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center border border-indigo-200/50'>
+                          <IconComponent className='w-5 h-5 text-indigo-600' />
+                        </div>
+                        <div className='flex-1'>
+                          <h4 className='font-bold text-gray-900 mb-1'>{item.name}</h4>
+                          <p className='text-sm text-gray-600 leading-relaxed'>
+                            {item.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             );
@@ -1073,15 +1777,22 @@ const TechnologiesSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className='text-center mt-12'
         >
-          <div className='bg-gradient-to-r from-secondary-500 to-accent-500 p-8 rounded-2xl text-white'>
-            <h3 className='text-2xl font-bold mb-4'>Continuous Learning</h3>
-            <p className='text-lg opacity-90 max-w-2xl mx-auto'>
-              I'm constantly exploring new technologies and platforms to stay current with industry
-              trends and expand my technical capabilities across different domains.
-            </p>
+          <div className='relative bg-gradient-to-r from-indigo-500 to-purple-500 p-8 rounded-3xl text-white shadow-xl overflow-hidden'>
+            {/* Background Pattern */}
+            <div className='absolute inset-0 bg-white/10 rounded-3xl'></div>
+            <div className='absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl'></div>
+            <div className='absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-2xl'></div>
+
+            <div className='relative z-10'>
+              <h3 className='text-2xl font-bold mb-4'>Continuous Learning</h3>
+              <p className='text-lg opacity-90 max-w-2xl mx-auto'>
+                I'm constantly exploring new technologies and platforms to stay current with
+                industry trends and expand my technical capabilities across different domains.
+              </p>
+            </div>
           </div>
         </motion.div>
       </div>
@@ -1183,7 +1894,10 @@ const ContactSection = () => {
   ];
 
   return (
-    <section id='contact' className='section-padding'>
+    <section
+      id='contact'
+      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50'
+    >
       <div className='container-custom'>
         <motion.div
           ref={ref}
@@ -1192,8 +1906,27 @@ const ContactSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Get In Touch</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>Let's discuss your next project</p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Mail size={16} className='text-green-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Get In Touch
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-green-600 via-blue-600 to-green-600 bg-clip-text text-transparent'>
+              Let's Work Together
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Ready to bring your ideas to life? Let's discuss your next project and create something
+            amazing together.
+          </p>
         </motion.div>
 
         <div className='grid lg:grid-cols-2 gap-8 lg:gap-16'>
@@ -1205,132 +1938,180 @@ const ContactSection = () => {
             className='space-y-6 lg:space-y-8 order-2 lg:order-1'
           >
             {contactInfo.map((item, index) => (
-              <div
+              <motion.div
                 key={index}
-                className='flex items-start space-x-3 lg:space-x-4 p-4 lg:p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300'
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
               >
-                <div className='flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-secondary-500 to-accent-500 rounded-full flex items-center justify-center text-white'>
-                  {item.icon}
+                {/* Background gradient */}
+                <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 to-green-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+
+                {/* Icon */}
+                <div className='flex items-start space-x-4'>
+                  <div className='flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-500'>
+                    {item.icon}
+                  </div>
+                  <div className='relative z-10'>
+                    <h3 className='text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300'>
+                      {item.title}
+                    </h3>
+                    {item.link ? (
+                      <a
+                        href={item.link}
+                        className='text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium'
+                      >
+                        {item.content}
+                      </a>
+                    ) : (
+                      <p className='text-gray-600 font-medium'>{item.content}</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h3 className='text-base lg:text-lg font-semibold text-gray-900 mb-1'>
-                    {item.title}
-                  </h3>
-                  {item.link ? (
-                    <a
-                      href={item.link}
-                      className='text-gray-600 hover:text-secondary-600 transition-colors duration-200 text-sm lg:text-base'
-                    >
-                      {item.content}
-                    </a>
-                  ) : (
-                    <p className='text-gray-600 text-sm lg:text-base'>{item.content}</p>
-                  )}
-                </div>
-              </div>
+
+                {/* Decorative elements */}
+                <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+              </motion.div>
             ))}
           </motion.div>
 
-          {/* Contact Form */}
+          {/* Modern Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className='card p-6 lg:p-8 order-1 lg:order-2'
+            className='relative bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 overflow-hidden order-1 lg:order-2'
           >
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/* Status Messages */}
-              {submitStatus === 'success' && (
-                <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <span className='text-green-400 text-xl'>✓</span>
-                    </div>
-                    <div className='ml-3'>
-                      <p className='text-sm font-medium text-green-800'>
-                        Message sent successfully! Thank you for contacting me.
-                      </p>
-                      <p className='text-sm text-green-600 mt-1'>
-                        I'll get back to you within 24-48 hours. You can also reach me directly at
-                        contact@aswinlocal.in
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+            {/* Background gradient */}
+            <div className='absolute inset-0 bg-gradient-to-br from-blue-50/30 to-green-50/30'></div>
 
-              {submitStatus === 'error' && (
-                <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <span className='text-red-400 text-xl'>⚠</span>
-                    </div>
-                    <div className='ml-3'>
-                      <p className='text-sm font-medium text-red-800'>
-                        Failed to send message. Please check the following:
-                      </p>
-                      <ul className='text-sm text-red-600 mt-1 list-disc list-inside'>
-                        <li>Name: Only letters and spaces allowed (2-100 characters)</li>
-                        <li>Email: Must be a valid email address</li>
-                        <li>Message: Must be 10-1000 characters long</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              )}
+            {/* Optimized decorative elements */}
+            <div className='absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-blue-500/8 to-green-500/8 rounded-full blur-lg'></div>
+            <div className='absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-green-500/8 to-blue-500/8 rounded-full blur-lg'></div>
 
-              <div>
-                <input
-                  type='text'
-                  name='name'
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder='Your Name'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-base'
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div>
-                <input
-                  type='email'
-                  name='email'
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder='Your Email'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-base'
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div>
-                <textarea
-                  name='message'
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder='Your Message'
-                  rows={4}
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed text-base'
-                  required
-                  disabled={isSubmitting}
-                ></textarea>
-              </div>
-              <button
-                type='submit'
-                disabled={isSubmitting}
-                aria-label='Send contact message'
-                className='w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
-              >
-                {isSubmitting ? (
-                  <div className='flex items-center justify-center'>
-                    <div className='animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2'></div>
-                    Sending Message...
+            <div className='relative z-10'>
+              <form onSubmit={handleSubmit} className='space-y-6'>
+                {/* Status Messages */}
+                {submitStatus === 'success' && (
+                  <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
+                    <div className='flex items-center'>
+                      <div className='flex-shrink-0'>
+                        <span className='text-green-400 text-xl'>✓</span>
+                      </div>
+                      <div className='ml-3'>
+                        <p className='text-sm font-medium text-green-800'>
+                          Message sent successfully! Thank you for contacting me.
+                        </p>
+                        <p className='text-sm text-green-600 mt-1'>
+                          I'll get back to you within 24-48 hours. You can also reach me directly at
+                          contact@aswinlocal.in
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  'Send Message'
                 )}
-              </button>
-            </form>
+
+                {submitStatus === 'error' && (
+                  <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
+                    <div className='flex items-center'>
+                      <div className='flex-shrink-0'>
+                        <span className='text-red-400 text-xl'>⚠</span>
+                      </div>
+                      <div className='ml-3'>
+                        <p className='text-sm font-medium text-red-800'>
+                          Failed to send message. Please check the following:
+                        </p>
+                        <ul className='text-sm text-red-600 mt-1 list-disc list-inside'>
+                          <li>Name: Only letters and spaces allowed (2-100 characters)</li>
+                          <li>Email: Must be a valid email address</li>
+                          <li>Message: Must be 10-1000 characters long</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className='space-y-2'>
+                  <label
+                    htmlFor='contact-name'
+                    className='block text-sm font-semibold text-gray-700 mb-2'
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    id='contact-name'
+                    type='text'
+                    name='name'
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder='Enter your full name'
+                    className='w-full px-6 py-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm hover:shadow-md'
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className='space-y-2'>
+                  <label
+                    htmlFor='contact-email'
+                    className='block text-sm font-semibold text-gray-700 mb-2'
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    id='contact-email'
+                    type='email'
+                    name='email'
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder='Enter your email address'
+                    className='w-full px-6 py-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm hover:shadow-md'
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className='space-y-2'>
+                  <label
+                    htmlFor='contact-message'
+                    className='block text-sm font-semibold text-gray-700 mb-2'
+                  >
+                    Message
+                  </label>
+                  <textarea
+                    id='contact-message'
+                    name='message'
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder='Tell me about your project or idea...'
+                    rows={5}
+                    className='w-full px-6 py-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 resize-none disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm hover:shadow-md'
+                    required
+                    disabled={isSubmitting}
+                  ></textarea>
+                </div>
+                <motion.button
+                  type='submit'
+                  disabled={isSubmitting}
+                  aria-label='Send contact message'
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className='w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2'
+                >
+                  {isSubmitting ? (
+                    <div className='flex items-center justify-center'>
+                      <div className='animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2'></div>
+                      <span>Sending Message...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <Mail size={20} />
+                      <span>Send Message</span>
+                    </>
+                  )}
+                </motion.button>
+              </form>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -1401,6 +2182,212 @@ const Footer = () => {
   );
 };
 
+// Floating Chat Button Component
+const FloatingChatButton = React.memo(() => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
+
+  // Handle scroll to show/hide and expand/collapse button
+  const handleScroll = React.useCallback(() => {
+    const scrollY = window.scrollY;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
+    // For mobile: always show floating button, just expand/collapse based on scroll
+    // For desktop: show floating button after scrolling past header
+    const shouldShowFloating = isMobile ? true : scrollY > 100;
+    const shouldExpand = scrollY > 200; // Expand when scrolled more
+
+    setShowFloatingButton(shouldShowFloating);
+    setIsExpanded(shouldExpand);
+  }, []);
+
+  useThrottledScroll(handleScroll);
+
+  // Handle window resize to update mobile behavior
+  React.useEffect(() => {
+    const handleResize = () => {
+      handleScroll(); // Recalculate on resize
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleScroll]);
+
+  // Set initial state on mount
+  React.useEffect(() => {
+    handleScroll(); // Set initial state based on current scroll position
+  }, [handleScroll]);
+
+  const openChat = () => {
+    setShowChatModal(true);
+  };
+
+  const closeChat = () => {
+    setShowChatModal(false);
+  };
+
+  // Listen for header button clicks
+  React.useEffect(() => {
+    const handleHeaderChatClick = () => {
+      openChat();
+    };
+
+    window.addEventListener('openChat', handleHeaderChatClick);
+    return () => window.removeEventListener('openChat', handleHeaderChatClick);
+  }, []);
+
+  // Handle keyboard events
+  React.useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.key === 'Escape' && showChatModal) {
+        closeChat();
+      }
+    };
+
+    if (showChatModal) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [showChatModal]);
+
+  return (
+    <>
+      {/* Floating Chat Button */}
+      <motion.button
+        onClick={openChat}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{
+          opacity: showFloatingButton ? 1 : 0,
+          scale: showFloatingButton ? 1 : 0.8,
+          width: isExpanded
+            ? typeof window !== 'undefined' && window.innerWidth <= 768
+              ? '120px'
+              : '140px'
+            : '56px',
+        }}
+        whileHover={{
+          scale: showFloatingButton ? (isExpanded ? 1.02 : 1.1) : 0.8,
+          boxShadow: showFloatingButton ? '0 6px 25px rgba(102,126,234,0.6)' : 'none',
+        }}
+        whileTap={{ scale: showFloatingButton ? 0.95 : 0.8 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className='fixed bottom-5 right-5 z-50 bg-gradient-to-br from-blue-500 to-purple-600 text-white border-none shadow-lg hover:shadow-xl flex items-center justify-center cursor-pointer overflow-hidden'
+        style={{
+          height: '56px',
+          borderRadius: isExpanded ? '28px' : '50%',
+          paddingLeft: isExpanded ? '16px' : '0',
+          paddingRight: isExpanded ? '16px' : '0',
+          justifyContent: 'center',
+          alignItems: 'center',
+          display: 'flex',
+          boxShadow: '0 4px 20px rgba(102,126,234,0.4)',
+          touchAction: 'manipulation',
+          pointerEvents: showFloatingButton ? 'auto' : 'none',
+        }}
+        aria-label='Open live chat'
+      >
+        {!isExpanded && (
+          <span
+            className='text-xl absolute'
+            style={{
+              lineHeight: '1',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            💬
+          </span>
+        )}
+        {isExpanded && (
+          <>
+            <span className='text-xl' style={{ lineHeight: '1' }}>
+              💬
+            </span>
+            <motion.span
+              initial={{ opacity: 0, width: 0 }}
+              animate={{
+                opacity: isExpanded ? 1 : 0,
+                width: isExpanded ? 'auto' : 0,
+                maxWidth: isExpanded
+                  ? typeof window !== 'undefined' && window.innerWidth <= 768
+                    ? '60px'
+                    : '80px'
+                  : 0,
+              }}
+              transition={{ duration: 0.3 }}
+              className='ml-2 font-semibold text-sm whitespace-nowrap overflow-hidden'
+              style={{
+                fontSize:
+                  typeof window !== 'undefined' && window.innerWidth <= 768 ? '12px' : '14px',
+              }}
+            >
+              Live Chat
+            </motion.span>
+          </>
+        )}
+      </motion.button>
+
+      {/* Chat Modal */}
+      <AnimatePresence>
+        {showChatModal && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeChat}
+              className='fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]'
+            />
+
+            {/* Chat Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className='fixed bottom-20 right-5 w-80 max-w-[calc(100vw-40px)] h-[calc(100vh-120px)] max-h-[600px] z-[9999] bg-white rounded-lg shadow-2xl overflow-hidden'
+              style={{
+                position: 'fixed',
+                zIndex: 9999,
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeChat}
+                className='absolute top-3 right-3 z-[10000] w-8 h-8 bg-white/90 hover:bg-white/100 rounded-full flex items-center justify-center transition-colors duration-200 shadow-md'
+                aria-label='Close chat'
+              >
+                <X size={16} className='text-gray-700' />
+              </button>
+
+              {/* Chat Content - Full Height */}
+              <div className='w-full h-full'>
+                <iframe
+                  src='https://chat.aswinlocal.in/'
+                  className='w-full h-full border-none'
+                  title='Live Chat'
+                  allow='microphone; camera; geolocation; payment'
+                  sandbox='allow-same-origin allow-scripts allow-forms allow-popups allow-modals'
+                  loading='lazy'
+                  style={{
+                    borderRadius: '8px',
+                    backgroundColor: 'white',
+                  }}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+});
+
+FloatingChatButton.displayName = 'FloatingChatButton';
+
 // Main App Component
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -1450,6 +2437,7 @@ const App = () => {
               <TechnologiesSection />
               <ContactSection />
               <Footer />
+              <FloatingChatButton />
             </div>
           }
         />

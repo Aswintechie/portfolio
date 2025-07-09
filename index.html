@@ -211,7 +211,7 @@
 
     <div id="root"></div>
 
-    <!-- Floating Chat Button -->
+    <!-- Dynamic Floating Chat Button -->
     <button
       id="openChat"
       title="Chat with us"
@@ -231,14 +231,31 @@
         cursor: pointer;
         transition: all 0.3s ease;
         opacity: 0;
-        transform: scale(0.8);
+        transform: scale(0.8) translateX(0);
         display: flex;
         align-items: center;
         justify-content: center;
         touch-action: manipulation;
+        overflow: hidden;
+        white-space: nowrap;
       "
     >
-      💬
+      <span id="chatButtonIcon">💬</span>
+      <span
+        id="chatButtonText"
+        style="
+          margin-left: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          opacity: 0;
+          width: 0;
+          max-width: 0;
+          transition: all 0.3s ease;
+          overflow: hidden;
+          white-space: nowrap;
+        "
+        >Live Chat</span
+      >
     </button>
 
     <!-- Chat Modal Overlay -->
@@ -295,21 +312,98 @@
         }, 1000);
       });
 
-      // Show chat button after loading screen
+      // Show chat button after loading screen and handle dynamic behavior
       window.addEventListener('load', () => {
         setTimeout(() => {
           const loading = document.getElementById('loading');
           const chatButton = document.getElementById('openChat');
+          const chatButtonText = document.getElementById('chatButtonText');
+          const chatButtonIcon = document.getElementById('chatButtonIcon');
+
           if (loading) {
             loading.classList.add('fade-out');
             setTimeout(() => {
               loading.remove();
               if (chatButton) {
                 chatButton.style.opacity = '1';
-                chatButton.style.transform = 'scale(1)';
+                chatButton.style.transform = 'scale(1) translateX(0)';
               }
             }, 500);
           }
+
+          // Dynamic chat button behavior based on scroll
+          let lastScrollY = 0;
+          let isExpanded = false;
+
+          const handleScroll = () => {
+            const scrollY = window.scrollY;
+            const isMobile = window.innerWidth <= 768;
+            const shouldExpand = scrollY > 200; // Expand when header button is hidden
+
+            // Only update if state changed to avoid unnecessary DOM updates
+            if (shouldExpand !== isExpanded) {
+              isExpanded = shouldExpand;
+
+              if (shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
+                // Mobile-responsive expansion
+                const expandedWidth = isMobile ? '120px' : '140px';
+                const translateX = isMobile ? '-64px' : '-84px';
+                const textMaxWidth = isMobile ? '60px' : '80px';
+
+                // Expand to show text - expand left towards center
+                chatButton.style.width = expandedWidth;
+                chatButton.style.borderRadius = '28px';
+                chatButton.style.paddingLeft = '16px';
+                chatButton.style.paddingRight = '16px';
+                chatButton.style.justifyContent = 'flex-start';
+                chatButton.style.transform = `scale(1) translateX(${translateX})`;
+                chatButtonText.style.opacity = '1';
+                chatButtonText.style.width = 'auto';
+                chatButtonText.style.maxWidth = textMaxWidth;
+                chatButtonText.style.fontSize = isMobile ? '12px' : '14px';
+              } else if (!shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
+                // Shrink to icon only
+                const buttonSize = isMobile ? '60px' : '56px';
+                chatButton.style.width = buttonSize;
+                chatButton.style.height = buttonSize;
+                chatButton.style.borderRadius = '50%';
+                chatButton.style.paddingLeft = '0';
+                chatButton.style.paddingRight = '0';
+                chatButton.style.justifyContent = 'center';
+                chatButton.style.transform = 'scale(1) translateX(0)';
+                chatButtonText.style.opacity = '0';
+                chatButtonText.style.width = '0';
+                chatButtonText.style.maxWidth = '0';
+              }
+            }
+
+            lastScrollY = scrollY;
+          };
+
+          // Throttled scroll event
+          let ticking = false;
+          const throttledScroll = () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                handleScroll();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          };
+
+          // Add scroll event listener
+          window.addEventListener('scroll', throttledScroll, { passive: true });
+
+          // Add resize event listener for responsive updates
+          window.addEventListener('resize', () => {
+            handleScroll(); // Recalculate on resize
+          });
+
+          // Also call handleScroll once initially to set correct state
+          setTimeout(() => {
+            handleScroll();
+          }, 100);
         }, 1000);
       });
 
@@ -332,15 +426,34 @@
         openChat();
       };
 
-      // Add hover effects
-      openChatBtn.addEventListener('mouseenter', function () {
-        this.style.transform = 'scale(1.1)';
-        this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
-      });
-      openChatBtn.addEventListener('mouseleave', function () {
-        this.style.transform = 'scale(1)';
-        this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
-      });
+      // Add dynamic hover effects (desktop only)
+      if (!('ontouchstart' in window)) {
+        openChatBtn.addEventListener('mouseenter', function () {
+          const isMobile = window.innerWidth <= 768;
+          const isExpanded = this.style.width === (isMobile ? '120px' : '140px');
+          const translateX = isMobile ? '-64px' : '-84px';
+
+          if (isExpanded) {
+            this.style.transform = `scale(1.02) translateX(${translateX})`;
+          } else {
+            this.style.transform = 'scale(1.1) translateX(0)';
+          }
+          this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
+        });
+
+        openChatBtn.addEventListener('mouseleave', function () {
+          const isMobile = window.innerWidth <= 768;
+          const isExpanded = this.style.width === (isMobile ? '120px' : '140px');
+          const translateX = isMobile ? '-64px' : '-84px';
+
+          if (isExpanded) {
+            this.style.transform = `scale(1) translateX(${translateX})`;
+          } else {
+            this.style.transform = 'scale(1) translateX(0)';
+          }
+          this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
+        });
+      }
 
       // Close when clicking on the overlay
       chatModalOverlay.onclick = function (e) {
