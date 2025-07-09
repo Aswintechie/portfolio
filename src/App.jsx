@@ -1511,6 +1511,7 @@ const TechnologiesSection = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
+  const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const technologies = [
     {
@@ -1556,8 +1557,15 @@ const TechnologiesSection = () => {
   ];
 
   return (
-    <section id='technologies' className='py-20 bg-gray-50'>
-      <div className='container-custom'>
+    <section id='technologies' className='section-padding relative overflow-hidden'>
+      {/* Modern Background */}
+      <div className='absolute inset-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-indigo-50'></div>
+      <div className='absolute top-0 left-0 w-full h-full'>
+        <div className='absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full blur-2xl'></div>
+        <div className='absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-br from-purple-400/10 to-indigo-400/10 rounded-full blur-2xl'></div>
+      </div>
+
+      <div className='container-custom relative z-10'>
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -1566,10 +1574,10 @@ const TechnologiesSection = () => {
           className='text-center mb-16'
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className='inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6'
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-indigo-200/50'
           >
             <Monitor size={16} className='text-indigo-500' />
             <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
@@ -1597,31 +1605,61 @@ const TechnologiesSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-                className='bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 border border-gray-100'
+                className='group relative'
+                onMouseEnter={() => setHoveredCategory(categoryIndex)}
+                onMouseLeave={() => setHoveredCategory(null)}
               >
-                <h3 className='text-2xl font-bold text-primary-900 mb-6 flex items-center'>
-                  <IconComponent className='w-8 h-8 text-secondary-500 mr-3' />
-                  {category.category}
-                </h3>
+                {/* Glassmorphism Card */}
+                <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden'>
+                  {/* Animated Background Gradient */}
+                  <div className='absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
-                <div className='space-y-4'>
-                  {category.items.map((item, itemIndex) => (
+                  {/* Floating Orbs */}
+                  <div className='absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                  <div className='absolute -bottom-16 -left-16 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-indigo-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700'></div>
+
+                  {/* Category Header */}
+                  <div className='relative z-10 mb-6'>
                     <motion.div
-                      key={item.name}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={inView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.4, delay: categoryIndex * 0.1 + itemIndex * 0.05 }}
-                      className='flex items-start space-x-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200'
+                      animate={hoveredCategory === categoryIndex ? { scale: 1.02 } : { scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                      className='flex items-center mb-4'
                     >
-                      <div className='flex-shrink-0 w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center'>
-                        <IconComponent className='w-5 h-5 text-secondary-600' />
+                      <div className='relative p-3 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl text-white shadow-lg mr-4'>
+                        <IconComponent className='w-6 h-6' />
+                        <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
                       </div>
-                      <div className='flex-1'>
-                        <h4 className='font-semibold text-primary-900 mb-1'>{item.name}</h4>
-                        <p className='text-sm text-primary-600'>{item.description}</p>
-                      </div>
+                      <h3 className='text-2xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors duration-200'>
+                        {category.category}
+                      </h3>
                     </motion.div>
-                  ))}
+                  </div>
+
+                  {/* Technology Items */}
+                  <div className='space-y-3 relative z-10'>
+                    {category.items.map((item, itemIndex) => (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={inView ? { opacity: 1, x: 0 } : {}}
+                        transition={{
+                          duration: 0.4,
+                          delay: categoryIndex * 0.1 + itemIndex * 0.05,
+                        }}
+                        className='flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-white/80 to-gray-50/80 border border-gray-100/50 hover:shadow-md transition-all duration-200 backdrop-blur-sm'
+                      >
+                        <div className='flex-shrink-0 w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center border border-indigo-200/50'>
+                          <IconComponent className='w-5 h-5 text-indigo-600' />
+                        </div>
+                        <div className='flex-1'>
+                          <h4 className='font-bold text-gray-900 mb-1'>{item.name}</h4>
+                          <p className='text-sm text-gray-600 leading-relaxed'>
+                            {item.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             );
@@ -1631,15 +1669,22 @@ const TechnologiesSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className='text-center mt-12'
         >
-          <div className='bg-gradient-to-r from-secondary-500 to-accent-500 p-8 rounded-2xl text-white'>
-            <h3 className='text-2xl font-bold mb-4'>Continuous Learning</h3>
-            <p className='text-lg opacity-90 max-w-2xl mx-auto'>
-              I'm constantly exploring new technologies and platforms to stay current with industry
-              trends and expand my technical capabilities across different domains.
-            </p>
+          <div className='relative bg-gradient-to-r from-indigo-500 to-purple-500 p-8 rounded-3xl text-white shadow-xl overflow-hidden'>
+            {/* Background Pattern */}
+            <div className='absolute inset-0 bg-white/10 rounded-3xl'></div>
+            <div className='absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl'></div>
+            <div className='absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-2xl'></div>
+
+            <div className='relative z-10'>
+              <h3 className='text-2xl font-bold mb-4'>Continuous Learning</h3>
+              <p className='text-lg opacity-90 max-w-2xl mx-auto'>
+                I'm constantly exploring new technologies and platforms to stay current with
+                industry trends and expand my technical capabilities across different domains.
+              </p>
+            </div>
           </div>
         </motion.div>
       </div>
