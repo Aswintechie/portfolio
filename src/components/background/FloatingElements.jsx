@@ -1,3 +1,10 @@
+/**
+ * @file FloatingElements.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Performance-optimized floating background elements with animated gradients
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 

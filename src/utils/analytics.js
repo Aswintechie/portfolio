@@ -1,3 +1,10 @@
+/**
+ * @file analytics.js
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Analytics utility for tracking user interactions and page views
+ */
+
 // Google Analytics configuration
 const GA_TRACKING_ID = import.meta.env.VITE_GA_TRACKING_ID || 'G-XXXXXXXXXX';
 

@@ -1,3 +1,10 @@
+/**
+ * @file SkillsSection.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Modern skills section component showcasing technical expertise and capabilities
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';

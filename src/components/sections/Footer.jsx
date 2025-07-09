@@ -1,3 +1,10 @@
+/**
+ * @file Footer.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Footer component with social links and copyright information
+ */
+
 import React from 'react';
 import { Mail, Linkedin, Github } from 'lucide-react';
 

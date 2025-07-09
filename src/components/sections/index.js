@@ -1,3 +1,10 @@
+/**
+ * @file index.js
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Central export file for all portfolio section components
+ */
+
 export { default as HeroSection } from './HeroSection.jsx';
 export { default as AboutSection } from './AboutSection.jsx';
 export { default as ExperienceSection } from './ExperienceSection.jsx';

@@ -1,3 +1,10 @@
+/**
+ * @file ProjectsSection.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Featured projects section component with interactive cards and expandable content
+ */
+
 import React, { useState, useId } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';

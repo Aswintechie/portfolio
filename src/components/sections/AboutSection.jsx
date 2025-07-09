@@ -1,3 +1,10 @@
+/**
+ * @file AboutSection.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Modern about section component showcasing professional background and statistics
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';

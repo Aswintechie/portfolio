@@ -1,3 +1,10 @@
+/**
+ * @file PersonalProjectsSection.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Personal infrastructure projects section showcasing self-hosted solutions
+ */
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';

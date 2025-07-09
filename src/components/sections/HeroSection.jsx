@@ -1,3 +1,10 @@
+/**
+ * @file HeroSection.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Modern hero section component with animated background and interactive elements
+ */
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Sparkles, Star } from 'lucide-react';

@@ -1,3 +1,10 @@
+/**
+ * @file AnimatedParticles.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Optimized animated background particles component for visual enhancement
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 

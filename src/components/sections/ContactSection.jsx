@@ -1,3 +1,10 @@
+/**
+ * @file ContactSection.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Contact section component with form submission and contact information
+ */
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';

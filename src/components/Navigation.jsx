@@ -1,3 +1,10 @@
+/**
+ * @file Navigation.jsx
+ * @author Aswin
+ * @copyright © 2024 Aswin. All rights reserved.
+ * @description Performance-optimized navigation component with mobile menu and search functionality
+ */
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Mail, Search, Code, Home, User, Briefcase, Folder } from 'lucide-react';
