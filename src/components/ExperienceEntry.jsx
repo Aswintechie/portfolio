@@ -68,20 +68,20 @@ function ExperienceEntryComponent({
       transition={{ duration: 0.8, delay }}
       className='relative mb-12'
     >
-      {/* Enhanced Timeline dot with company theme */}
+      {/* Enhanced Timeline dot with company theme - Mobile responsive positioning */}
       <div
         aria-hidden='true'
-        className={`absolute left-6 top-8 w-5 h-5 ${theme.timelineColor} rounded-full border-4 border-white shadow-lg z-10`}
+        className={`absolute left-3 md:left-6 top-8 w-4 h-4 md:w-5 md:h-5 ${theme.timelineColor} rounded-full border-3 md:border-4 border-white shadow-lg z-10`}
       ></div>
 
-      {/* Enhanced card with company-specific styling - Optimized animations */}
+      {/* Enhanced card with company-specific styling - Mobile responsive margins */}
       <motion.div
         whileHover={{
           scale: 1.01,
           y: -3,
           transition: { duration: 0.2, ease: 'easeOut' },
         }}
-        className={`ml-20 bg-white rounded-2xl p-8 shadow-lg ${theme.hoverShadow} hover:shadow-xl transition-shadow duration-300 border ${theme.borderColor} overflow-hidden relative group`}
+        className={`ml-12 md:ml-20 bg-white rounded-2xl p-6 md:p-8 shadow-lg ${theme.hoverShadow} hover:shadow-xl transition-shadow duration-300 border ${theme.borderColor} overflow-hidden relative group`}
       >
         {/* Simplified background gradient overlay */}
         <div
