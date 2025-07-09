@@ -24,6 +24,9 @@ import {
   Monitor,
   Search,
   Wifi,
+  Sparkles,
+  Star,
+  Circle,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
@@ -31,6 +34,135 @@ import NotFound from './components/NotFound.jsx';
 import ExperienceEntry from './components/ExperienceEntry.jsx';
 import { getExperienceData } from './data/experienceData.js';
 import { featuredProjects, allProjects } from './data/projects.jsx';
+
+// Animated Background Particles Component
+const AnimatedParticles = () => {
+  const particles = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 4 + 1,
+    duration: Math.random() * 20 + 10,
+    delay: Math.random() * 5,
+  }));
+
+  return (
+    <div className='absolute inset-0 overflow-hidden pointer-events-none'>
+      {particles.map(particle => (
+        <motion.div
+          key={particle.id}
+          className='absolute rounded-full bg-white/10'
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+          }}
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.3, 0.8, 0.3],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Modern Floating Elements Component
+const FloatingElements = () => {
+  return (
+    <div className='absolute inset-0 overflow-hidden pointer-events-none'>
+      {/* Large gradient orbs */}
+      <motion.div
+        className='absolute w-96 h-96 rounded-full opacity-20'
+        style={{
+          background:
+            'radial-gradient(circle, rgba(236,72,153,0.6) 0%, rgba(14,165,233,0.4) 50%, transparent 100%)',
+          top: '10%',
+          right: '10%',
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+          rotate: [0, 180, 360],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-72 h-72 rounded-full opacity-15'
+        style={{
+          background:
+            'radial-gradient(circle, rgba(14,165,233,0.6) 0%, rgba(236,72,153,0.4) 50%, transparent 100%)',
+          bottom: '20%',
+          left: '5%',
+        }}
+        animate={{
+          scale: [1.2, 1, 1.2],
+          rotate: [360, 180, 0],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
+      />
+
+      {/* Floating geometric shapes */}
+      <motion.div
+        className='absolute w-16 h-16 border-2 border-white/20 rounded-lg'
+        style={{ top: '30%', left: '15%' }}
+        animate={{
+          y: [0, -30, 0],
+          rotate: [0, 45, 0],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-12 h-12 bg-gradient-to-br from-secondary-400/30 to-accent-400/30 rounded-full'
+        style={{ top: '60%', right: '25%' }}
+        animate={{
+          y: [0, -40, 0],
+          x: [0, 20, 0],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <motion.div
+        className='absolute w-8 h-8 border-2 border-accent-400/40 rounded-full'
+        style={{ top: '20%', left: '70%' }}
+        animate={{
+          scale: [1, 1.5, 1],
+          opacity: [0.3, 0.8, 0.3],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+    </div>
+  );
+};
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -66,7 +198,7 @@ const useExperienceCalculator = () => {
   return experience;
 };
 
-// Navigation Component
+// Modern Navigation Component
 const Navigation = React.memo(function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -112,95 +244,133 @@ const Navigation = React.memo(function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-gray-200/50'
-          : 'bg-black/20 backdrop-blur-sm'
+          ? 'bg-white/80 backdrop-blur-xl shadow-2xl border-b border-gray-200/20'
+          : 'bg-black/10 backdrop-blur-md'
       }`}
     >
       <div className='container-custom'>
         <div className='flex items-center justify-between h-16'>
-          {/* Logo */}
+          {/* Modern Logo */}
           <motion.a
             href='#home'
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`flex items-center space-x-2 text-xl font-bold transition-colors duration-300 hover:scale-105 ${
+            className={`flex items-center space-x-3 text-xl font-bold transition-all duration-300 hover:scale-105 ${
               scrolled ? 'text-primary-900' : 'text-white'
             }`}
           >
-            <Code size={24} className='text-secondary-500' />
-            <span>Portfolio</span>
+            <div className='relative'>
+              <Code size={28} className='text-secondary-500' />
+              <motion.div
+                className='absolute -top-1 -right-1 w-3 h-3 bg-accent-400 rounded-full'
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.7, 1, 0.7],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+            </div>
+            <span className='bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent'>
+              Portfolio
+            </span>
           </motion.a>
 
           {/* Desktop Navigation */}
-          <div className='hidden md:flex items-center space-x-8'>
+          <div className='hidden md:flex items-center space-x-1'>
             {navItems.map((item, index) => (
               <motion.a
                 key={item.name}
                 href={item.href}
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`font-medium transition-colors duration-200 relative group ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 relative overflow-hidden group ${
                   scrolled
-                    ? 'text-primary-700 hover:text-secondary-600'
+                    ? 'text-gray-700 hover:text-primary-900'
                     : 'text-white/90 hover:text-white'
                 }`}
               >
-                {item.name}
-                <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-secondary-500 to-accent-500 group-hover:w-full transition-all duration-300'></span>
+                <span className='relative z-10'>{item.name}</span>
+                <motion.div
+                  className={`absolute inset-0 rounded-xl transition-all duration-300 ${
+                    scrolled
+                      ? 'bg-gradient-to-r from-secondary-500/10 to-accent-500/10 opacity-0 group-hover:opacity-100'
+                      : 'bg-white/10 opacity-0 group-hover:opacity-100'
+                  }`}
+                />
               </motion.a>
             ))}
 
-            {/* Search Button */}
+            {/* Modern Search Button */}
             <motion.button
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
               onClick={() => setIsSearchOpen(true)}
-              aria-label='Open search'
-              className={`p-2 rounded-lg transition-colors duration-200 ${
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8 }}
+              className={`p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
                 scrolled
-                  ? 'text-primary-700 hover:text-secondary-600 hover:bg-gray-100'
-                  : 'text-white/90 hover:text-white hover:bg-white/10'
+                  ? 'text-gray-700 hover:bg-secondary-500/10'
+                  : 'text-white/90 hover:bg-white/10'
               }`}
             >
-              <Search size={20} />
+              <Search size={18} />
             </motion.button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className='md:hidden'>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={isOpen}
-              aria-controls='mobile-menu'
-              className={`focus:outline-none transition-colors duration-200 ${
-                scrolled
-                  ? 'text-primary-700 hover:text-secondary-600'
-                  : 'text-white hover:text-white/80'
-              }`}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          <motion.button
+            onClick={() => setIsOpen(!isOpen)}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={`md:hidden p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
+              scrolled
+                ? 'text-gray-700 hover:bg-secondary-500/10'
+                : 'text-white/90 hover:bg-white/10'
+            }`}
+          >
+            <AnimatePresence mode='wait'>
+              {isOpen ? (
+                <motion.div
+                  key='close'
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X size={24} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key='menu'
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Menu size={24} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Modern Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              id='mobile-menu'
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className='md:hidden bg-white border-t border-gray-200'
-              role='navigation'
-              aria-label='Mobile navigation'
+              transition={{ duration: 0.3 }}
+              className='md:hidden bg-white/90 backdrop-blur-xl rounded-2xl mt-2 p-4 shadow-2xl border border-gray-200/20'
             >
-              <div className='py-2'>
+              <div className='flex flex-col space-y-2'>
                 {navItems.map((item, index) => (
                   <motion.a
                     key={item.name}
@@ -208,17 +378,25 @@ const Navigation = React.memo(function Navigation() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className='block px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-inset'
                     onClick={() => setIsOpen(false)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        setIsOpen(false);
-                      }
-                    }}
+                    className='px-4 py-3 rounded-xl text-gray-700 hover:text-primary-900 hover:bg-gradient-to-r hover:from-secondary-500/10 hover:to-accent-500/10 transition-all duration-300 font-medium'
                   >
                     {item.name}
                   </motion.a>
                 ))}
+                <motion.button
+                  onClick={() => {
+                    setIsSearchOpen(true);
+                    setIsOpen(false);
+                  }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navItems.length * 0.1 }}
+                  className='px-4 py-3 rounded-xl text-gray-700 hover:text-primary-900 hover:bg-gradient-to-r hover:from-secondary-500/10 hover:to-accent-500/10 transition-all duration-300 font-medium text-left flex items-center space-x-2'
+                >
+                  <Search size={18} />
+                  <span>Search</span>
+                </motion.button>
               </div>
             </motion.div>
           )}
@@ -231,201 +409,258 @@ const Navigation = React.memo(function Navigation() {
   );
 });
 
-// Hero Section Component
+// Modern Hero Section Component
 const HeroSection = React.memo(function HeroSection() {
   const experience = useExperienceCalculator();
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <section
       id='home'
       className='min-h-screen flex items-center justify-center relative overflow-hidden'
     >
-      {/* Modern gradient background */}
-      <div className='absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700'></div>
+      {/* Modern Ultra-Gradient Background */}
+      <div className='absolute inset-0'>
+        <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'></div>
+        <div className='absolute inset-0 bg-gradient-to-tr from-blue-900/50 via-transparent to-pink-900/50'></div>
+        <div className='absolute inset-0 bg-gradient-to-bl from-transparent via-cyan-900/30 to-transparent'></div>
+      </div>
 
-      {/* Modern geometric pattern overlay */}
-      <div className='absolute inset-0 opacity-10'>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(236,72,153,0.3)_0%,transparent_50%)]'></div>
+      {/* Animated Particles */}
+      <AnimatedParticles />
+
+      {/* Floating Elements */}
+      <FloatingElements />
+
+      {/* Modern Mesh Gradient Overlay */}
+      <div className='absolute inset-0 opacity-30'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(236,72,153,0.3)_0%,transparent_50%)]'></div>
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.3)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(236,72,153,0.2)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_40%_80%,rgba(20,184,166,0.2)_0%,transparent_50%)]'></div>
       </div>
 
-      {/* Floating geometric elements */}
-      <div className='absolute inset-0 overflow-hidden'>
-        {/* Top right accent */}
-        <div className='absolute top-10 right-10 w-32 h-32 bg-gradient-to-br from-secondary-500/20 to-accent-500/20 rounded-full blur-2xl animate-pulse'></div>
-
-        {/* Bottom left accent */}
-        <div className='absolute bottom-10 left-10 w-40 h-40 bg-gradient-to-tr from-accent-500/15 to-secondary-500/15 rounded-full blur-3xl animate-pulse animation-delay-400'></div>
-
-        {/* Center accent */}
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-secondary-400/5 to-accent-400/5 rounded-full blur-3xl animate-pulse animation-delay-600'></div>
-      </div>
-
-      {/* Modern gradient accents */}
-      <div className='absolute inset-0 overflow-hidden'>
-        {/* Top gradient bar */}
-        <div className='absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary-500/30 to-transparent'></div>
-
-        {/* Bottom gradient bar */}
-        <div className='absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent-500/30 to-transparent'></div>
-
-        {/* Left gradient bar */}
-        <div className='absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-secondary-500/20 to-transparent'></div>
-
-        {/* Right gradient bar */}
-        <div className='absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-accent-500/20 to-transparent'></div>
-
-        {/* Diagonal gradient accent */}
-        <div className='absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary-500/10 via-transparent to-accent-500/10 transform rotate-12'></div>
-
-        {/* Corner accent */}
-        <div className='absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent-500/15 via-transparent to-secondary-500/15 transform -rotate-12'></div>
-      </div>
-
+      {/* Content */}
       <div className='container-custom relative z-10'>
         <div className='flex items-center justify-center'>
-          {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className='text-white text-center max-w-4xl'
+            className='text-white text-center max-w-5xl'
           >
+            {/* Modern Greeting */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className='flex items-center justify-center space-x-2 mb-4'
+            >
+              <motion.div
+                animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
+                transition={{ duration: 1.5, delay: 1, repeat: Infinity, repeatDelay: 3 }}
+                className='text-2xl'
+              >
+                👋
+              </motion.div>
+              <span className='text-xl font-medium text-gray-300'>Hello, I'm</span>
+            </motion.div>
+
+            {/* Modern Name with Enhanced Gradient */}
             <motion.h1
-              className='text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight'
+              className='text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              Hi, I'm{' '}
-              <span className='bg-gradient-to-r from-secondary-400 to-accent-400 bg-clip-text text-transparent'>
-                Aswin
+              <span className='relative'>
+                <span className='bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-pulse'>
+                  Aswin
+                </span>
+                <motion.div
+                  className='absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-r from-pink-400 to-cyan-400 rounded-full'
+                  animate={{
+                    scale: [1, 1.5, 1],
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
               </span>
             </motion.h1>
 
-            <motion.p
-              className='text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-6 text-gray-200 font-medium'
+            {/* Modern Title with Typing Effect */}
+            <motion.div
+              className='text-2xl sm:text-3xl lg:text-4xl mb-6 font-bold'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              Software Developer Engineer
-            </motion.p>
+              <span className='bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent'>
+                Software Developer Engineer
+              </span>
+              <motion.span
+                className='inline-block w-1 h-8 bg-gradient-to-r from-pink-400 to-cyan-400 ml-1'
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
+            </motion.div>
 
+            {/* Enhanced Description */}
             <motion.p
-              className='text-base sm:text-lg mb-6 sm:mb-8 text-gray-300 leading-relaxed max-w-2xl mx-auto px-4 sm:px-0'
+              className='text-lg sm:text-xl mb-8 text-gray-300 leading-relaxed max-w-3xl mx-auto px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              Passionate about software development and modern technologies. Specializing in
-              building efficient software solutions with a keen interest in cloud infrastructure.
-              Based in the beautiful city of Pondicherry with {experience} of professional
+              Passionate about{' '}
+              <span className='text-pink-400 font-semibold'>software development</span> and{' '}
+              <span className='text-cyan-400 font-semibold'>modern technologies</span>. Specializing
+              in building efficient software solutions with a keen interest in{' '}
+              <span className='text-purple-400 font-semibold'>cloud infrastructure</span>. Based in
+              the beautiful city of Pondicherry with{' '}
+              <span className='text-emerald-400 font-semibold'>{experience}</span> of professional
               experience.
             </motion.p>
 
+            {/* Modern CTA Buttons */}
             <motion.div
-              className='flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 justify-center px-4 sm:px-0'
+              className='flex flex-col sm:flex-row gap-4 mb-8 justify-center px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <a
+              <motion.a
                 href='#contact'
-                className='btn btn-primary w-full sm:w-auto'
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className='group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-pink-500/25 transition-all duration-300 overflow-hidden'
                 aria-label='Navigate to contact section'
               >
-                Get In Touch
-              </a>
-              <a
+                <span className='relative z-10 flex items-center justify-center space-x-2'>
+                  <Sparkles size={20} />
+                  <span>Get In Touch</span>
+                </span>
+                <motion.div
+                  className='absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-700'
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '0%' }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.a>
+
+              <motion.a
                 href='#experience'
-                className='btn btn-outline w-full sm:w-auto'
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className='group relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
                 aria-label='Navigate to experience section'
               >
-                View My Work
-              </a>
+                <span className='flex items-center justify-center space-x-2'>
+                  <Star size={20} />
+                  <span>View My Work</span>
+                </span>
+              </motion.a>
             </motion.div>
 
-            {/* Social Media Links */}
+            {/* Modern Social Links */}
             <motion.div
-              className='flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 px-4 sm:px-0'
+              className='flex items-center gap-6 justify-center mb-16 px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0 }}
             >
-              <span className='text-gray-300 text-sm mb-2 sm:mb-0'>Connect with me:</span>
-              <div className='flex items-center gap-6 sm:gap-4'>
-                <a
-                  href='https://www.linkedin.com/in/aswin4122001/'
+              {[
+                { icon: Github, href: 'https://github.com/Aswin-coder', label: 'GitHub' },
+                {
+                  icon: Linkedin,
+                  href: 'https://www.linkedin.com/in/aswin4122001/',
+                  label: 'LinkedIn',
+                },
+                { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email' },
+              ].map((social, index) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
                   target='_blank'
                   rel='noopener noreferrer'
-                  aria-label="Visit Aswin's LinkedIn profile"
-                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform p-2'
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0 + index * 0.1 }}
+                  whileHover={{ scale: 1.2, y: -5 }}
+                  className='group relative p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
+                  aria-label={`Visit ${social.label} profile`}
                 >
-                  <Linkedin size={20} />
-                  <span className='text-sm'>LinkedIn</span>
-                </a>
-                <a
-                  href='https://github.com/Aswin-coder'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  aria-label="Visit Aswin's GitHub profile"
-                  className='flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 hover:scale-110 transform p-2'
-                >
-                  <Github size={20} />
-                  <span className='text-sm'>GitHub</span>
-                </a>
-              </div>
+                  <social.icon
+                    size={24}
+                    className='text-white group-hover:text-pink-400 transition-colors duration-300'
+                  />
+                  <motion.div className='absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+                </motion.a>
+              ))}
             </motion.div>
-          </motion.div>
-        </div>
 
-        {/* Scroll Indicator */}
-        <AnimatePresence>
-          {!scrolled && (
+            {/* Modern Scroll Indicator */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 1.2 }}
-              className='fixed bottom-4 left-1/2 transform -translate-x-1/2 text-white/80 z-20 bg-black/20 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm'
+              transition={{ delay: 1.5 }}
+              className='absolute bottom-8 left-1/2 transform -translate-x-1/2'
             >
-              <div className='flex flex-col items-center space-y-1'>
-                <span className='text-xs font-medium'>Scroll down</span>
-                <ChevronDown size={18} className='animate-bounce' />
-              </div>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                className='flex flex-col items-center space-y-2 text-white/60'
+              >
+                <span className='text-sm font-medium'>Scroll to explore</span>
+                <motion.div className='w-6 h-10 border-2 border-white/30 rounded-full flex justify-center'>
+                  <motion.div
+                    className='w-1 h-3 bg-white/60 rounded-full mt-2'
+                    animate={{ y: [0, 12, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                </motion.div>
+              </motion.div>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
 });
 
-// About Section Component
+// Modern About Section Component
 const AboutSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const experience = useExperienceCalculator();
 
   const stats = [
-    { number: experience, label: 'Years Experience' },
-    { number: 'Software', label: 'Development' },
-    { number: 'Cloud', label: 'Technologies' },
+    {
+      number: experience,
+      label: 'Years Experience',
+      icon: <Briefcase size={24} />,
+      color: 'from-blue-500 to-cyan-500',
+    },
+    {
+      number: 'Software',
+      label: 'Development',
+      icon: <Code size={24} />,
+      color: 'from-purple-500 to-pink-500',
+    },
+    {
+      number: 'Cloud',
+      label: 'Technologies',
+      icon: <Cloud size={24} />,
+      color: 'from-emerald-500 to-teal-500',
+    },
   ];
 
   return (
-    <section id='about' className='section-padding bg-gray-50'>
+    <section
+      id='about'
+      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50'
+    >
       <div className='container-custom'>
         <motion.div
           ref={ref}
@@ -434,9 +669,25 @@ const AboutSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>About Me</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
-            Learn more about my background and interests
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Circle size={8} className='text-blue-500 fill-current' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              About Me
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent'>
+              Crafting Digital Excellence
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Passionate about building innovative solutions that make a difference
           </p>
         </motion.div>
 
@@ -445,34 +696,79 @@ const AboutSection = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
+            className='relative'
           >
             <div className='space-y-6 text-lg text-gray-700 leading-relaxed'>
-              <p>
-                I'm a passionate Software Developer Engineer based in Pondicherry, specializing in
-                software development and modern application architecture. My expertise lies in
-                developing efficient software solutions, building scalable applications, and
-                implementing best practices in software engineering.
-              </p>
-              <p>
-                I have a keen interest in cloud technologies and enjoy exploring modern deployment
-                strategies. I combine software engineering skills with cloud infrastructure to
-                create high-quality, scalable applications that leverage the power of cloud
-                computing.
-              </p>
+              <div className='relative'>
+                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 rounded-full'></div>
+                <p className='pl-8'>
+                  I'm a passionate{' '}
+                  <span className='font-semibold text-blue-600'>Software Developer Engineer</span>{' '}
+                  based in Pondicherry, specializing in software development and modern application
+                  architecture. My expertise lies in developing efficient software solutions,
+                  building scalable applications, and implementing best practices in software
+                  engineering.
+                </p>
+              </div>
+
+              <div className='relative'>
+                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500 rounded-full'></div>
+                <p className='pl-8'>
+                  I have a keen interest in{' '}
+                  <span className='font-semibold text-purple-600'>cloud technologies</span> and
+                  enjoy exploring modern deployment strategies. I combine software engineering
+                  skills with cloud infrastructure to create high-quality, scalable applications
+                  that leverage the power of{' '}
+                  <span className='font-semibold text-pink-600'>cloud computing</span>.
+                </p>
+              </div>
             </div>
+
+            {/* Modern decorative elements */}
+            <div className='absolute -top-4 -left-4 w-20 h-20 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-xl'></div>
+            <div className='absolute -bottom-4 -right-4 w-16 h-16 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-xl'></div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className='grid grid-cols-1 sm:grid-cols-3 gap-6'
+            className='grid grid-cols-1 gap-6'
           >
             {stats.map((stat, index) => (
-              <div key={index} className='card p-6 text-center'>
-                <div className='text-3xl font-bold text-secondary-600 mb-2'>{stat.number}</div>
-                <div className='text-sm text-gray-600 font-medium'>{stat.label}</div>
-              </div>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
+              >
+                {/* Background gradient */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                ></div>
+
+                {/* Icon */}
+                <div
+                  className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} mb-4 text-white shadow-lg`}
+                >
+                  {stat.icon}
+                </div>
+
+                {/* Content */}
+                <div className='relative z-10'>
+                  <div
+                    className={`text-4xl font-black mb-2 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
+                  >
+                    {stat.number}
+                  </div>
+                  <div className='text-gray-600 font-semibold text-lg'>{stat.label}</div>
+                </div>
+
+                {/* Decorative elements */}
+                <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
@@ -525,7 +821,7 @@ const ExperienceSection = () => {
   );
 };
 
-// Skills Section Component
+// Modern Skills Section Component
 const SkillsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -534,26 +830,34 @@ const SkillsSection = () => {
       icon: <Code size={48} />,
       title: 'Software Development',
       description: 'Full-stack development, application architecture, and software engineering',
+      color: 'from-blue-500 to-indigo-600',
+      bgColor: 'from-blue-50 to-indigo-50',
     },
     {
       icon: <Zap size={48} />,
       title: 'Performance Optimization',
       description: 'Profiling, benchmarking, and performance analysis for applications',
+      color: 'from-purple-500 to-pink-600',
+      bgColor: 'from-purple-50 to-pink-50',
     },
     {
       icon: <Cpu size={48} />,
       title: 'System Analysis',
       description: 'System profiling, resource optimization, and performance tuning',
+      color: 'from-emerald-500 to-teal-600',
+      bgColor: 'from-emerald-50 to-teal-50',
     },
     {
       icon: <Cloud size={48} />,
       title: 'Cloud Technologies',
       description: 'Cloud deployment, infrastructure, and modern deployment strategies',
+      color: 'from-orange-500 to-red-600',
+      bgColor: 'from-orange-50 to-red-50',
     },
   ];
 
   return (
-    <section id='skills' className='section-padding bg-gray-50'>
+    <section id='skills' className='section-padding bg-white'>
       <div className='container-custom'>
         <motion.div
           ref={ref}
@@ -562,9 +866,25 @@ const SkillsSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Skills & Interests</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
-            Technologies and areas I'm passionate about
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Sparkles size={16} className='text-purple-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Skills & Expertise
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent'>
+              What I Do Best
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Passionate about technologies that drive innovation and create meaningful impact
           </p>
         </motion.div>
 
@@ -575,13 +895,38 @@ const SkillsSection = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className='card p-8 text-center group'
+              className='group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden'
             >
-              <div className='text-secondary-600 mb-6 group-hover:text-accent-500 transition-colors duration-300'>
-                {skill.icon}
+              {/* Background gradient overlay */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${skill.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+              ></div>
+
+              {/* Floating background elements */}
+              <div className='absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-gray-200/30 to-gray-300/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500'></div>
+              <div className='absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-gray-100/40 to-gray-200/40 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500'></div>
+
+              {/* Icon container */}
+              <div className='relative z-10 text-center'>
+                <motion.div
+                  className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${skill.color} mb-6 text-white shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-500`}
+                  whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {skill.icon}
+                </motion.div>
+
+                <h3 className='text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors duration-300'>
+                  {skill.title}
+                </h3>
+                <p className='text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300'>
+                  {skill.description}
+                </p>
               </div>
-              <h3 className='text-xl font-bold text-gray-900 mb-4'>{skill.title}</h3>
-              <p className='text-gray-600 leading-relaxed'>{skill.description}</p>
+
+              {/* Decorative corner elements */}
+              <div className='absolute top-4 right-4 w-2 h-2 bg-gray-300 rounded-full opacity-30 group-hover:opacity-60 transition-opacity duration-500'></div>
+              <div className='absolute bottom-4 left-4 w-3 h-3 border-2 border-gray-300 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
             </motion.div>
           ))}
         </div>
@@ -1183,7 +1528,10 @@ const ContactSection = () => {
   ];
 
   return (
-    <section id='contact' className='section-padding'>
+    <section
+      id='contact'
+      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50'
+    >
       <div className='container-custom'>
         <motion.div
           ref={ref}
@@ -1192,8 +1540,27 @@ const ContactSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Get In Touch</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>Let's discuss your next project</p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Mail size={16} className='text-green-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Get In Touch
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-green-600 via-blue-600 to-green-600 bg-clip-text text-transparent'>
+              Let's Work Together
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Ready to bring your ideas to life? Let's discuss your next project and create something
+            amazing together.
+          </p>
         </motion.div>
 
         <div className='grid lg:grid-cols-2 gap-8 lg:gap-16'>
@@ -1205,132 +1572,180 @@ const ContactSection = () => {
             className='space-y-6 lg:space-y-8 order-2 lg:order-1'
           >
             {contactInfo.map((item, index) => (
-              <div
+              <motion.div
                 key={index}
-                className='flex items-start space-x-3 lg:space-x-4 p-4 lg:p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300'
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
               >
-                <div className='flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-secondary-500 to-accent-500 rounded-full flex items-center justify-center text-white'>
-                  {item.icon}
+                {/* Background gradient */}
+                <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 to-green-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+
+                {/* Icon */}
+                <div className='flex items-start space-x-4'>
+                  <div className='flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-500'>
+                    {item.icon}
+                  </div>
+                  <div className='relative z-10'>
+                    <h3 className='text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300'>
+                      {item.title}
+                    </h3>
+                    {item.link ? (
+                      <a
+                        href={item.link}
+                        className='text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium'
+                      >
+                        {item.content}
+                      </a>
+                    ) : (
+                      <p className='text-gray-600 font-medium'>{item.content}</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h3 className='text-base lg:text-lg font-semibold text-gray-900 mb-1'>
-                    {item.title}
-                  </h3>
-                  {item.link ? (
-                    <a
-                      href={item.link}
-                      className='text-gray-600 hover:text-secondary-600 transition-colors duration-200 text-sm lg:text-base'
-                    >
-                      {item.content}
-                    </a>
-                  ) : (
-                    <p className='text-gray-600 text-sm lg:text-base'>{item.content}</p>
-                  )}
-                </div>
-              </div>
+
+                {/* Decorative elements */}
+                <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+              </motion.div>
             ))}
           </motion.div>
 
-          {/* Contact Form */}
+          {/* Modern Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className='card p-6 lg:p-8 order-1 lg:order-2'
+            className='relative bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 overflow-hidden order-1 lg:order-2'
           >
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              {/* Status Messages */}
-              {submitStatus === 'success' && (
-                <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <span className='text-green-400 text-xl'>✓</span>
-                    </div>
-                    <div className='ml-3'>
-                      <p className='text-sm font-medium text-green-800'>
-                        Message sent successfully! Thank you for contacting me.
-                      </p>
-                      <p className='text-sm text-green-600 mt-1'>
-                        I'll get back to you within 24-48 hours. You can also reach me directly at
-                        contact@aswinlocal.in
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+            {/* Background gradient */}
+            <div className='absolute inset-0 bg-gradient-to-br from-blue-50/30 to-green-50/30'></div>
 
-              {submitStatus === 'error' && (
-                <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <span className='text-red-400 text-xl'>⚠</span>
-                    </div>
-                    <div className='ml-3'>
-                      <p className='text-sm font-medium text-red-800'>
-                        Failed to send message. Please check the following:
-                      </p>
-                      <ul className='text-sm text-red-600 mt-1 list-disc list-inside'>
-                        <li>Name: Only letters and spaces allowed (2-100 characters)</li>
-                        <li>Email: Must be a valid email address</li>
-                        <li>Message: Must be 10-1000 characters long</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              )}
+            {/* Decorative elements */}
+            <div className='absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-full blur-xl'></div>
+            <div className='absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full blur-xl'></div>
 
-              <div>
-                <input
-                  type='text'
-                  name='name'
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder='Your Name'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-base'
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div>
-                <input
-                  type='email'
-                  name='email'
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder='Your Email'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-base'
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div>
-                <textarea
-                  name='message'
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder='Your Message'
-                  rows={4}
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none disabled:opacity-50 disabled:cursor-not-allowed text-base'
-                  required
-                  disabled={isSubmitting}
-                ></textarea>
-              </div>
-              <button
-                type='submit'
-                disabled={isSubmitting}
-                aria-label='Send contact message'
-                className='w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
-              >
-                {isSubmitting ? (
-                  <div className='flex items-center justify-center'>
-                    <div className='animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2'></div>
-                    Sending Message...
+            <div className='relative z-10'>
+              <form onSubmit={handleSubmit} className='space-y-6'>
+                {/* Status Messages */}
+                {submitStatus === 'success' && (
+                  <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
+                    <div className='flex items-center'>
+                      <div className='flex-shrink-0'>
+                        <span className='text-green-400 text-xl'>✓</span>
+                      </div>
+                      <div className='ml-3'>
+                        <p className='text-sm font-medium text-green-800'>
+                          Message sent successfully! Thank you for contacting me.
+                        </p>
+                        <p className='text-sm text-green-600 mt-1'>
+                          I'll get back to you within 24-48 hours. You can also reach me directly at
+                          contact@aswinlocal.in
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  'Send Message'
                 )}
-              </button>
-            </form>
+
+                {submitStatus === 'error' && (
+                  <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
+                    <div className='flex items-center'>
+                      <div className='flex-shrink-0'>
+                        <span className='text-red-400 text-xl'>⚠</span>
+                      </div>
+                      <div className='ml-3'>
+                        <p className='text-sm font-medium text-red-800'>
+                          Failed to send message. Please check the following:
+                        </p>
+                        <ul className='text-sm text-red-600 mt-1 list-disc list-inside'>
+                          <li>Name: Only letters and spaces allowed (2-100 characters)</li>
+                          <li>Email: Must be a valid email address</li>
+                          <li>Message: Must be 10-1000 characters long</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className='space-y-2'>
+                  <label
+                    htmlFor='contact-name'
+                    className='block text-sm font-semibold text-gray-700 mb-2'
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    id='contact-name'
+                    type='text'
+                    name='name'
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder='Enter your full name'
+                    className='w-full px-6 py-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm hover:shadow-md'
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className='space-y-2'>
+                  <label
+                    htmlFor='contact-email'
+                    className='block text-sm font-semibold text-gray-700 mb-2'
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    id='contact-email'
+                    type='email'
+                    name='email'
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder='Enter your email address'
+                    className='w-full px-6 py-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm hover:shadow-md'
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className='space-y-2'>
+                  <label
+                    htmlFor='contact-message'
+                    className='block text-sm font-semibold text-gray-700 mb-2'
+                  >
+                    Message
+                  </label>
+                  <textarea
+                    id='contact-message'
+                    name='message'
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder='Tell me about your project or idea...'
+                    rows={5}
+                    className='w-full px-6 py-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-300 resize-none disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm hover:shadow-md'
+                    required
+                    disabled={isSubmitting}
+                  ></textarea>
+                </div>
+                <motion.button
+                  type='submit'
+                  disabled={isSubmitting}
+                  aria-label='Send contact message'
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className='w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2'
+                >
+                  {isSubmitting ? (
+                    <div className='flex items-center justify-center'>
+                      <div className='animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2'></div>
+                      <span>Sending Message...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <Mail size={20} />
+                      <span>Send Message</span>
+                    </>
+                  )}
+                </motion.button>
+              </form>
+            </div>
           </motion.div>
         </div>
       </div>
