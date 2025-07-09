@@ -2047,11 +2047,6 @@ const FloatingChatButton = React.memo(() => {
               ? '120px'
               : '140px'
             : '56px',
-          x: isExpanded
-            ? typeof window !== 'undefined' && window.innerWidth <= 768
-              ? -64
-              : -84
-            : 0,
         }}
         whileHover={{
           scale: isExpanded ? 1.02 : 1.1,
@@ -2065,13 +2060,25 @@ const FloatingChatButton = React.memo(() => {
           borderRadius: isExpanded ? '28px' : '50%',
           paddingLeft: isExpanded ? '16px' : '0',
           paddingRight: isExpanded ? '16px' : '0',
-          justifyContent: isExpanded ? 'flex-start' : 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+          display: 'flex',
           boxShadow: '0 4px 20px rgba(102,126,234,0.4)',
           touchAction: 'manipulation',
         }}
         aria-label='Open live chat'
       >
-        <span className='flex-shrink-0 text-xl'>💬</span>
+        <span
+          className='text-xl'
+          style={{
+            lineHeight: '1',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          💬
+        </span>
         <motion.span
           initial={{ opacity: 0, width: 0 }}
           animate={{
