@@ -691,12 +691,12 @@ const AboutSection = () => {
           </p>
         </motion.div>
 
-        <div className='grid lg:grid-cols-2 gap-16 items-center'>
+        <div className='grid lg:grid-cols-2 gap-16 items-start'>
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className='relative'
+            className='relative h-full flex flex-col justify-center'
           >
             <div className='space-y-6 text-lg text-gray-700 leading-relaxed'>
               <div className='relative'>
@@ -722,6 +722,17 @@ const AboutSection = () => {
                   <span className='font-semibold text-pink-600'>cloud computing</span>.
                 </p>
               </div>
+
+              <div className='relative'>
+                <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-pink-500 to-emerald-500 rounded-full'></div>
+                <p className='pl-8'>
+                  My approach focuses on{' '}
+                  <span className='font-semibold text-emerald-600'>continuous learning</span> and
+                  staying updated with the latest industry trends. I believe in writing clean,
+                  maintainable code and creating solutions that not only work efficiently but also
+                  provide excellent user experiences and long-term value.
+                </p>
+              </div>
             </div>
 
             {/* Modern decorative elements */}
@@ -741,7 +752,7 @@ const AboutSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
+                className='group relative bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
               >
                 {/* Background gradient */}
                 <div
@@ -750,7 +761,7 @@ const AboutSection = () => {
 
                 {/* Icon */}
                 <div
-                  className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} mb-4 text-white shadow-lg`}
+                  className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} mb-3 text-white shadow-lg`}
                 >
                   {stat.icon}
                 </div>
@@ -758,16 +769,16 @@ const AboutSection = () => {
                 {/* Content */}
                 <div className='relative z-10'>
                   <div
-                    className={`text-4xl font-black mb-2 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
+                    className={`text-3xl font-black mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
                   >
                     {stat.number}
                   </div>
-                  <div className='text-gray-600 font-semibold text-lg'>{stat.label}</div>
+                  <div className='text-gray-600 font-semibold text-base'>{stat.label}</div>
                 </div>
 
                 {/* Decorative elements */}
-                <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
-                <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                <div className='absolute top-3 right-3 w-6 h-6 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                <div className='absolute bottom-3 right-3 w-3 h-3 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
               </motion.div>
             ))}
           </motion.div>
