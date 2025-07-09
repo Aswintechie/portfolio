@@ -2068,36 +2068,46 @@ const FloatingChatButton = React.memo(() => {
         }}
         aria-label='Open live chat'
       >
-        <span
-          className='text-xl'
-          style={{
-            lineHeight: '1',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          💬
-        </span>
-        <motion.span
-          initial={{ opacity: 0, width: 0 }}
-          animate={{
-            opacity: isExpanded ? 1 : 0,
-            width: isExpanded ? 'auto' : 0,
-            maxWidth: isExpanded
-              ? typeof window !== 'undefined' && window.innerWidth <= 768
-                ? '60px'
-                : '80px'
-              : 0,
-          }}
-          transition={{ duration: 0.3 }}
-          className='ml-2 font-semibold text-sm whitespace-nowrap overflow-hidden'
-          style={{
-            fontSize: typeof window !== 'undefined' && window.innerWidth <= 768 ? '12px' : '14px',
-          }}
-        >
-          Live Chat
-        </motion.span>
+        {!isExpanded && (
+          <span
+            className='text-xl absolute'
+            style={{
+              lineHeight: '1',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            💬
+          </span>
+        )}
+        {isExpanded && (
+          <>
+            <span className='text-xl' style={{ lineHeight: '1' }}>
+              💬
+            </span>
+            <motion.span
+              initial={{ opacity: 0, width: 0 }}
+              animate={{
+                opacity: isExpanded ? 1 : 0,
+                width: isExpanded ? 'auto' : 0,
+                maxWidth: isExpanded
+                  ? typeof window !== 'undefined' && window.innerWidth <= 768
+                    ? '60px'
+                    : '80px'
+                  : 0,
+              }}
+              transition={{ duration: 0.3 }}
+              className='ml-2 font-semibold text-sm whitespace-nowrap overflow-hidden'
+              style={{
+                fontSize:
+                  typeof window !== 'undefined' && window.innerWidth <= 768 ? '12px' : '14px',
+              }}
+            >
+              Live Chat
+            </motion.span>
+          </>
+        )}
       </motion.button>
 
       {/* Chat Modal */}
