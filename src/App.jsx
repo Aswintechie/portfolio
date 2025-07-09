@@ -754,6 +754,21 @@ const AboutSection = () => {
                 transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
                 className='group relative bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
               >
+                {/* Modern Gradient Background inside each card */}
+                <div className='absolute inset-0 opacity-30'>
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-20`}
+                  ></div>
+                  <div className='absolute inset-0 bg-gradient-to-r from-white/60 via-transparent to-white/20'></div>
+                  <div className='absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent'></div>
+                  <div
+                    className='absolute inset-0 bg-repeat opacity-30'
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='grad' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ffffff;stop-opacity:0' /%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='30' cy='30' r='8' fill='url(%23grad)' /%3E%3Ccircle cx='10' cy='10' r='4' fill='url(%23grad)' /%3E%3Ccircle cx='50' cy='10' r='4' fill='url(%23grad)' /%3E%3Ccircle cx='10' cy='50' r='4' fill='url(%23grad)' /%3E%3Ccircle cx='50' cy='50' r='4' fill='url(%23grad)' /%3E%3C/svg%3E")`,
+                    }}
+                  ></div>
+                </div>
+
                 {/* Background gradient */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
