@@ -30,7 +30,6 @@ import {
   Home,
   User,
   Folder,
-  MessageCircle,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
