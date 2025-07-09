@@ -30,6 +30,7 @@ import {
   Home,
   User,
   Folder,
+  MessageCircle,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
@@ -323,15 +324,18 @@ const Navigation = React.memo(function Navigation() {
               <Search size={20} />
             </motion.button>
 
-            <motion.a
-              href='#contact'
+            <motion.button
+              onClick={() => {
+                const chatBtn = document.getElementById('openChat');
+                if (chatBtn) chatBtn.click();
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className='hidden sm:inline-flex items-center px-6 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200'
             >
-              <Sparkles size={16} className='mr-2' />
-              Let's Talk
-            </motion.a>
+              <MessageCircle size={16} className='mr-2' />
+              Live Chat
+            </motion.button>
 
             {/* Mobile Menu Button */}
             <motion.button
