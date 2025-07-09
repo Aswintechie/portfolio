@@ -296,6 +296,39 @@ const Navigation = React.memo(function Navigation() {
               <Search size={20} />
             </motion.button>
 
+            {/* Header Chat Button - Shows when at top of page */}
+            <motion.button
+              onClick={() => {
+                // We'll need to access the FloatingChatButton's openChat function
+                // For now, we'll use a custom event
+                window.dispatchEvent(new CustomEvent('openChat'));
+              }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{
+                opacity: scrolled ? 0 : 1,
+                scale: scrolled ? 0.8 : 1,
+              }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              whileHover={{
+                scale: scrolled ? 0.8 : 1.05,
+                boxShadow: scrolled ? 'none' : '0 4px 20px rgba(102,126,234,0.4)',
+              }}
+              whileTap={{ scale: scrolled ? 0.8 : 0.95 }}
+              className={`hidden md:flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+                scrolled
+                  ? 'pointer-events-none'
+                  : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-purple-700'
+              }`}
+              style={{
+                pointerEvents: scrolled ? 'none' : 'auto',
+                boxShadow: scrolled ? 'none' : '0 4px 15px rgba(102,126,234,0.3)',
+              }}
+              aria-label='Open live chat'
+            >
+              <span className='text-lg'>💬</span>
+              <span>Live Chat</span>
+            </motion.button>
+
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -338,6 +371,38 @@ const Navigation = React.memo(function Navigation() {
                     <span className='font-medium'>{item.label}</span>
                   </motion.a>
                 ))}
+
+                {/* Mobile Chat Button - Shows when at top of page */}
+                <motion.button
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('openChat'));
+                    setIsMenuOpen(false);
+                  }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{
+                    opacity: scrolled ? 0 : 1,
+                    x: scrolled ? -20 : 0,
+                  }}
+                  transition={{ delay: navigationItems.length * 0.05, duration: 0.3 }}
+                  whileHover={{
+                    scale: scrolled ? 1 : 1.02,
+                    boxShadow: scrolled ? 'none' : '0 4px 15px rgba(102,126,234,0.3)',
+                  }}
+                  whileTap={{ scale: scrolled ? 1 : 0.98 }}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 w-full ${
+                    scrolled
+                      ? 'pointer-events-none opacity-50'
+                      : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-purple-700'
+                  }`}
+                  style={{
+                    pointerEvents: scrolled ? 'none' : 'auto',
+                    boxShadow: scrolled ? 'none' : '0 4px 12px rgba(102,126,234,0.25)',
+                  }}
+                  aria-label='Open live chat'
+                >
+                  <span className='text-lg'>💬</span>
+                  <span className='font-medium'>Live Chat</span>
+                </motion.button>
               </div>
             </motion.div>
           )}
@@ -2001,15 +2066,38 @@ const Footer = () => {
 const FloatingChatButton = React.memo(() => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
 
-  // Handle scroll to expand/collapse button
+  // Handle scroll to show/hide and expand/collapse button
   const handleScroll = React.useCallback(() => {
     const scrollY = window.scrollY;
-    const shouldExpand = scrollY > 200; // Expand when header button is hidden
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
+    // For mobile: always show floating button, just expand/collapse based on scroll
+    // For desktop: show floating button after scrolling past header
+    const shouldShowFloating = isMobile ? true : scrollY > 100;
+    const shouldExpand = scrollY > 200; // Expand when scrolled more
+
+    setShowFloatingButton(shouldShowFloating);
     setIsExpanded(shouldExpand);
   }, []);
 
   useThrottledScroll(handleScroll);
+
+  // Handle window resize to update mobile behavior
+  React.useEffect(() => {
+    const handleResize = () => {
+      handleScroll(); // Recalculate on resize
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleScroll]);
+
+  // Set initial state on mount
+  React.useEffect(() => {
+    handleScroll(); // Set initial state based on current scroll position
+  }, [handleScroll]);
 
   const openChat = () => {
     setShowChatModal(true);
@@ -2018,6 +2106,16 @@ const FloatingChatButton = React.memo(() => {
   const closeChat = () => {
     setShowChatModal(false);
   };
+
+  // Listen for header button clicks
+  React.useEffect(() => {
+    const handleHeaderChatClick = () => {
+      openChat();
+    };
+
+    window.addEventListener('openChat', handleHeaderChatClick);
+    return () => window.removeEventListener('openChat', handleHeaderChatClick);
+  }, []);
 
   // Handle keyboard events
   React.useEffect(() => {
@@ -2040,8 +2138,8 @@ const FloatingChatButton = React.memo(() => {
         onClick={openChat}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{
-          opacity: 1,
-          scale: 1,
+          opacity: showFloatingButton ? 1 : 0,
+          scale: showFloatingButton ? 1 : 0.8,
           width: isExpanded
             ? typeof window !== 'undefined' && window.innerWidth <= 768
               ? '120px'
@@ -2049,10 +2147,10 @@ const FloatingChatButton = React.memo(() => {
             : '56px',
         }}
         whileHover={{
-          scale: isExpanded ? 1.02 : 1.1,
-          boxShadow: '0 6px 25px rgba(102,126,234,0.6)',
+          scale: showFloatingButton ? (isExpanded ? 1.02 : 1.1) : 0.8,
+          boxShadow: showFloatingButton ? '0 6px 25px rgba(102,126,234,0.6)' : 'none',
         }}
-        whileTap={{ scale: 0.95 }}
+        whileTap={{ scale: showFloatingButton ? 0.95 : 0.8 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
         className='fixed bottom-5 right-5 z-50 bg-gradient-to-br from-blue-500 to-purple-600 text-white border-none shadow-lg hover:shadow-xl flex items-center justify-center cursor-pointer overflow-hidden'
         style={{
@@ -2065,6 +2163,7 @@ const FloatingChatButton = React.memo(() => {
           display: 'flex',
           boxShadow: '0 4px 20px rgba(102,126,234,0.4)',
           touchAction: 'manipulation',
+          pointerEvents: showFloatingButton ? 'auto' : 'none',
         }}
         aria-label='Open live chat'
       >
