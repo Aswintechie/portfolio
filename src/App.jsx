@@ -820,8 +820,27 @@ const ExperienceSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Experience</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>My professional journey</p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Briefcase size={16} className='text-blue-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Professional Journey
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent'>
+              Experience
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+            Building innovative solutions and driving technological excellence across diverse
+            industries
+          </p>
         </motion.div>
 
         <div className='max-w-4xl mx-auto'>
@@ -979,8 +998,24 @@ const ProjectsSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>Featured Projects</h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Zap size={16} className='text-emerald-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Featured Work
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 bg-clip-text text-transparent'>
+              Featured Projects
+            </span>
+          </h2>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
             Innovative solutions powered by machine learning and modern technology
           </p>
         </motion.div>
@@ -1220,10 +1255,24 @@ const PersonalProjectsSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl lg:text-5xl font-bold mb-6 text-gray-900'>
-            Personal Infrastructure
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Server size={16} className='text-orange-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Self-Hosted Solutions
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent'>
+              Personal Infrastructure
+            </span>
           </h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
             Self-hosted services and infrastructure projects I maintain
           </p>
         </motion.div>
@@ -1392,10 +1441,24 @@ const TechnologiesSection = () => {
           transition={{ duration: 0.6 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl md:text-5xl font-bold text-primary-900 mb-6'>
-            Technologies & Platforms
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6'
+          >
+            <Monitor size={16} className='text-indigo-500' />
+            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+              Technical Stack
+            </span>
+          </motion.div>
+
+          <h2 className='text-4xl md:text-5xl font-black mb-6 text-gray-900'>
+            <span className='bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent'>
+              Technologies & Platforms
+            </span>
           </h2>
-          <p className='text-xl text-primary-700 max-w-3xl mx-auto'>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
             Comprehensive experience across cloud platforms, operating systems, networking, and
             infrastructure technologies.
           </p>

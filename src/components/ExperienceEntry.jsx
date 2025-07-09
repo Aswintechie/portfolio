@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { MapPin } from 'lucide-react';
 import PropTypes from 'prop-types';
 
 // Experience Entry Component
@@ -7,6 +8,7 @@ function ExperienceEntryComponent({
   period,
   title,
   company,
+  location,
   logo,
   description,
   experience,
@@ -39,7 +41,13 @@ function ExperienceEntryComponent({
           />
           <div>
             <h3 className='text-2xl font-bold text-gray-900 mb-1'>{title}</h3>
-            <h4 className='text-lg text-gray-600'>{company}</h4>
+            <h4 className='text-lg text-gray-600 mb-1'>{company}</h4>
+            {location && (
+              <div className='flex items-center gap-1 text-sm text-gray-500'>
+                <MapPin size={14} />
+                <span>{location}</span>
+              </div>
+            )}
           </div>
         </div>
         <p className='text-gray-700 leading-relaxed mb-6'>{description}</p>
@@ -58,6 +66,7 @@ ExperienceEntry.propTypes = {
   period: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   company: PropTypes.string.isRequired,
+  location: PropTypes.string,
   logo: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   experience: PropTypes.string.isRequired,
