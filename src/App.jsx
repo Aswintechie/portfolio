@@ -104,7 +104,7 @@ const FloatingElements = () => {
         style={{
           background:
             'radial-gradient(circle, rgba(14,165,233,0.6) 0%, rgba(236,72,153,0.4) 50%, transparent 100%)',
-          bottom: '20%',
+          bottom: '35%',
           left: '5%',
         }}
         animate={{
@@ -135,7 +135,7 @@ const FloatingElements = () => {
 
       <motion.div
         className='absolute w-12 h-12 bg-gradient-to-br from-secondary-400/30 to-accent-400/30 rounded-full'
-        style={{ top: '60%', right: '25%' }}
+        style={{ top: '50%', right: '25%' }}
         animate={{
           y: [0, -40, 0],
           x: [0, 20, 0],
@@ -600,32 +600,32 @@ const HeroSection = React.memo(function HeroSection() {
                 </motion.a>
               ))}
             </motion.div>
-
-            {/* Modern Scroll Indicator */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className='absolute bottom-8 left-1/2 transform -translate-x-1/2'
-            >
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                className='flex flex-col items-center space-y-2 text-white/60'
-              >
-                <span className='text-sm font-medium'>Scroll to explore</span>
-                <motion.div className='w-6 h-10 border-2 border-white/30 rounded-full flex justify-center'>
-                  <motion.div
-                    className='w-1 h-3 bg-white/60 rounded-full mt-2'
-                    animate={{ y: [0, 12, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                  />
-                </motion.div>
-              </motion.div>
-            </motion.div>
           </motion.div>
         </div>
       </div>
+
+      {/* Modern Scroll Indicator - Moved outside content div */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className='absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50'
+      >
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className='flex flex-col items-center space-y-2 text-white/80'
+        >
+          <span className='text-sm font-medium'>Scroll to explore</span>
+          <motion.div className='w-6 h-10 border-2 border-white/40 rounded-full flex justify-center'>
+            <motion.div
+              className='w-1 h-3 bg-white/80 rounded-full mt-2'
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 });
