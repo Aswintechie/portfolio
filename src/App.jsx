@@ -226,11 +226,14 @@ const Navigation = React.memo(function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showLiveChat, setShowLiveChat] = useState(true);
 
   // Optimized scroll handler with throttling
   const handleScroll = React.useCallback(() => {
     const isScrolled = window.scrollY > 50;
+    const shouldShowLiveChat = window.scrollY < 200; // Hide after 200px scroll
     setScrolled(isScrolled);
+    setShowLiveChat(shouldShowLiveChat);
   }, []);
 
   useThrottledScroll(handleScroll);
@@ -287,8 +290,12 @@ const Navigation = React.memo(function Navigation() {
             </span>
           </motion.a>
 
-          {/* Desktop Navigation */}
-          <div className='hidden md:flex items-center space-x-1'>
+          {/* Desktop Navigation - Dynamic centering */}
+          <div
+            className={`hidden md:flex items-center space-x-1 transition-all duration-300 ${
+              !showLiveChat ? 'flex-1 justify-center' : ''
+            }`}
+          >
             {navigationItems.map((item, index) => (
               <motion.a
                 key={item.href}
@@ -314,28 +321,39 @@ const Navigation = React.memo(function Navigation() {
               onClick={() => setIsSearchOpen(true)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`p-2 rounded-xl transition-all duration-200 ${
+              className={`p-2 rounded-xl transition-all duration-300 ${
                 scrolled
                   ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
                   : 'text-white/90 hover:text-white hover:bg-white/10'
-              }`}
+              } ${!showLiveChat ? 'scale-110' : ''}`}
               aria-label='Search'
             >
               <Search size={20} />
             </motion.button>
 
-            <motion.button
-              onClick={() => {
-                const chatBtn = document.getElementById('openChat');
-                if (chatBtn) chatBtn.click();
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className='hidden sm:inline-flex items-center px-6 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200'
-            >
-              <MessageCircle size={16} className='mr-2' />
-              Live Chat
-            </motion.button>
+            <AnimatePresence mode='wait'>
+              {showLiveChat && (
+                <motion.button
+                  onClick={() => {
+                    const chatBtn = document.getElementById('openChat');
+                    if (chatBtn) chatBtn.click();
+                  }}
+                  initial={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.8,
+                    x: 20,
+                    transition: { duration: 0.25, ease: 'easeInOut' },
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className='hidden sm:inline-flex items-center px-6 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden'
+                >
+                  <MessageCircle size={16} className='mr-2 flex-shrink-0' />
+                  <span className='whitespace-nowrap'>Live Chat</span>
+                </motion.button>
+              )}
+            </AnimatePresence>
 
             {/* Mobile Menu Button */}
             <motion.button
