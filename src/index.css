@@ -275,6 +275,113 @@ html {
     @apply fixed inset-0 bg-white z-50;
   }
 
+  /* Mobile hero section fixes */
+  #home {
+    height: 100vh !important; /* Fixed height exactly to viewport */
+    min-height: 100vh !important;
+    max-height: 100vh !important; /* Constrain height to viewport */
+    padding-top: 1rem !important; /* Minimal top padding */
+    padding-bottom: 3rem !important; /* More bottom padding for scroll indicator */
+    overflow: hidden !important; /* Prevent gradient overflow */
+    position: relative !important; /* Ensure contained positioning */
+  }
+
+  /* Ensure content fits in viewport */
+  .hero-content {
+    max-height: calc(100vh - 4rem); /* Adjusted for minimal top padding */
+    height: calc(100vh - 4rem); /* Fixed height to contain content */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Mobile button spacing - keep side by side */
+  .hero-buttons {
+    gap: 0.5rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .hero-buttons a,
+  .hero-buttons button {
+    flex: 1;
+    max-width: 140px;
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    justify-content: center;
+  }
+
+  /* Reduce mobile spacing for better fit */
+  #home h1 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  #home .text-xl {
+    margin-bottom: 0.5rem !important;
+  }
+
+  #home p {
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* Reduce social links spacing */
+  #home .mb-8 {
+    margin-bottom: 0.25rem !important; /* Almost no gap between social links and scroll indicator */
+  }
+
+  /* Reduce buttons spacing */
+  #home .hero-buttons {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Ensure gradient backgrounds are contained within hero section */
+  #home .absolute.inset-0 {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Desktop hero section - restore original behavior */
+@media (min-width: 769px) {
+  #home {
+    min-height: 100vh !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .hero-content {
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+
+  .hero-buttons {
+    flex-direction: row !important;
+    gap: 1rem !important;
+    align-items: center !important;
+  }
+
+  .hero-buttons a,
+  .hero-buttons button {
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  /* Restore desktop spacing */
+  #home .hero-buttons {
+    margin-bottom: 2rem !important;
+  }
+
+  #home .flex.items-center.gap-4 {
+    gap: 1.5rem !important;
+    margin-bottom: 4rem !important;
+  }
+
   /* Optimize animations for mobile performance */
   @media (prefers-reduced-motion: reduce) {
     * {

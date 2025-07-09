@@ -108,37 +108,9 @@ const FloatingElements = React.memo(() => {
         }}
       />
 
-      <motion.div
-        className='absolute w-48 h-48 rounded-full opacity-8' // Further reduced size and opacity
-        style={{
-          background:
-            'radial-gradient(circle, rgba(14,165,233,0.3) 0%, rgba(236,72,153,0.15) 50%, transparent 100%)',
-          bottom: '35%',
-          left: '5%',
-        }}
-        animate={{
-          scale: [1.05, 1, 1.05], // Further reduced scale change
-        }}
-        transition={{
-          duration: 35, // Increased duration
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
+      {/* Removed left-side floating element that was causing the unwanted box */}
 
-      {/* Simplified geometric shapes - reduced number and complexity */}
-      <motion.div
-        className='absolute w-10 h-10 border border-white/12 rounded-lg' // Further reduced size and opacity
-        style={{ top: '30%', left: '15%' }}
-        animate={{
-          y: [0, -15, 0], // Further reduced movement
-        }}
-        transition={{
-          duration: 12, // Increased duration
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
+      {/* Removed geometric shapes that were causing the unwanted box */}
 
       <motion.div
         className='absolute w-6 h-6 bg-gradient-to-br from-secondary-400/15 to-accent-400/15 rounded-full' // Further reduced size and opacity
@@ -424,13 +396,16 @@ const HeroSection = React.memo(function HeroSection() {
   return (
     <section
       id='home'
-      className='min-h-screen flex items-center justify-center relative overflow-hidden'
+      className='min-h-screen flex items-center justify-center relative overflow-hidden pt-16 md:pt-0'
     >
-      {/* Optimized Gradient Background */}
+      {/* Optimized Gradient Background - Extended to prevent white bars */}
       <div className='absolute inset-0'>
         <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'></div>
         <div className='absolute inset-0 bg-gradient-to-tr from-blue-900/40 via-transparent to-pink-900/40'></div>
       </div>
+
+      {/* Additional background extension to prevent white bars */}
+      <div className='absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none'></div>
 
       {/* Animated Particles */}
       <AnimatedParticles />
@@ -472,7 +447,7 @@ const HeroSection = React.memo(function HeroSection() {
 
             {/* Modern Name with Enhanced Gradient */}
             <motion.h1
-              className='text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight'
+              className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 md:mb-6 leading-tight'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -498,7 +473,7 @@ const HeroSection = React.memo(function HeroSection() {
 
             {/* Modern Title with Typing Effect */}
             <motion.div
-              className='text-2xl sm:text-3xl lg:text-4xl mb-6 font-bold'
+              className='text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 md:mb-6 font-bold'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -515,7 +490,7 @@ const HeroSection = React.memo(function HeroSection() {
 
             {/* Enhanced Description */}
             <motion.p
-              className='text-lg sm:text-xl mb-8 text-gray-300 leading-relaxed max-w-3xl mx-auto px-4 sm:px-0'
+              className='text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-gray-300 leading-relaxed max-w-3xl mx-auto px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
@@ -532,7 +507,7 @@ const HeroSection = React.memo(function HeroSection() {
 
             {/* Modern CTA Buttons */}
             <motion.div
-              className='flex flex-col sm:flex-row gap-4 mb-8 justify-center px-4 sm:px-0'
+              className='flex flex-col sm:flex-row gap-3 md:gap-4 mb-6 md:mb-8 justify-center px-4 sm:px-0 hero-buttons'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
@@ -572,7 +547,7 @@ const HeroSection = React.memo(function HeroSection() {
 
             {/* Modern Social Links */}
             <motion.div
-              className='flex items-center gap-6 justify-center mb-16 px-4 sm:px-0'
+              className='flex items-center gap-4 md:gap-6 justify-center mb-8 md:mb-16 px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0 }}
@@ -610,23 +585,23 @@ const HeroSection = React.memo(function HeroSection() {
         </div>
       </div>
 
-      {/* Modern Scroll Indicator - Moved outside content div */}
+      {/* Modern Scroll Indicator - Positioned right after social links */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: showScrollIndicator ? 1 : 0 }}
         transition={{ delay: showScrollIndicator ? 1.5 : 0, duration: 0.5 }}
-        className='absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50'
+        className='absolute bottom-12 md:bottom-8 left-1/2 transform -translate-x-1/2 z-40'
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className='flex flex-col items-center space-y-2 text-white/80'
+          className='flex flex-col items-center space-y-2 text-white/90'
         >
-          <span className='text-sm font-medium'>Scroll to explore</span>
-          <motion.div className='w-6 h-10 border-2 border-white/40 rounded-full flex justify-center'>
+          <span className='text-sm md:text-sm font-medium'>Scroll to explore</span>
+          <motion.div className='w-6 h-9 md:w-6 md:h-10 border-2 border-white/60 rounded-full flex justify-center'>
             <motion.div
-              className='w-1 h-3 bg-white/80 rounded-full mt-2'
-              animate={{ y: [0, 12, 0] }}
+              className='w-1 h-3 md:h-3 bg-white/90 rounded-full mt-2 md:mt-2'
+              animate={{ y: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             />
           </motion.div>
@@ -741,9 +716,7 @@ const AboutSection = React.memo(() => {
               </div>
             </div>
 
-            {/* Optimized decorative elements */}
-            <div className='absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-br from-blue-500/8 to-purple-500/8 rounded-full blur-lg'></div>
-            <div className='absolute -bottom-4 -right-4 w-12 h-12 bg-gradient-to-br from-purple-500/8 to-pink-500/8 rounded-full blur-lg'></div>
+            {/* Removed decorative elements that were causing layout issues */}
           </motion.div>
 
           <motion.div

@@ -337,6 +337,7 @@
 
           const handleScroll = () => {
             const scrollY = window.scrollY;
+            const isMobile = window.innerWidth <= 768;
             const shouldExpand = scrollY > 200; // Expand when header button is hidden
 
             // Only update if state changed to avoid unnecessary DOM updates
@@ -344,19 +345,27 @@
               isExpanded = shouldExpand;
 
               if (shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
+                // Mobile-responsive expansion
+                const expandedWidth = isMobile ? '120px' : '140px';
+                const translateX = isMobile ? '-64px' : '-84px';
+                const textMaxWidth = isMobile ? '60px' : '80px';
+
                 // Expand to show text - expand left towards center
-                chatButton.style.width = '140px';
+                chatButton.style.width = expandedWidth;
                 chatButton.style.borderRadius = '28px';
                 chatButton.style.paddingLeft = '16px';
                 chatButton.style.paddingRight = '16px';
                 chatButton.style.justifyContent = 'flex-start';
-                chatButton.style.transform = 'scale(1) translateX(-84px)';
+                chatButton.style.transform = `scale(1) translateX(${translateX})`;
                 chatButtonText.style.opacity = '1';
                 chatButtonText.style.width = 'auto';
-                chatButtonText.style.maxWidth = '80px';
+                chatButtonText.style.maxWidth = textMaxWidth;
+                chatButtonText.style.fontSize = isMobile ? '12px' : '14px';
               } else if (!shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
                 // Shrink to icon only
-                chatButton.style.width = '56px';
+                const buttonSize = isMobile ? '60px' : '56px';
+                chatButton.style.width = buttonSize;
+                chatButton.style.height = buttonSize;
                 chatButton.style.borderRadius = '50%';
                 chatButton.style.paddingLeft = '0';
                 chatButton.style.paddingRight = '0';
@@ -386,6 +395,11 @@
           // Add scroll event listener
           window.addEventListener('scroll', throttledScroll, { passive: true });
 
+          // Add resize event listener for responsive updates
+          window.addEventListener('resize', () => {
+            handleScroll(); // Recalculate on resize
+          });
+
           // Also call handleScroll once initially to set correct state
           setTimeout(() => {
             handleScroll();
@@ -412,25 +426,34 @@
         openChat();
       };
 
-      // Add dynamic hover effects
-      openChatBtn.addEventListener('mouseenter', function () {
-        const isExpanded = this.style.width === '140px';
-        if (isExpanded) {
-          this.style.transform = 'scale(1.02) translateX(-84px)';
-        } else {
-          this.style.transform = 'scale(1.1) translateX(0)';
-        }
-        this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
-      });
-      openChatBtn.addEventListener('mouseleave', function () {
-        const isExpanded = this.style.width === '140px';
-        if (isExpanded) {
-          this.style.transform = 'scale(1) translateX(-84px)';
-        } else {
-          this.style.transform = 'scale(1) translateX(0)';
-        }
-        this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
-      });
+      // Add dynamic hover effects (desktop only)
+      if (!('ontouchstart' in window)) {
+        openChatBtn.addEventListener('mouseenter', function () {
+          const isMobile = window.innerWidth <= 768;
+          const isExpanded = this.style.width === (isMobile ? '120px' : '140px');
+          const translateX = isMobile ? '-64px' : '-84px';
+
+          if (isExpanded) {
+            this.style.transform = `scale(1.02) translateX(${translateX})`;
+          } else {
+            this.style.transform = 'scale(1.1) translateX(0)';
+          }
+          this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
+        });
+
+        openChatBtn.addEventListener('mouseleave', function () {
+          const isMobile = window.innerWidth <= 768;
+          const isExpanded = this.style.width === (isMobile ? '120px' : '140px');
+          const translateX = isMobile ? '-64px' : '-84px';
+
+          if (isExpanded) {
+            this.style.transform = `scale(1) translateX(${translateX})`;
+          } else {
+            this.style.transform = 'scale(1) translateX(0)';
+          }
+          this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
+        });
+      }
 
       // Close when clicking on the overlay
       chatModalOverlay.onclick = function (e) {
