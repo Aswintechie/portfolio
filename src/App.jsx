@@ -27,6 +27,9 @@ import {
   Sparkles,
   Star,
   Circle,
+  Home,
+  User,
+  Folder,
 } from 'lucide-react';
 import SearchModal from './components/SearchModal.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
@@ -81,42 +84,42 @@ const AnimatedParticles = React.memo(() => {
 
 AnimatedParticles.displayName = 'AnimatedParticles';
 
-// Optimized Modern Floating Elements Component
+// Performance-optimized Floating Elements Component
 const FloatingElements = React.memo(() => {
   return (
     <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-      {/* Optimized gradient orbs - reduced size and simplified animations */}
+      {/* Optimized gradient orbs - further reduced size and simplified animations */}
       <motion.div
-        className='absolute w-80 h-80 rounded-full opacity-15' // Reduced size and opacity
+        className='absolute w-64 h-64 rounded-full opacity-12' // Further reduced size and opacity
         style={{
           background:
-            'radial-gradient(circle, rgba(236,72,153,0.4) 0%, rgba(14,165,233,0.2) 50%, transparent 100%)',
+            'radial-gradient(circle, rgba(236,72,153,0.3) 0%, rgba(14,165,233,0.15) 50%, transparent 100%)',
           top: '10%',
           right: '10%',
         }}
         animate={{
-          scale: [1, 1.1, 1], // Reduced scale change
+          scale: [1, 1.05, 1], // Further reduced scale change
         }}
         transition={{
-          duration: 25, // Increased duration for smoother animation
+          duration: 30, // Increased duration for smoother animation
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
 
       <motion.div
-        className='absolute w-64 h-64 rounded-full opacity-10' // Reduced size and opacity
+        className='absolute w-48 h-48 rounded-full opacity-8' // Further reduced size and opacity
         style={{
           background:
-            'radial-gradient(circle, rgba(14,165,233,0.4) 0%, rgba(236,72,153,0.2) 50%, transparent 100%)',
+            'radial-gradient(circle, rgba(14,165,233,0.3) 0%, rgba(236,72,153,0.15) 50%, transparent 100%)',
           bottom: '35%',
           left: '5%',
         }}
         animate={{
-          scale: [1.1, 1, 1.1], // Reduced scale change
+          scale: [1.05, 1, 1.05], // Further reduced scale change
         }}
         transition={{
-          duration: 30, // Increased duration
+          duration: 35, // Increased duration
           repeat: Infinity,
           ease: 'easeInOut',
         }}
@@ -124,26 +127,26 @@ const FloatingElements = React.memo(() => {
 
       {/* Simplified geometric shapes - reduced number and complexity */}
       <motion.div
-        className='absolute w-12 h-12 border border-white/15 rounded-lg' // Reduced size and opacity
+        className='absolute w-10 h-10 border border-white/12 rounded-lg' // Further reduced size and opacity
         style={{ top: '30%', left: '15%' }}
         animate={{
-          y: [0, -20, 0], // Reduced movement
+          y: [0, -15, 0], // Further reduced movement
         }}
         transition={{
-          duration: 10, // Increased duration
+          duration: 12, // Increased duration
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
 
       <motion.div
-        className='absolute w-8 h-8 bg-gradient-to-br from-secondary-400/20 to-accent-400/20 rounded-full' // Reduced size and opacity
+        className='absolute w-6 h-6 bg-gradient-to-br from-secondary-400/15 to-accent-400/15 rounded-full' // Further reduced size and opacity
         style={{ top: '50%', right: '25%' }}
         animate={{
-          y: [0, -25, 0], // Reduced movement
+          y: [0, -20, 0], // Further reduced movement
         }}
         transition={{
-          duration: 15, // Increased duration
+          duration: 18, // Increased duration
           repeat: Infinity,
           ease: 'easeInOut',
         }}
@@ -217,65 +220,49 @@ const useThrottledScroll = (callback, delay = 16) => {
   }, [delay]);
 };
 
-// Modern Navigation Component
+// Performance-optimized Navigation component
 const Navigation = React.memo(function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Optimized scroll handler with throttling
   const handleScroll = React.useCallback(() => {
-    setScrolled(window.scrollY > 50);
+    const isScrolled = window.scrollY > 50;
+    setScrolled(isScrolled);
   }, []);
 
   useThrottledScroll(handleScroll);
 
-  useEffect(() => {
-    const handleKeyDown = e => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-      if (e.key === 'Escape' && isSearchOpen) {
-        setIsSearchOpen(false);
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsSearchOpen(true);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, isSearchOpen]);
-
-  const navItems = React.useMemo(
+  // Memoized navigation items
+  const navigationItems = React.useMemo(
     () => [
-      { name: 'Home', href: '#home' },
-      { name: 'About', href: '#about' },
-      { name: 'Experience', href: '#experience' },
-      { name: 'Skills', href: '#skills' },
-      { name: 'Projects', href: '#projects' },
-      { name: 'Contact', href: '#contact' },
+      { href: '#home', label: 'Home', icon: Home },
+      { href: '#about', label: 'About', icon: User },
+      { href: '#experience', label: 'Experience', icon: Briefcase },
+      { href: '#skills', label: 'Skills', icon: Code },
+      { href: '#projects', label: 'Projects', icon: Folder },
+      { href: '#contact', label: 'Contact', icon: Mail },
     ],
     []
   );
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/80 backdrop-blur-xl shadow-2xl border-b border-gray-200/20'
-          : 'bg-black/10 backdrop-blur-md'
+          ? 'bg-white/85 backdrop-blur-md shadow-lg border-b border-gray-200/20'
+          : 'bg-black/5 backdrop-blur-sm'
       }`}
     >
       <div className='container-custom'>
         <div className='flex items-center justify-between h-16'>
-          {/* Modern Logo */}
+          {/* Optimized Logo */}
           <motion.a
             href='#home'
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`flex items-center space-x-3 text-xl font-bold transition-all duration-300 hover:scale-105 ${
+            className={`flex items-center space-x-3 text-xl font-bold transition-all duration-200 hover:scale-105 ${
               scrolled ? 'text-primary-900' : 'text-white'
             }`}
           >
@@ -284,8 +271,8 @@ const Navigation = React.memo(function Navigation() {
               <motion.div
                 className='absolute -top-1 -right-1 w-3 h-3 bg-accent-400 rounded-full'
                 animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.7, 1, 0.7],
+                  scale: [1, 1.1, 1],
+                  opacity: [0.8, 1, 0.8],
                 }}
                 transition={{
                   duration: 2,
@@ -301,127 +288,99 @@ const Navigation = React.memo(function Navigation() {
 
           {/* Desktop Navigation */}
           <div className='hidden md:flex items-center space-x-1'>
-            {navItems.map((item, index) => (
+            {navigationItems.map((item, index) => (
               <motion.a
-                key={item.name}
+                key={item.href}
                 href={item.href}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 relative overflow-hidden group ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${
                   scrolled
-                    ? 'text-gray-700 hover:text-primary-900'
-                    : 'text-white/90 hover:text-white'
+                    ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <span className='relative z-10'>{item.name}</span>
-                <motion.div
-                  className={`absolute inset-0 rounded-xl transition-all duration-300 ${
-                    scrolled
-                      ? 'bg-gradient-to-r from-secondary-500/10 to-accent-500/10 opacity-0 group-hover:opacity-100'
-                      : 'bg-white/10 opacity-0 group-hover:opacity-100'
-                  }`}
-                />
+                <item.icon size={16} />
+                <span>{item.label}</span>
               </motion.a>
             ))}
-
-            {/* Modern Search Button */}
-            <motion.button
-              onClick={() => setIsSearchOpen(true)}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8 }}
-              className={`p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
-                scrolled
-                  ? 'text-gray-700 hover:bg-secondary-500/10'
-                  : 'text-white/90 hover:bg-white/10'
-              }`}
-            >
-              <Search size={18} />
-            </motion.button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <motion.button
-            onClick={() => setIsOpen(!isOpen)}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className={`md:hidden p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
-              scrolled
-                ? 'text-gray-700 hover:bg-secondary-500/10'
-                : 'text-white/90 hover:bg-white/10'
-            }`}
-          >
-            <AnimatePresence mode='wait'>
-              {isOpen ? (
-                <motion.div
-                  key='close'
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X size={24} />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key='menu'
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Menu size={24} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.button>
+          {/* Optimized Action Buttons */}
+          <div className='flex items-center space-x-3'>
+            <motion.button
+              onClick={() => setIsSearchOpen(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`p-2 rounded-xl transition-all duration-200 ${
+                scrolled
+                  ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                  : 'text-white/90 hover:text-white hover:bg-white/10'
+              }`}
+              aria-label='Search'
+            >
+              <Search size={20} />
+            </motion.button>
+
+            <motion.a
+              href='#contact'
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className='hidden sm:inline-flex items-center px-6 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200'
+            >
+              <Sparkles size={16} className='mr-2' />
+              Let's Talk
+            </motion.a>
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`md:hidden p-2 rounded-xl transition-all duration-200 ${
+                scrolled
+                  ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                  : 'text-white/90 hover:text-white hover:bg-white/10'
+              }`}
+              aria-label='Toggle menu'
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </motion.button>
+          </div>
         </div>
 
-        {/* Modern Mobile Menu */}
+        {/* Optimized Mobile Menu */}
         <AnimatePresence>
-          {isOpen && (
+          {isMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className='md:hidden bg-white/90 backdrop-blur-xl rounded-2xl mt-2 p-4 shadow-2xl border border-gray-200/20'
+              transition={{ duration: 0.2 }}
+              className='md:hidden border-t border-gray-200/20 bg-white/90 backdrop-blur-sm'
             >
-              <div className='flex flex-col space-y-2'>
-                {navItems.map((item, index) => (
+              <div className='py-4 space-y-2'>
+                {navigationItems.map((item, index) => (
                   <motion.a
-                    key={item.name}
+                    key={item.href}
                     href={item.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => setIsOpen(false)}
-                    className='px-4 py-3 rounded-xl text-gray-700 hover:text-primary-900 hover:bg-gradient-to-r hover:from-secondary-500/10 hover:to-accent-500/10 transition-all duration-300 font-medium'
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => setIsMenuOpen(false)}
+                    className='flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-secondary-600 hover:bg-secondary-50 rounded-xl transition-all duration-200'
                   >
-                    {item.name}
+                    <item.icon size={18} />
+                    <span className='font-medium'>{item.label}</span>
                   </motion.a>
                 ))}
-                <motion.button
-                  onClick={() => {
-                    setIsSearchOpen(true);
-                    setIsOpen(false);
-                  }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.1 }}
-                  className='px-4 py-3 rounded-xl text-gray-700 hover:text-primary-900 hover:bg-gradient-to-r hover:from-secondary-500/10 hover:to-accent-500/10 transition-all duration-300 font-medium text-left flex items-center space-x-2'
-                >
-                  <Search size={18} />
-                  <span>Search</span>
-                </motion.button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </nav>
   );
@@ -445,11 +404,10 @@ const HeroSection = React.memo(function HeroSection() {
       id='home'
       className='min-h-screen flex items-center justify-center relative overflow-hidden'
     >
-      {/* Modern Ultra-Gradient Background */}
+      {/* Optimized Gradient Background */}
       <div className='absolute inset-0'>
         <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'></div>
-        <div className='absolute inset-0 bg-gradient-to-tr from-blue-900/50 via-transparent to-pink-900/50'></div>
-        <div className='absolute inset-0 bg-gradient-to-bl from-transparent via-cyan-900/30 to-transparent'></div>
+        <div className='absolute inset-0 bg-gradient-to-tr from-blue-900/40 via-transparent to-pink-900/40'></div>
       </div>
 
       {/* Animated Particles */}
@@ -458,11 +416,10 @@ const HeroSection = React.memo(function HeroSection() {
       {/* Floating Elements */}
       <FloatingElements />
 
-      {/* Modern Mesh Gradient Overlay */}
-      <div className='absolute inset-0 opacity-30'>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(236,72,153,0.3)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.3)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_40%_80%,rgba(20,184,166,0.2)_0%,transparent_50%)]'></div>
+      {/* Optimized Mesh Gradient Overlay */}
+      <div className='absolute inset-0 opacity-25'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(236,72,153,0.25)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.25)_0%,transparent_50%)]'></div>
       </div>
 
       {/* Content */}
@@ -658,7 +615,7 @@ const HeroSection = React.memo(function HeroSection() {
 });
 
 // Modern About Section Component
-const AboutSection = () => {
+const AboutSection = React.memo(() => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const experience = useExperienceCalculator();
 
@@ -762,9 +719,9 @@ const AboutSection = () => {
               </div>
             </div>
 
-            {/* Modern decorative elements */}
-            <div className='absolute -top-4 -left-4 w-20 h-20 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-xl'></div>
-            <div className='absolute -bottom-4 -right-4 w-16 h-16 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-xl'></div>
+            {/* Optimized decorative elements */}
+            <div className='absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-br from-blue-500/8 to-purple-500/8 rounded-full blur-lg'></div>
+            <div className='absolute -bottom-4 -right-4 w-12 h-12 bg-gradient-to-br from-purple-500/8 to-pink-500/8 rounded-full blur-lg'></div>
           </motion.div>
 
           <motion.div
@@ -820,7 +777,9 @@ const AboutSection = () => {
       </div>
     </section>
   );
-};
+});
+
+AboutSection.displayName = 'AboutSection';
 
 // Experience Section Component
 const ExperienceSection = () => {
@@ -966,9 +925,9 @@ const SkillsSection = () => {
                 className={`absolute inset-0 bg-gradient-to-br ${skill.bgColor} opacity-0 group-hover:opacity-80 transition-opacity duration-300`}
               ></div>
 
-              {/* Simplified floating background elements */}
-              <div className='absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-gray-200/20 to-gray-300/20 rounded-full opacity-50 group-hover:opacity-70 transition-opacity duration-300'></div>
-              <div className='absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-gray-100/30 to-gray-200/30 rounded-full opacity-50 group-hover:opacity-70 transition-opacity duration-300'></div>
+              {/* Optimized floating background elements */}
+              <div className='absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br from-gray-200/15 to-gray-300/15 rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-200'></div>
+              <div className='absolute -bottom-4 -left-4 w-8 h-8 bg-gradient-to-br from-gray-100/20 to-gray-200/20 rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-200'></div>
 
               {/* Icon container */}
               <div
@@ -1879,9 +1838,9 @@ const ContactSection = () => {
             {/* Background gradient */}
             <div className='absolute inset-0 bg-gradient-to-br from-blue-50/30 to-green-50/30'></div>
 
-            {/* Decorative elements */}
-            <div className='absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-full blur-xl'></div>
-            <div className='absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full blur-xl'></div>
+            {/* Optimized decorative elements */}
+            <div className='absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-blue-500/8 to-green-500/8 rounded-full blur-lg'></div>
+            <div className='absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-green-500/8 to-blue-500/8 rounded-full blur-lg'></div>
 
             <div className='relative z-10'>
               <form onSubmit={handleSubmit} className='space-y-6'>
