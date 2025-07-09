@@ -412,6 +412,20 @@ const Navigation = React.memo(function Navigation() {
 // Modern Hero Section Component
 const HeroSection = React.memo(function HeroSection() {
   const experience = useExperienceCalculator();
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowScrollIndicator(false);
+      } else {
+        setShowScrollIndicator(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <section
@@ -607,8 +621,8 @@ const HeroSection = React.memo(function HeroSection() {
       {/* Modern Scroll Indicator - Moved outside content div */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        animate={{ opacity: showScrollIndicator ? 1 : 0 }}
+        transition={{ delay: showScrollIndicator ? 1.5 : 0, duration: 0.5 }}
         className='absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50'
       >
         <motion.div
