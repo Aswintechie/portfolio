@@ -1365,12 +1365,12 @@ const PersonalProjectsSection = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className='group relative'
+              className='group relative h-full'
               onMouseEnter={() => setHoveredProject(index)}
               onMouseLeave={() => setHoveredProject(null)}
             >
               {/* Glassmorphism Card */}
-              <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden'>
+              <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col'>
                 {/* Animated Background Gradient */}
                 <div className='absolute inset-0 bg-gradient-to-br from-orange-500/5 via-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
@@ -1429,52 +1429,55 @@ const PersonalProjectsSection = () => {
                 </div>
 
                 {/* Project Description */}
-                <p className='text-gray-600 leading-relaxed mb-6 relative z-10'>
+                <p className='text-gray-600 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
                   {project.description}
                 </p>
 
-                {/* Technologies */}
-                <div className='mb-6 relative z-10'>
-                  <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                    <Code size={16} className='mr-2 text-orange-600' />
-                    Technologies
-                  </h4>
-                  <div className='flex flex-wrap gap-2'>
-                    {project.technologies.map((tech, techIndex) => (
-                      <motion.span
-                        key={techIndex}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={inView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ duration: 0.3, delay: index * 0.1 + techIndex * 0.03 }}
-                        className='px-3 py-1 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 text-sm font-bold rounded-full border border-orange-200 hover:shadow-sm transition-all duration-200'
-                      >
-                        {tech}
-                      </motion.span>
-                    ))}
+                {/* Content Area - Flexible */}
+                <div className='flex-1 flex flex-col relative z-10'>
+                  {/* Technologies */}
+                  <div className='mb-6'>
+                    <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                      <Code size={16} className='mr-2 text-orange-600' />
+                      Technologies
+                    </h4>
+                    <div className='flex flex-wrap gap-2'>
+                      {project.technologies.map((tech, techIndex) => (
+                        <motion.span
+                          key={techIndex}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={inView ? { opacity: 1, scale: 1 } : {}}
+                          transition={{ duration: 0.3, delay: index * 0.1 + techIndex * 0.03 }}
+                          className='px-3 py-1 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 text-sm font-bold rounded-full border border-orange-200 hover:shadow-sm transition-all duration-200'
+                        >
+                          {tech}
+                        </motion.span>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Key Features */}
-                <div className='relative z-10'>
-                  <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                    <Zap size={16} className='mr-2 text-red-600' />
-                    Key Features
-                  </h4>
-                  <div className='space-y-2'>
-                    {project.features.map((feature, featureIndex) => (
-                      <motion.div
-                        key={featureIndex}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={inView ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 0.3, delay: index * 0.1 + featureIndex * 0.05 }}
-                        className='flex items-center space-x-3 p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:shadow-sm transition-all duration-200'
-                      >
-                        <div className='p-1 bg-gradient-to-br from-red-500 to-orange-500 rounded-full'>
-                          <Shield size={12} className='text-white' />
-                        </div>
-                        <span className='text-gray-700 font-medium text-sm'>{feature}</span>
-                      </motion.div>
-                    ))}
+                  {/* Key Features */}
+                  <div className='flex-1'>
+                    <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                      <Zap size={16} className='mr-2 text-red-600' />
+                      Key Features
+                    </h4>
+                    <div className='space-y-2'>
+                      {project.features.map((feature, featureIndex) => (
+                        <motion.div
+                          key={featureIndex}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={inView ? { opacity: 1, x: 0 } : {}}
+                          transition={{ duration: 0.3, delay: index * 0.1 + featureIndex * 0.05 }}
+                          className='flex items-center space-x-3 p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:shadow-sm transition-all duration-200'
+                        >
+                          <div className='p-1 bg-gradient-to-br from-red-500 to-orange-500 rounded-full'>
+                            <Shield size={12} className='text-white' />
+                          </div>
+                          <span className='text-gray-700 font-medium text-sm'>{feature}</span>
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
