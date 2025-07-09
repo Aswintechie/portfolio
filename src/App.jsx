@@ -35,23 +35,28 @@ import ExperienceEntry from './components/ExperienceEntry.jsx';
 import { getExperienceData } from './data/experienceData.js';
 import { featuredProjects, allProjects } from './data/projects.jsx';
 
-// Animated Background Particles Component
-const AnimatedParticles = () => {
-  const particles = Array.from({ length: 50 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 1,
-    duration: Math.random() * 20 + 10,
-    delay: Math.random() * 5,
-  }));
+// Optimized Animated Background Particles Component
+const AnimatedParticles = React.memo(() => {
+  // Reduce particles from 50 to 20 for better performance
+  const particles = React.useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 3 + 1, // Reduced max size
+        duration: Math.random() * 15 + 8, // Reduced duration range
+        delay: Math.random() * 3, // Reduced delay range
+      })),
+    []
+  );
 
   return (
     <div className='absolute inset-0 overflow-hidden pointer-events-none'>
       {particles.map(particle => (
         <motion.div
           key={particle.id}
-          className='absolute rounded-full bg-white/10'
+          className='absolute rounded-full bg-white/8' // Reduced opacity
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,
@@ -59,9 +64,8 @@ const AnimatedParticles = () => {
             height: `${particle.size}px`,
           }}
           animate={{
-            y: [0, -20, 0],
-            opacity: [0.3, 0.8, 0.3],
-            scale: [1, 1.2, 1],
+            y: [0, -15, 0], // Reduced movement
+            opacity: [0.2, 0.6, 0.2], // Reduced opacity range
           }}
           transition={{
             duration: particle.duration,
@@ -73,96 +77,82 @@ const AnimatedParticles = () => {
       ))}
     </div>
   );
-};
+});
 
-// Modern Floating Elements Component
-const FloatingElements = () => {
+AnimatedParticles.displayName = 'AnimatedParticles';
+
+// Optimized Modern Floating Elements Component
+const FloatingElements = React.memo(() => {
   return (
     <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-      {/* Large gradient orbs */}
+      {/* Optimized gradient orbs - reduced size and simplified animations */}
       <motion.div
-        className='absolute w-96 h-96 rounded-full opacity-20'
+        className='absolute w-80 h-80 rounded-full opacity-15' // Reduced size and opacity
         style={{
           background:
-            'radial-gradient(circle, rgba(236,72,153,0.6) 0%, rgba(14,165,233,0.4) 50%, transparent 100%)',
+            'radial-gradient(circle, rgba(236,72,153,0.4) 0%, rgba(14,165,233,0.2) 50%, transparent 100%)',
           top: '10%',
           right: '10%',
         }}
         animate={{
-          scale: [1, 1.2, 1],
-          rotate: [0, 180, 360],
+          scale: [1, 1.1, 1], // Reduced scale change
         }}
         transition={{
-          duration: 20,
+          duration: 25, // Increased duration for smoother animation
           repeat: Infinity,
-          ease: 'linear',
+          ease: 'easeInOut',
         }}
       />
 
       <motion.div
-        className='absolute w-72 h-72 rounded-full opacity-15'
+        className='absolute w-64 h-64 rounded-full opacity-10' // Reduced size and opacity
         style={{
           background:
-            'radial-gradient(circle, rgba(14,165,233,0.6) 0%, rgba(236,72,153,0.4) 50%, transparent 100%)',
+            'radial-gradient(circle, rgba(14,165,233,0.4) 0%, rgba(236,72,153,0.2) 50%, transparent 100%)',
           bottom: '35%',
           left: '5%',
         }}
         animate={{
-          scale: [1.2, 1, 1.2],
-          rotate: [360, 180, 0],
+          scale: [1.1, 1, 1.1], // Reduced scale change
         }}
         transition={{
-          duration: 25,
+          duration: 30, // Increased duration
           repeat: Infinity,
-          ease: 'linear',
+          ease: 'easeInOut',
         }}
       />
 
-      {/* Floating geometric shapes */}
+      {/* Simplified geometric shapes - reduced number and complexity */}
       <motion.div
-        className='absolute w-16 h-16 border-2 border-white/20 rounded-lg'
+        className='absolute w-12 h-12 border border-white/15 rounded-lg' // Reduced size and opacity
         style={{ top: '30%', left: '15%' }}
         animate={{
-          y: [0, -30, 0],
-          rotate: [0, 45, 0],
+          y: [0, -20, 0], // Reduced movement
         }}
         transition={{
-          duration: 8,
+          duration: 10, // Increased duration
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
 
       <motion.div
-        className='absolute w-12 h-12 bg-gradient-to-br from-secondary-400/30 to-accent-400/30 rounded-full'
+        className='absolute w-8 h-8 bg-gradient-to-br from-secondary-400/20 to-accent-400/20 rounded-full' // Reduced size and opacity
         style={{ top: '50%', right: '25%' }}
         animate={{
-          y: [0, -40, 0],
-          x: [0, 20, 0],
+          y: [0, -25, 0], // Reduced movement
         }}
         transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
-
-      <motion.div
-        className='absolute w-8 h-8 border-2 border-accent-400/40 rounded-full'
-        style={{ top: '20%', left: '70%' }}
-        animate={{
-          scale: [1, 1.5, 1],
-          opacity: [0.3, 0.8, 0.3],
-        }}
-        transition={{
-          duration: 6,
+          duration: 15, // Increased duration
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
     </div>
   );
-};
+});
+
+FloatingElements.displayName = 'FloatingElements';
 
 // Custom hook for experience calculation
 const useExperienceCalculator = () => {
@@ -198,17 +188,49 @@ const useExperienceCalculator = () => {
   return experience;
 };
 
+// Optimized throttle function for scroll events
+const useThrottledScroll = (callback, delay = 16) => {
+  const callbackRef = React.useRef(callback);
+  const throttleRef = React.useRef(null);
+
+  React.useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (throttleRef.current) return;
+
+      throttleRef.current = setTimeout(() => {
+        callbackRef.current();
+        throttleRef.current = null;
+      }, delay);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (throttleRef.current) {
+        clearTimeout(throttleRef.current);
+      }
+    };
+  }, [delay]);
+};
+
 // Modern Navigation Component
 const Navigation = React.memo(function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+  // Optimized scroll handler with throttling
+  const handleScroll = React.useCallback(() => {
+    setScrolled(window.scrollY > 50);
+  }, []);
 
+  useThrottledScroll(handleScroll);
+
+  useEffect(() => {
     const handleKeyDown = e => {
       if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
@@ -222,25 +244,21 @@ const Navigation = React.memo(function Navigation() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
     document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isSearchOpen]);
 
-  const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Infrastructure', href: '#personal-projects' },
-    { name: 'Technologies', href: '#technologies' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  const navItems = React.useMemo(
+    () => [
+      { name: 'Home', href: '#home' },
+      { name: 'About', href: '#about' },
+      { name: 'Experience', href: '#experience' },
+      { name: 'Skills', href: '#skills' },
+      { name: 'Projects', href: '#projects' },
+      { name: 'Contact', href: '#contact' },
+    ],
+    []
+  );
 
   return (
     <nav
@@ -414,18 +432,13 @@ const HeroSection = React.memo(function HeroSection() {
   const experience = useExperienceCalculator();
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setShowScrollIndicator(false);
-      } else {
-        setShowScrollIndicator(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+  // Optimized scroll handler with throttling
+  const handleScrollIndicator = React.useCallback(() => {
+    const shouldShow = window.scrollY <= 50;
+    setShowScrollIndicator(shouldShow);
   }, []);
+
+  useThrottledScroll(handleScrollIndicator);
 
   return (
     <section
@@ -766,26 +779,19 @@ const AboutSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                className='group relative bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
+                className='group relative bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-white/20 overflow-hidden'
               >
-                {/* Modern Gradient Background inside each card */}
-                <div className='absolute inset-0 opacity-30'>
+                {/* Simplified gradient background */}
+                <div className='absolute inset-0 opacity-20'>
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-20`}
+                    className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-30`}
                   ></div>
-                  <div className='absolute inset-0 bg-gradient-to-r from-white/60 via-transparent to-white/20'></div>
-                  <div className='absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent'></div>
-                  <div
-                    className='absolute inset-0 bg-repeat opacity-30'
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='grad' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ffffff;stop-opacity:0' /%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='30' cy='30' r='8' fill='url(%23grad)' /%3E%3Ccircle cx='10' cy='10' r='4' fill='url(%23grad)' /%3E%3Ccircle cx='50' cy='10' r='4' fill='url(%23grad)' /%3E%3Ccircle cx='10' cy='50' r='4' fill='url(%23grad)' /%3E%3Ccircle cx='50' cy='50' r='4' fill='url(%23grad)' /%3E%3C/svg%3E")`,
-                    }}
-                  ></div>
+                  <div className='absolute inset-0 bg-gradient-to-r from-white/40 via-transparent to-white/10'></div>
                 </div>
 
-                {/* Background gradient */}
+                {/* Hover gradient */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                  className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
                 ></div>
 
                 {/* Icon */}
@@ -805,9 +811,8 @@ const AboutSection = () => {
                   <div className='text-gray-600 font-semibold text-base'>{stat.label}</div>
                 </div>
 
-                {/* Decorative elements */}
-                <div className='absolute top-3 right-3 w-6 h-6 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
-                <div className='absolute bottom-3 right-3 w-3 h-3 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                {/* Simplified decorative elements */}
+                <div className='absolute top-3 right-3 w-6 h-6 border border-gray-200 rounded-full opacity-20 group-hover:opacity-30 transition-opacity duration-300'></div>
               </motion.div>
             ))}
           </motion.div>
@@ -954,28 +959,27 @@ const SkillsSection = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className='group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden'
+              className='group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-100 overflow-hidden'
             >
-              {/* Background gradient overlay */}
+              {/* Simplified background gradient overlay */}
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${skill.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                className={`absolute inset-0 bg-gradient-to-br ${skill.bgColor} opacity-0 group-hover:opacity-80 transition-opacity duration-300`}
               ></div>
 
-              {/* Floating background elements */}
-              <div className='absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-gray-200/30 to-gray-300/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500'></div>
-              <div className='absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-gray-100/40 to-gray-200/40 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500'></div>
+              {/* Simplified floating background elements */}
+              <div className='absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-gray-200/20 to-gray-300/20 rounded-full opacity-50 group-hover:opacity-70 transition-opacity duration-300'></div>
+              <div className='absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-gray-100/30 to-gray-200/30 rounded-full opacity-50 group-hover:opacity-70 transition-opacity duration-300'></div>
 
               {/* Icon container */}
-              <div className='relative z-10 text-center'>
-                <motion.div
-                  className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${skill.color} mb-6 text-white shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-500`}
-                  whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {skill.icon}
-                </motion.div>
+              <div
+                className={`relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${skill.color} mb-6 text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}
+              >
+                {skill.icon}
+              </div>
 
-                <h3 className='text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors duration-300'>
+              {/* Content */}
+              <div className='relative z-10'>
+                <h3 className='text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-300'>
                   {skill.title}
                 </h3>
                 <p className='text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300'>
@@ -983,9 +987,8 @@ const SkillsSection = () => {
                 </p>
               </div>
 
-              {/* Decorative corner elements */}
-              <div className='absolute top-4 right-4 w-2 h-2 bg-gray-300 rounded-full opacity-30 group-hover:opacity-60 transition-opacity duration-500'></div>
-              <div className='absolute bottom-4 left-4 w-3 h-3 border-2 border-gray-300 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+              {/* Simplified decorative corner element */}
+              <div className='absolute top-4 right-4 w-2 h-2 bg-gray-300 rounded-full opacity-30 group-hover:opacity-50 transition-opacity duration-300'></div>
             </motion.div>
           ))}
         </div>

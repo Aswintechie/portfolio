@@ -16,47 +16,50 @@ function ExperienceEntryComponent({
   delay = 0.1,
 }) {
   // Define company-specific themes
-  const getCompanyTheme = companyName => {
-    if (companyName.includes('MulticoreWare')) {
+  const getCompanyTheme = React.useMemo(
+    () => companyName => {
+      if (companyName.includes('MulticoreWare')) {
+        return {
+          gradient: 'from-blue-500 to-indigo-600',
+          bgGradient: 'from-blue-50 to-indigo-50',
+          icon: <Cpu size={20} />,
+          accentColor: 'text-blue-600',
+          borderColor: 'border-blue-200',
+          timelineColor: 'bg-blue-600',
+          tagBg: 'bg-blue-100',
+          tagText: 'text-blue-800',
+          hoverShadow: 'hover:shadow-blue-500/20',
+        };
+      } else if (companyName.includes('Lenovo')) {
+        return {
+          gradient: 'from-emerald-500 to-teal-600',
+          bgGradient: 'from-emerald-50 to-teal-50',
+          icon: <Code size={20} />,
+          accentColor: 'text-emerald-600',
+          borderColor: 'border-emerald-200',
+          timelineColor: 'bg-emerald-600',
+          tagBg: 'bg-emerald-100',
+          tagText: 'text-emerald-800',
+          hoverShadow: 'hover:shadow-emerald-500/20',
+        };
+      }
+      // Default theme
       return {
-        gradient: 'from-blue-500 to-indigo-600',
-        bgGradient: 'from-blue-50 to-indigo-50',
-        icon: <Cpu size={20} />,
-        accentColor: 'text-blue-600',
-        borderColor: 'border-blue-200',
-        timelineColor: 'bg-blue-600',
-        tagBg: 'bg-blue-100',
-        tagText: 'text-blue-800',
-        hoverShadow: 'hover:shadow-blue-500/20',
+        gradient: 'from-gray-500 to-gray-600',
+        bgGradient: 'from-gray-50 to-gray-50',
+        icon: <Building size={20} />,
+        accentColor: 'text-gray-600',
+        borderColor: 'border-gray-200',
+        timelineColor: 'bg-gray-600',
+        tagBg: 'bg-gray-100',
+        tagText: 'text-gray-800',
+        hoverShadow: 'hover:shadow-gray-500/20',
       };
-    } else if (companyName.includes('Lenovo')) {
-      return {
-        gradient: 'from-emerald-500 to-teal-600',
-        bgGradient: 'from-emerald-50 to-teal-50',
-        icon: <Code size={20} />,
-        accentColor: 'text-emerald-600',
-        borderColor: 'border-emerald-200',
-        timelineColor: 'bg-emerald-600',
-        tagBg: 'bg-emerald-100',
-        tagText: 'text-emerald-800',
-        hoverShadow: 'hover:shadow-emerald-500/20',
-      };
-    }
-    // Default theme
-    return {
-      gradient: 'from-gray-500 to-gray-600',
-      bgGradient: 'from-gray-50 to-gray-50',
-      icon: <Building size={20} />,
-      accentColor: 'text-gray-600',
-      borderColor: 'border-gray-200',
-      timelineColor: 'bg-gray-600',
-      tagBg: 'bg-gray-100',
-      tagText: 'text-gray-800',
-      hoverShadow: 'hover:shadow-gray-500/20',
-    };
-  };
+    },
+    []
+  );
 
-  const theme = getCompanyTheme(company);
+  const theme = React.useMemo(() => getCompanyTheme(company), [company, getCompanyTheme]);
 
   return (
     <motion.div
@@ -71,23 +74,26 @@ function ExperienceEntryComponent({
         className={`absolute left-6 top-8 w-5 h-5 ${theme.timelineColor} rounded-full border-4 border-white shadow-lg z-10`}
       ></div>
 
-      {/* Enhanced card with company-specific styling */}
+      {/* Enhanced card with company-specific styling - Optimized animations */}
       <motion.div
-        whileHover={{ scale: 1.02, y: -5 }}
-        transition={{ duration: 0.3 }}
-        className={`ml-20 bg-white rounded-2xl p-8 shadow-lg ${theme.hoverShadow} hover:shadow-2xl transition-all duration-500 border ${theme.borderColor} overflow-hidden relative group`}
+        whileHover={{
+          scale: 1.01,
+          y: -3,
+          transition: { duration: 0.2, ease: 'easeOut' },
+        }}
+        className={`ml-20 bg-white rounded-2xl p-8 shadow-lg ${theme.hoverShadow} hover:shadow-xl transition-shadow duration-300 border ${theme.borderColor} overflow-hidden relative group`}
       >
-        {/* Background gradient overlay */}
+        {/* Simplified background gradient overlay */}
         <div
-          className={`absolute inset-0 bg-gradient-to-br ${theme.bgGradient} opacity-30 group-hover:opacity-50 transition-opacity duration-500`}
+          className={`absolute inset-0 bg-gradient-to-br ${theme.bgGradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}
         ></div>
 
-        {/* Decorative elements */}
+        {/* Simplified decorative elements - Removed blur for performance */}
         <div
-          className={`absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br ${theme.gradient} opacity-10 rounded-full blur-xl group-hover:opacity-20 transition-opacity duration-500`}
+          className={`absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br ${theme.gradient} opacity-5 rounded-full group-hover:opacity-10 transition-opacity duration-300`}
         ></div>
         <div
-          className={`absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br ${theme.gradient} opacity-10 rounded-full blur-xl group-hover:opacity-20 transition-opacity duration-500`}
+          className={`absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br ${theme.gradient} opacity-5 rounded-full group-hover:opacity-10 transition-opacity duration-300`}
         ></div>
 
         {/* Content */}
@@ -103,8 +109,10 @@ function ExperienceEntryComponent({
           {/* Company header with logo and info */}
           <div className='flex items-start gap-4 mb-6'>
             <motion.div
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ duration: 0.3 }}
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.2, ease: 'easeOut' },
+              }}
               className='flex-shrink-0'
             >
               <img
@@ -118,7 +126,7 @@ function ExperienceEntryComponent({
             </motion.div>
 
             <div className='flex-1'>
-              <h3 className='text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300'>
+              <h3 className='text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-200'>
                 {title}
               </h3>
               <h4 className={`text-lg font-semibold mb-2 ${theme.accentColor}`}>{company}</h4>
@@ -144,15 +152,15 @@ function ExperienceEntryComponent({
           {/* Experience badge with theme colors */}
           <div className='flex items-center justify-between'>
             <div
-              className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${theme.gradient} text-white rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow duration-300`}
+              className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${theme.gradient} text-white rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow duration-200`}
             >
               <Zap size={16} />
               <span>{experience}</span>
             </div>
 
-            {/* Decorative corner element */}
+            {/* Simplified decorative corner element */}
             <div
-              className={`w-8 h-8 rounded-full bg-gradient-to-br ${theme.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-500`}
+              className={`w-8 h-8 rounded-full bg-gradient-to-br ${theme.gradient} opacity-15 group-hover:opacity-25 transition-opacity duration-200`}
             ></div>
           </div>
         </div>
