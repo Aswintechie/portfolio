@@ -521,38 +521,6 @@ const Navigation = React.memo(function Navigation() {
                     <span className='font-medium'>{item.label}</span>
                   </motion.a>
                 ))}
-
-                {/* Mobile Chat Button - Shows when at top of page */}
-                <motion.button
-                  onClick={() => {
-                    window.dispatchEvent(new CustomEvent('openChat'));
-                    setIsMenuOpen(false);
-                  }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{
-                    opacity: scrolled ? 0 : 1,
-                    x: scrolled ? -20 : 0,
-                  }}
-                  transition={{ delay: navigationItems.length * 0.05, duration: 0.3 }}
-                  whileHover={{
-                    scale: scrolled ? 1 : 1.02,
-                    boxShadow: scrolled ? 'none' : '0 4px 15px rgba(102,126,234,0.3)',
-                  }}
-                  whileTap={{ scale: scrolled ? 1 : 0.98 }}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 w-full ${
-                    scrolled
-                      ? 'pointer-events-none opacity-50'
-                      : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-purple-700'
-                  }`}
-                  style={{
-                    pointerEvents: scrolled ? 'none' : 'auto',
-                    boxShadow: scrolled ? 'none' : '0 4px 12px rgba(102,126,234,0.25)',
-                  }}
-                  aria-label='Open live chat'
-                >
-                  <span className='text-lg'>💬</span>
-                  <span className='font-medium'>Live Chat</span>
-                </motion.button>
               </div>
             </motion.div>
           )}
