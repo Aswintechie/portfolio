@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide the HTML chat button since we're using the React version */
+#openChat {
+  display: none !important;
+}
+
+/* Hide the HTML chat modal elements since we're using the React version */
+#chatModal,
+#chatModalOverlay {
+  display: none !important;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;

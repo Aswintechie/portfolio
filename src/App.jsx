@@ -198,14 +198,11 @@ const Navigation = React.memo(function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [showLiveChat, setShowLiveChat] = useState(true);
 
   // Optimized scroll handler with throttling
   const handleScroll = React.useCallback(() => {
     const isScrolled = window.scrollY > 50;
-    const shouldShowLiveChat = window.scrollY < 200; // Hide after 200px scroll
     setScrolled(isScrolled);
-    setShowLiveChat(shouldShowLiveChat);
   }, []);
 
   useThrottledScroll(handleScroll);
@@ -262,12 +259,8 @@ const Navigation = React.memo(function Navigation() {
             </span>
           </motion.a>
 
-          {/* Desktop Navigation - Dynamic centering */}
-          <div
-            className={`hidden md:flex items-center space-x-1 transition-all duration-300 ${
-              !showLiveChat ? 'flex-1 justify-center' : ''
-            }`}
-          >
+          {/* Desktop Navigation */}
+          <div className='hidden md:flex items-center space-x-1 transition-all duration-300'>
             {navigationItems.map((item, index) => (
               <motion.a
                 key={item.href}
@@ -297,35 +290,11 @@ const Navigation = React.memo(function Navigation() {
                 scrolled
                   ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
                   : 'text-white/90 hover:text-white hover:bg-white/10'
-              } ${!showLiveChat ? 'scale-110' : ''}`}
+              }`}
               aria-label='Search'
             >
               <Search size={20} />
             </motion.button>
-
-            <AnimatePresence mode='wait'>
-              {showLiveChat && (
-                <motion.button
-                  onClick={() => {
-                    const chatBtn = document.getElementById('openChat');
-                    if (chatBtn) chatBtn.click();
-                  }}
-                  initial={{ opacity: 1, scale: 1, x: 0 }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.8,
-                    x: 20,
-                    transition: { duration: 0.25, ease: 'easeInOut' },
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className='hidden sm:inline-flex items-center px-6 py-2 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden'
-                >
-                  <MessageCircle size={16} className='mr-2 flex-shrink-0' />
-                  <span className='whitespace-nowrap'>Live Chat</span>
-                </motion.button>
-              )}
-            </AnimatePresence>
 
             {/* Mobile Menu Button */}
             <motion.button
@@ -2028,6 +1997,161 @@ const Footer = () => {
   );
 };
 
+// Floating Chat Button Component
+const FloatingChatButton = React.memo(() => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
+
+  // Handle scroll to expand/collapse button
+  const handleScroll = React.useCallback(() => {
+    const scrollY = window.scrollY;
+    const shouldExpand = scrollY > 200; // Expand when header button is hidden
+    setIsExpanded(shouldExpand);
+  }, []);
+
+  useThrottledScroll(handleScroll);
+
+  const openChat = () => {
+    setShowChatModal(true);
+  };
+
+  const closeChat = () => {
+    setShowChatModal(false);
+  };
+
+  // Handle keyboard events
+  React.useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.key === 'Escape' && showChatModal) {
+        closeChat();
+      }
+    };
+
+    if (showChatModal) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [showChatModal]);
+
+  return (
+    <>
+      {/* Floating Chat Button */}
+      <motion.button
+        onClick={openChat}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          width: isExpanded
+            ? typeof window !== 'undefined' && window.innerWidth <= 768
+              ? '120px'
+              : '140px'
+            : '56px',
+          x: isExpanded
+            ? typeof window !== 'undefined' && window.innerWidth <= 768
+              ? -64
+              : -84
+            : 0,
+        }}
+        whileHover={{
+          scale: isExpanded ? 1.02 : 1.1,
+          boxShadow: '0 6px 25px rgba(102,126,234,0.6)',
+        }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className='fixed bottom-5 right-5 z-50 bg-gradient-to-br from-blue-500 to-purple-600 text-white border-none shadow-lg hover:shadow-xl flex items-center justify-center cursor-pointer overflow-hidden'
+        style={{
+          height: '56px',
+          borderRadius: isExpanded ? '28px' : '50%',
+          paddingLeft: isExpanded ? '16px' : '0',
+          paddingRight: isExpanded ? '16px' : '0',
+          justifyContent: isExpanded ? 'flex-start' : 'center',
+          boxShadow: '0 4px 20px rgba(102,126,234,0.4)',
+          touchAction: 'manipulation',
+        }}
+        aria-label='Open live chat'
+      >
+        <span className='flex-shrink-0 text-xl'>💬</span>
+        <motion.span
+          initial={{ opacity: 0, width: 0 }}
+          animate={{
+            opacity: isExpanded ? 1 : 0,
+            width: isExpanded ? 'auto' : 0,
+            maxWidth: isExpanded
+              ? typeof window !== 'undefined' && window.innerWidth <= 768
+                ? '60px'
+                : '80px'
+              : 0,
+          }}
+          transition={{ duration: 0.3 }}
+          className='ml-2 font-semibold text-sm whitespace-nowrap overflow-hidden'
+          style={{
+            fontSize: typeof window !== 'undefined' && window.innerWidth <= 768 ? '12px' : '14px',
+          }}
+        >
+          Live Chat
+        </motion.span>
+      </motion.button>
+
+      {/* Chat Modal */}
+      <AnimatePresence>
+        {showChatModal && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeChat}
+              className='fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]'
+            />
+
+            {/* Chat Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className='fixed bottom-20 right-5 w-80 max-w-[calc(100vw-40px)] h-[calc(100vh-120px)] max-h-[600px] z-[9999] bg-white rounded-lg shadow-2xl overflow-hidden'
+              style={{
+                position: 'fixed',
+                zIndex: 9999,
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeChat}
+                className='absolute top-3 right-3 z-[10000] w-8 h-8 bg-white/90 hover:bg-white/100 rounded-full flex items-center justify-center transition-colors duration-200 shadow-md'
+                aria-label='Close chat'
+              >
+                <X size={16} className='text-gray-700' />
+              </button>
+
+              {/* Chat Content - Full Height */}
+              <div className='w-full h-full'>
+                <iframe
+                  src='https://chat.aswinlocal.in/'
+                  className='w-full h-full border-none'
+                  title='Live Chat'
+                  allow='microphone; camera; geolocation; payment'
+                  sandbox='allow-same-origin allow-scripts allow-forms allow-popups allow-modals'
+                  loading='lazy'
+                  style={{
+                    borderRadius: '8px',
+                    backgroundColor: 'white',
+                  }}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+});
+
+FloatingChatButton.displayName = 'FloatingChatButton';
+
 // Main App Component
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -2077,6 +2201,7 @@ const App = () => {
               <TechnologiesSection />
               <ContactSection />
               <Footer />
+              <FloatingChatButton />
             </div>
           }
         />
