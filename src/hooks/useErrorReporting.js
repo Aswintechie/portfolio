@@ -34,7 +34,7 @@ export const useErrorReporting = () => {
     errorsBySeverity: {},
   });
 
-  // Initialize error stats from localStorage
+  // Load error statistics from localStorage on mount
   useEffect(() => {
     try {
       const errors = JSON.parse(localStorage.getItem('portfolio_errors') || '[]');
@@ -43,10 +43,10 @@ export const useErrorReporting = () => {
     } catch (e) {
       console.warn('Failed to load error stats from localStorage:', e);
     }
-  }, []);
+  }, [calculateErrorStats]);
 
   // Calculate error statistics
-  const calculateErrorStats = useCallback((errors) => {
+  const calculateErrorStats = useCallback(errors => {
     const stats = {
       totalErrors: errors.length,
       lastError: errors[errors.length - 1] || null,
@@ -68,98 +68,107 @@ export const useErrorReporting = () => {
   }, []);
 
   // Report error function
-  const reportError = useCallback((error, options = {}) => {
-    const {
-      severity = ERROR_SEVERITY.ERROR,
-      category = ERROR_CATEGORIES.COMPONENT,
-      context = {},
-      tags = [],
-      userId = null,
-      silent = false,
-    } = options;
+  const reportError = useCallback(
+    (error, options = {}) => {
+      const {
+        severity = ERROR_SEVERITY.ERROR,
+        category = ERROR_CATEGORIES.COMPONENT,
+        context = {},
+        tags = [],
+        userId = null,
+        silent = false,
+      } = options;
 
-    // Create standardized error object
-    const errorData = {
-      id: Date.now().toString(36) + Math.random().toString(36).substr(2),
-      timestamp: new Date().toISOString(),
-      message: error.message || 'Unknown error',
-      stack: error.stack || '',
-      severity,
-      category,
-      context,
-      tags,
-      userId: userId || localStorage.getItem('portfolio_user_id') || 'anonymous',
-      sessionId: getSessionId(),
-      url: window.location.href,
-      userAgent: navigator.userAgent,
-      viewport: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      },
-      performance: getPerformanceMetrics(),
-    };
+      // Create standardized error object
+      const errorData = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        timestamp: new Date().toISOString(),
+        message: error.message || 'Unknown error',
+        stack: error.stack || '',
+        severity,
+        category,
+        context,
+        tags,
+        userId: userId || localStorage.getItem('portfolio_user_id') || 'anonymous',
+        sessionId: getSessionId(),
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        },
+        performance: getPerformanceMetrics(),
+      };
 
-    // Log to console (unless silent)
-    if (!silent) {
-      const consoleMethod = severity === ERROR_SEVERITY.FATAL ? 'error' : 
-                           severity === ERROR_SEVERITY.ERROR ? 'error' : 
-                           severity === ERROR_SEVERITY.WARNING ? 'warn' : 'info';
-      
-      console.group(`🚨 ${severity.toUpperCase()} Error Report`);
-      console[consoleMethod]('Message:', errorData.message);
-      console[consoleMethod]('Category:', errorData.category);
-      console[consoleMethod]('Context:', errorData.context);
-      console[consoleMethod]('Full Error:', errorData);
-      console.groupEnd();
-    }
+      // Log to console (unless silent)
+      if (!silent) {
+        const consoleMethod =
+          severity === ERROR_SEVERITY.FATAL
+            ? 'error'
+            : severity === ERROR_SEVERITY.ERROR
+              ? 'error'
+              : severity === ERROR_SEVERITY.WARNING
+                ? 'warn'
+                : 'info';
 
-    // Store in localStorage
-    try {
-      const errors = JSON.parse(localStorage.getItem('portfolio_errors') || '[]');
-      errors.push(errorData);
-      
-      // Keep only last 100 errors
-      if (errors.length > 100) {
-        errors.splice(0, errors.length - 100);
+        console.group(`🚨 ${severity.toUpperCase()} Error Report`);
+        console[consoleMethod]('Message:', errorData.message);
+        console[consoleMethod]('Category:', errorData.category);
+        console[consoleMethod]('Context:', errorData.context);
+        console[consoleMethod]('Full Error:', errorData);
+        console.groupEnd();
       }
-      
-      localStorage.setItem('portfolio_errors', JSON.stringify(errors));
-      
-      // Update error stats
-      const stats = calculateErrorStats(errors);
-      setErrorStats(stats);
-    } catch (e) {
-      console.warn('Failed to store error in localStorage:', e);
-    }
 
-    // Send to analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'exception', {
-        description: errorData.message,
-        fatal: severity === ERROR_SEVERITY.FATAL,
-        custom_map: {
-          error_id: errorData.id,
-          error_category: errorData.category,
-          error_severity: errorData.severity,
-          error_context: JSON.stringify(errorData.context),
-          error_tags: errorData.tags.join(','),
-        },
-      });
-    }
+      // Store in localStorage
+      try {
+        const errors = JSON.parse(localStorage.getItem('portfolio_errors') || '[]');
+        errors.push(errorData);
 
-    // Send to custom analytics endpoint
-    if (process.env.REACT_APP_ANALYTICS_ENDPOINT) {
-      fetch(process.env.REACT_APP_ANALYTICS_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(errorData),
-      }).catch(e => console.warn('Failed to send error to analytics:', e));
-    }
+        // Keep only last 100 errors
+        if (errors.length > 100) {
+          errors.splice(0, errors.length - 100);
+        }
 
-    return errorData;
-  }, [calculateErrorStats]);
+        localStorage.setItem('portfolio_errors', JSON.stringify(errors));
+
+        // Update error stats
+        const stats = calculateErrorStats(errors);
+        setErrorStats(stats);
+      } catch (e) {
+        console.warn('Failed to store error in localStorage:', e);
+      }
+
+      // Send to analytics if available
+      if (typeof gtag !== 'undefined') {
+        // eslint-disable-next-line no-undef
+        gtag('event', 'exception', {
+          description: errorData.message,
+          fatal: severity === ERROR_SEVERITY.FATAL,
+          custom_map: {
+            error_id: errorData.id,
+            error_category: errorData.category,
+            error_severity: errorData.severity,
+            error_context: JSON.stringify(errorData.context),
+            error_tags: errorData.tags.join(','),
+          },
+        });
+      }
+
+      // Send to custom analytics endpoint
+      if (process.env.REACT_APP_ANALYTICS_ENDPOINT) {
+        fetch(process.env.REACT_APP_ANALYTICS_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(errorData),
+        }).catch(e => console.warn('Failed to send error to analytics:', e));
+      }
+
+      return errorData;
+    },
+    [calculateErrorStats]
+  );
 
   // Track user action
   const trackUserAction = useCallback((action, context = {}) => {
@@ -179,8 +188,9 @@ export const useErrorReporting = () => {
       console.log('🔍 User Action:', actionData);
     }
 
-    // Send to analytics
+    // Send to analytics if available
     if (typeof gtag !== 'undefined') {
+      // eslint-disable-next-line no-undef
       gtag('event', 'user_action', {
         action_name: action,
         custom_map: {
@@ -253,15 +263,19 @@ const getPerformanceMetrics = () => {
     const navigation = performance.getEntriesByType('navigation')[0];
     if (navigation) {
       return {
-        domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+        domContentLoaded:
+          navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
         loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
         domInteractive: navigation.domInteractive - navigation.navigationStart,
-        firstPaint: performance.getEntriesByType('paint').find(p => p.name === 'first-paint')?.startTime,
-        firstContentfulPaint: performance.getEntriesByType('paint').find(p => p.name === 'first-contentful-paint')?.startTime,
+        firstPaint: performance.getEntriesByType('paint').find(p => p.name === 'first-paint')
+          ?.startTime,
+        firstContentfulPaint: performance
+          .getEntriesByType('paint')
+          .find(p => p.name === 'first-contentful-paint')?.startTime,
       };
     }
   }
   return {};
 };
 
-export default useErrorReporting; 
+export default useErrorReporting;

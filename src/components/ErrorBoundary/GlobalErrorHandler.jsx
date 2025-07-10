@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable no-undef */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 // Global Error Handler Component
 const GlobalErrorHandler = ({ children }) => {

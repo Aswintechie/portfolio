@@ -7,56 +7,66 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Bug, 
-  X, 
-  Download, 
-  Trash2, 
-  AlertTriangle, 
-  Info, 
-  AlertCircle, 
+import {
+  Bug,
+  X,
+  Trash2,
+  Download,
+  AlertTriangle,
+  Info,
+  AlertCircle,
   Zap,
   Eye,
-  EyeOff,
   RefreshCw,
   Calendar,
   MapPin,
   User,
-  Monitor
+  Monitor,
 } from 'lucide-react';
 import { useErrorReporting, ERROR_SEVERITY } from '../../hooks';
 
-// Only show in development mode
+// Development-only error tracking
 const ErrorDevTools = () => {
+  // Always call the hook (React requirement)
+  const { clearErrorHistory, getErrorHistory, exportErrorHistory, errorStats } =
+    useErrorReporting();
+
+  const [errors, setErrors] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedError, setSelectedError] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [errors, setErrors] = useState([]);
-  
-  const { 
-    getErrorHistory, 
-    clearErrorHistory, 
-    exportErrorHistory, 
-    errorStats 
-  } = useErrorReporting();
 
-  // Don't render in production
-  if (process.env.NODE_ENV === 'production') {
+  useEffect(() => {
+    // Only track errors in development mode
+    if (process.env.NODE_ENV === 'development') {
+      const handleError = error => {
+        setErrors(prev => [
+          ...prev.slice(-9),
+          {
+            id: Date.now(),
+            message: error.message,
+            stack: error.stack,
+            timestamp: new Date().toISOString(),
+          },
+        ]);
+      };
+
+      window.addEventListener('error', handleError);
+      window.addEventListener('unhandledrejection', event => {
+        handleError(new Error(event.reason));
+      });
+
+      return () => {
+        window.removeEventListener('error', handleError);
+        window.removeEventListener('unhandledrejection', handleError);
+      };
+    }
+  }, []);
+
+  // Don't render anything in production
+  if (process.env.NODE_ENV !== 'development') {
     return null;
   }
-
-  // Load errors on mount and when stats change
-  useEffect(() => {
-    const loadErrors = () => {
-      const errorHistory = getErrorHistory();
-      setErrors(errorHistory);
-    };
-    
-    loadErrors();
-    const interval = setInterval(loadErrors, 1000); // Refresh every second
-    
-    return () => clearInterval(interval);
-  }, [getErrorHistory, errorStats]);
 
   // Filter errors based on selected filter
   const filteredErrors = errors.filter(error => {
@@ -65,10 +75,14 @@ const ErrorDevTools = () => {
   });
 
   // Get severity icon and color
-  const getSeverityDisplay = (severity) => {
+  const getSeverityDisplay = severity => {
     const displays = {
       [ERROR_SEVERITY.INFO]: { icon: Info, color: 'text-blue-500', bg: 'bg-blue-100' },
-      [ERROR_SEVERITY.WARNING]: { icon: AlertTriangle, color: 'text-yellow-500', bg: 'bg-yellow-100' },
+      [ERROR_SEVERITY.WARNING]: {
+        icon: AlertTriangle,
+        color: 'text-yellow-500',
+        bg: 'bg-yellow-100',
+      },
       [ERROR_SEVERITY.ERROR]: { icon: AlertCircle, color: 'text-red-500', bg: 'bg-red-100' },
       [ERROR_SEVERITY.FATAL]: { icon: Zap, color: 'text-purple-500', bg: 'bg-purple-100' },
     };
@@ -76,7 +90,7 @@ const ErrorDevTools = () => {
   };
 
   // Format timestamp
-  const formatTimestamp = (timestamp) => {
+  const formatTimestamp = timestamp => {
     return new Date(timestamp).toLocaleString();
   };
 
@@ -89,12 +103,12 @@ const ErrorDevTools = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 right-4 z-50 w-14 h-14 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center"
-        title="Error DevTools"
+        className='fixed bottom-4 right-4 z-50 w-14 h-14 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center'
+        title='Error DevTools'
       >
         <Bug size={24} />
         {errorStats.totalErrors > 0 && (
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-500 text-xs font-bold rounded-full flex items-center justify-center">
+          <div className='absolute -top-2 -right-2 w-6 h-6 bg-yellow-500 text-xs font-bold rounded-full flex items-center justify-center'>
             {errorStats.totalErrors > 99 ? '99+' : errorStats.totalErrors}
           </div>
         )}
@@ -107,50 +121,48 @@ const ErrorDevTools = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm'
             onClick={() => setIsOpen(false)}
           >
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              className="absolute right-0 top-0 h-full w-full max-w-4xl bg-white shadow-2xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              className='absolute right-0 top-0 h-full w-full max-w-4xl bg-white shadow-2xl overflow-hidden'
+              onClick={e => e.stopPropagation()}
             >
-              <div className="flex flex-col h-full">
+              <div className='flex flex-col h-full'>
                 {/* Header */}
-                <div className="bg-red-500 text-white p-4 flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+                <div className='bg-red-500 text-white p-4 flex items-center justify-between'>
+                  <div className='flex items-center space-x-3'>
                     <Bug size={24} />
                     <div>
-                      <h2 className="text-xl font-bold">Error DevTools</h2>
-                      <p className="text-red-100 text-sm">
-                        {errorStats.totalErrors} errors logged
-                      </p>
+                      <h2 className='text-xl font-bold'>Error DevTools</h2>
+                      <p className='text-red-100 text-sm'>{errorStats.totalErrors} errors logged</p>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center space-x-2">
+
+                  <div className='flex items-center space-x-2'>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setErrors(getErrorHistory())}
-                      className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
-                      title="Refresh"
+                      className='p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors'
+                      title='Refresh'
                     >
                       <RefreshCw size={18} />
                     </motion.button>
-                    
+
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={exportErrorHistory}
-                      className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
-                      title="Export Errors"
+                      className='p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors'
+                      title='Export Errors'
                     >
                       <Download size={18} />
                     </motion.button>
-                    
+
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -159,30 +171,36 @@ const ErrorDevTools = () => {
                         setErrors([]);
                         setSelectedError(null);
                       }}
-                      className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
-                      title="Clear All Errors"
+                      className='p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors'
+                      title='Clear All Errors'
                     >
                       <Trash2 size={18} />
                     </motion.button>
-                    
+
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setIsOpen(false)}
-                      className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+                      className='p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors'
                     >
                       <X size={18} />
                     </motion.button>
                   </div>
                 </div>
 
-                <div className="flex flex-1 overflow-hidden">
+                <div className='flex flex-1 overflow-hidden'>
                   {/* Error List */}
-                  <div className="w-1/2 border-r border-gray-200 flex flex-col">
+                  <div className='w-1/2 border-r border-gray-200 flex flex-col'>
                     {/* Filters */}
-                    <div className="p-4 border-b border-gray-200">
-                      <div className="flex space-x-2">
-                        {['all', ERROR_SEVERITY.FATAL, ERROR_SEVERITY.ERROR, ERROR_SEVERITY.WARNING, ERROR_SEVERITY.INFO].map((severity) => (
+                    <div className='p-4 border-b border-gray-200'>
+                      <div className='flex space-x-2'>
+                        {[
+                          'all',
+                          ERROR_SEVERITY.FATAL,
+                          ERROR_SEVERITY.ERROR,
+                          ERROR_SEVERITY.WARNING,
+                          ERROR_SEVERITY.INFO,
+                        ].map(severity => (
                           <motion.button
                             key={severity}
                             whileHover={{ scale: 1.02 }}
@@ -201,19 +219,19 @@ const ErrorDevTools = () => {
                     </div>
 
                     {/* Error List */}
-                    <div className="flex-1 overflow-y-auto">
+                    <div className='flex-1 overflow-y-auto'>
                       {filteredErrors.length === 0 ? (
-                        <div className="p-8 text-center text-gray-500">
-                          <Bug size={48} className="mx-auto mb-4 text-gray-300" />
+                        <div className='p-8 text-center text-gray-500'>
+                          <Bug size={48} className='mx-auto mb-4 text-gray-300' />
                           <p>No errors found</p>
-                          <p className="text-sm">Start using the app to generate error logs</p>
+                          <p className='text-sm'>Start using the app to generate error logs</p>
                         </div>
                       ) : (
-                        <div className="space-y-1 p-2">
-                          {filteredErrors.reverse().map((error, index) => {
+                        <div className='space-y-1 p-2'>
+                          {filteredErrors.reverse().map(error => {
                             const severityDisplay = getSeverityDisplay(error.severity);
                             const Icon = severityDisplay.icon;
-                            
+
                             return (
                               <motion.button
                                 key={error.id}
@@ -226,23 +244,25 @@ const ErrorDevTools = () => {
                                     : 'bg-white border-gray-200 hover:bg-gray-50'
                                 }`}
                               >
-                                <div className="flex items-start space-x-3">
+                                <div className='flex items-start space-x-3'>
                                   <div className={`p-1 rounded-full ${severityDisplay.bg}`}>
                                     <Icon size={14} className={severityDisplay.color} />
                                   </div>
-                                  
-                                  <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-gray-900 truncate">
+
+                                  <div className='flex-1 min-w-0'>
+                                    <p className='font-medium text-gray-900 truncate'>
                                       {error.message}
                                     </p>
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <p className='text-xs text-gray-500 mt-1'>
                                       {formatTimestamp(error.timestamp)}
                                     </p>
-                                    <div className="flex items-center space-x-2 mt-2">
-                                      <span className={`text-xs px-2 py-1 rounded-full ${severityDisplay.bg} ${severityDisplay.color} font-medium`}>
+                                    <div className='flex items-center space-x-2 mt-2'>
+                                      <span
+                                        className={`text-xs px-2 py-1 rounded-full ${severityDisplay.bg} ${severityDisplay.color} font-medium`}
+                                      >
                                         {error.severity}
                                       </span>
-                                      <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-medium">
+                                      <span className='text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-medium'>
                                         {error.category}
                                       </span>
                                     </div>
@@ -257,13 +277,13 @@ const ErrorDevTools = () => {
                   </div>
 
                   {/* Error Details */}
-                  <div className="w-1/2 flex flex-col">
+                  <div className='w-1/2 flex flex-col'>
                     {selectedError ? (
-                      <div className="flex-1 overflow-y-auto p-6">
-                        <div className="space-y-6">
+                      <div className='flex-1 overflow-y-auto p-6'>
+                        <div className='space-y-6'>
                           {/* Error Header */}
                           <div>
-                            <div className="flex items-center space-x-3 mb-4">
+                            <div className='flex items-center space-x-3 mb-4'>
                               {(() => {
                                 const severityDisplay = getSeverityDisplay(selectedError.severity);
                                 const Icon = severityDisplay.icon;
@@ -274,10 +294,10 @@ const ErrorDevTools = () => {
                                 );
                               })()}
                               <div>
-                                <h3 className="text-lg font-bold text-gray-900">
+                                <h3 className='text-lg font-bold text-gray-900'>
                                   {selectedError.message}
                                 </h3>
-                                <p className="text-sm text-gray-500">
+                                <p className='text-sm text-gray-500'>
                                   Error ID: {selectedError.id}
                                 </p>
                               </div>
@@ -285,85 +305,91 @@ const ErrorDevTools = () => {
                           </div>
 
                           {/* Metadata */}
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-3">
-                              <div className="flex items-center space-x-2 text-sm">
-                                <Calendar size={16} className="text-gray-400" />
-                                <span className="text-gray-600">Timestamp:</span>
-                                <span className="font-medium">{formatTimestamp(selectedError.timestamp)}</span>
+                          <div className='grid grid-cols-2 gap-4'>
+                            <div className='space-y-3'>
+                              <div className='flex items-center space-x-2 text-sm'>
+                                <Calendar size={16} className='text-gray-400' />
+                                <span className='text-gray-600'>Timestamp:</span>
+                                <span className='font-medium'>
+                                  {formatTimestamp(selectedError.timestamp)}
+                                </span>
                               </div>
-                              
-                              <div className="flex items-center space-x-2 text-sm">
-                                <MapPin size={16} className="text-gray-400" />
-                                <span className="text-gray-600">URL:</span>
-                                <span className="font-medium truncate">{selectedError.url}</span>
+
+                              <div className='flex items-center space-x-2 text-sm'>
+                                <MapPin size={16} className='text-gray-400' />
+                                <span className='text-gray-600'>URL:</span>
+                                <span className='font-medium truncate'>{selectedError.url}</span>
                               </div>
-                              
-                              <div className="flex items-center space-x-2 text-sm">
-                                <User size={16} className="text-gray-400" />
-                                <span className="text-gray-600">User ID:</span>
-                                <span className="font-medium">{selectedError.userId}</span>
+
+                              <div className='flex items-center space-x-2 text-sm'>
+                                <User size={16} className='text-gray-400' />
+                                <span className='text-gray-600'>User ID:</span>
+                                <span className='font-medium'>{selectedError.userId}</span>
                               </div>
                             </div>
-                            
-                            <div className="space-y-3">
-                              <div className="flex items-center space-x-2 text-sm">
-                                <Monitor size={16} className="text-gray-400" />
-                                <span className="text-gray-600">Viewport:</span>
-                                <span className="font-medium">
+
+                            <div className='space-y-3'>
+                              <div className='flex items-center space-x-2 text-sm'>
+                                <Monitor size={16} className='text-gray-400' />
+                                <span className='text-gray-600'>Viewport:</span>
+                                <span className='font-medium'>
                                   {selectedError.viewport?.width}x{selectedError.viewport?.height}
                                 </span>
                               </div>
-                              
-                              <div className="flex items-center space-x-2 text-sm">
-                                <Bug size={16} className="text-gray-400" />
-                                <span className="text-gray-600">Category:</span>
-                                <span className="font-medium">{selectedError.category}</span>
+
+                              <div className='flex items-center space-x-2 text-sm'>
+                                <Bug size={16} className='text-gray-400' />
+                                <span className='text-gray-600'>Category:</span>
+                                <span className='font-medium'>{selectedError.category}</span>
                               </div>
-                              
-                              <div className="flex items-center space-x-2 text-sm">
-                                <AlertTriangle size={16} className="text-gray-400" />
-                                <span className="text-gray-600">Severity:</span>
-                                <span className="font-medium">{selectedError.severity}</span>
+
+                              <div className='flex items-center space-x-2 text-sm'>
+                                <AlertTriangle size={16} className='text-gray-400' />
+                                <span className='text-gray-600'>Severity:</span>
+                                <span className='font-medium'>{selectedError.severity}</span>
                               </div>
                             </div>
                           </div>
 
                           {/* Context */}
-                          {selectedError.context && Object.keys(selectedError.context).length > 0 && (
-                            <div>
-                              <h4 className="font-semibold text-gray-800 mb-2">Context</h4>
-                              <pre className="bg-gray-50 p-3 rounded-lg text-xs overflow-x-auto">
-                                {JSON.stringify(selectedError.context, null, 2)}
-                              </pre>
-                            </div>
-                          )}
+                          {selectedError.context &&
+                            Object.keys(selectedError.context).length > 0 && (
+                              <div>
+                                <h4 className='font-semibold text-gray-800 mb-2'>Context</h4>
+                                <pre className='bg-gray-50 p-3 rounded-lg text-xs overflow-x-auto'>
+                                  {JSON.stringify(selectedError.context, null, 2)}
+                                </pre>
+                              </div>
+                            )}
 
                           {/* Stack Trace */}
                           {selectedError.stack && (
                             <div>
-                              <h4 className="font-semibold text-gray-800 mb-2">Stack Trace</h4>
-                              <pre className="bg-red-50 p-3 rounded-lg text-xs overflow-x-auto border border-red-200">
+                              <h4 className='font-semibold text-gray-800 mb-2'>Stack Trace</h4>
+                              <pre className='bg-red-50 p-3 rounded-lg text-xs overflow-x-auto border border-red-200'>
                                 {selectedError.stack}
                               </pre>
                             </div>
                           )}
 
                           {/* Performance Metrics */}
-                          {selectedError.performance && Object.keys(selectedError.performance).length > 0 && (
-                            <div>
-                              <h4 className="font-semibold text-gray-800 mb-2">Performance Metrics</h4>
-                              <pre className="bg-blue-50 p-3 rounded-lg text-xs overflow-x-auto border border-blue-200">
-                                {JSON.stringify(selectedError.performance, null, 2)}
-                              </pre>
-                            </div>
-                          )}
+                          {selectedError.performance &&
+                            Object.keys(selectedError.performance).length > 0 && (
+                              <div>
+                                <h4 className='font-semibold text-gray-800 mb-2'>
+                                  Performance Metrics
+                                </h4>
+                                <pre className='bg-blue-50 p-3 rounded-lg text-xs overflow-x-auto border border-blue-200'>
+                                  {JSON.stringify(selectedError.performance, null, 2)}
+                                </pre>
+                              </div>
+                            )}
                         </div>
                       </div>
                     ) : (
-                      <div className="flex-1 flex items-center justify-center text-gray-500">
-                        <div className="text-center">
-                          <Eye size={48} className="mx-auto mb-4 text-gray-300" />
+                      <div className='flex-1 flex items-center justify-center text-gray-500'>
+                        <div className='text-center'>
+                          <Eye size={48} className='mx-auto mb-4 text-gray-300' />
                           <p>Select an error to view details</p>
                         </div>
                       </div>
@@ -379,4 +405,4 @@ const ErrorDevTools = () => {
   );
 };
 
-export default ErrorDevTools; 
+export default ErrorDevTools;

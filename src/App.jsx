@@ -98,15 +98,18 @@ const Layout = ({ children }) => {
 
 // Main App Component with Routing
 const App = () => {
+  // Skip loading screen in test environment
+  const isTestEnvironment = process.env.NODE_ENV === 'test' || process.env.VITEST;
+
   // Only show loading on initial page load, not on route changes
   const [isInitialLoad, setIsInitialLoad] = React.useState(() => {
-    return !sessionStorage.getItem('hasLoadedBefore');
+    return !isTestEnvironment && !sessionStorage.getItem('hasLoadedBefore');
   });
 
   const { isLoading, loadingProgress, loadingStage, completeLoading } = usePageLoading();
 
-  // Only use loading screen for initial load
-  const shouldShowLoading = isInitialLoad && isLoading;
+  // Only use loading screen for initial load and not in tests
+  const shouldShowLoading = !isTestEnvironment && isInitialLoad && isLoading;
 
   useEffect(() => {
     initAnalytics();

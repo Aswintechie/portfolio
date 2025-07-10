@@ -327,7 +327,7 @@ export const useScrollAnimations = () => {
 };
 
 // Hook for staggered animations
-export const useStaggeredAnimations = (itemCount, delay = 0.1) => {
+export const useStaggeredAnimations = (itemCount, staggerDelay = 0.1) => {
   const controls = useAnimation();
 
   const startStaggeredAnimation = useCallback(async () => {
@@ -335,12 +335,12 @@ export const useStaggeredAnimations = (itemCount, delay = 0.1) => {
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * delay,
+        delay: i * staggerDelay,
         duration: 0.5,
         ease: 'easeOut',
       },
     }));
-  }, [controls, delay]);
+  }, [controls, staggerDelay]);
 
   const resetAnimation = useCallback(async () => {
     await controls.start({
@@ -394,7 +394,7 @@ export const usePageLoading = () => {
       { progress: 90, stage: 'finalizing', delay: 300 },
     ];
 
-    const timers = progressSteps.map(({ progress, stage, delay }, index) => {
+    const timers = progressSteps.map(({ progress, stage }, index) => {
       const totalDelay = progressSteps
         .slice(0, index + 1)
         .reduce((sum, step) => sum + step.delay, 0);

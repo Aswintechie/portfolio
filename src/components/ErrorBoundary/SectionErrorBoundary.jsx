@@ -8,50 +8,48 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, RefreshCw, SkipForward } from 'lucide-react';
-import ErrorBoundary from './ErrorBoundary.jsx';
 
 // Section Error Fallback Component
-const SectionErrorFallback = ({ error, errorId, onRetry, onSkip, sectionName }) => {
+const SectionErrorFallback = ({ errorId, onRetry, onSkip, sectionName }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="section-padding bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl"
+      className='section-padding bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl'
     >
-      <div className="container-custom">
-        <div className="text-center py-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-6">
-            <AlertTriangle size={32} className="text-red-600" />
+      <div className='container-custom'>
+        <div className='text-center py-12'>
+          <div className='inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-6'>
+            <AlertTriangle size={32} className='text-red-600' />
           </div>
-          
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            {sectionName} Section Error
-          </h2>
-          
-          <p className="text-gray-600 mb-6 max-w-md mx-auto">
-            This section encountered an issue while loading. You can try reloading it or skip to the next section.
+
+          <h2 className='text-2xl font-bold text-gray-900 mb-2'>{sectionName} Section Error</h2>
+
+          <p className='text-gray-600 mb-6 max-w-md mx-auto'>
+            This section encountered an issue while loading. You can try reloading it or skip to the
+            next section.
           </p>
-          
-          <div className="inline-flex items-center space-x-2 bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium mb-8">
+
+          <div className='inline-flex items-center space-x-2 bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium mb-8'>
             <span>Error ID: {errorId}</span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className='flex flex-col sm:flex-row gap-4 justify-center'>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onRetry}
-              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              className='flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200'
             >
               <RefreshCw size={18} />
               <span>Try Again</span>
             </motion.button>
-            
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onSkip}
-              className="flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+              className='flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors'
             >
               <SkipForward size={18} />
               <span>Skip Section</span>
@@ -74,23 +72,22 @@ class SectionErrorBoundary extends React.Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error) {
     // Log to console for debugging
     console.error(`Section Error in ${this.props.sectionName}:`, error);
-    
+
     // Log to analytics if available
-    if (typeof gtag !== 'undefined') {
+    if (process.env.NODE_ENV === 'production' && typeof gtag !== 'undefined') {
+      // eslint-disable-next-line no-undef
       gtag('event', 'exception', {
         description: `Section Error: ${this.props.sectionName} - ${error.message}`,
         fatal: false,
-        custom_map: {
-          section_name: this.props.sectionName,
-          error_type: 'section_error',
-        },
+        section: this.props.sectionName,
+        error_boundary: 'section',
       });
     }
   }
@@ -114,7 +111,6 @@ class SectionErrorBoundary extends React.Component {
     if (this.state.hasError && !this.state.isSkipped) {
       return (
         <SectionErrorFallback
-          error={this.state.error}
           errorId={Date.now().toString(36)}
           onRetry={this.handleRetry}
           onSkip={this.handleSkip}
@@ -128,11 +124,11 @@ class SectionErrorBoundary extends React.Component {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="section-padding bg-gray-50 border border-gray-200 rounded-xl"
+          className='section-padding bg-gray-50 border border-gray-200 rounded-xl'
         >
-          <div className="container-custom">
-            <div className="text-center py-8">
-              <p className="text-gray-500">
+          <div className='container-custom'>
+            <div className='text-center py-8'>
+              <p className='text-gray-500'>
                 {this.props.sectionName} section was skipped due to an error.
               </p>
             </div>
@@ -145,4 +141,4 @@ class SectionErrorBoundary extends React.Component {
   }
 }
 
-export default SectionErrorBoundary; 
+export default SectionErrorBoundary;

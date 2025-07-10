@@ -9,12 +9,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import {
-  AlertTriangle,
   RefreshCw,
+  AlertTriangle,
   Home,
-  Bug,
-  ArrowLeft,
   Copy,
+  Bug,
   CheckCircle2,
   ExternalLink,
 } from 'lucide-react';
