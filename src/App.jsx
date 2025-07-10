@@ -9,7 +9,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useThrottledScroll } from './hooks';
-import { AnimatedParticles, FloatingElements } from './components/background';
 import Navigation from './components/Navigation.jsx';
 import SearchModal from './components/SearchModal.jsx';
 import {
@@ -238,14 +237,8 @@ const App = () => {
       {/* Navigation */}
       <Navigation onOpenChat={openChat} />
 
-      {/* Background Elements */}
-      <div className='fixed inset-0 pointer-events-none z-0'>
-        <AnimatedParticles />
-        <FloatingElements />
-      </div>
-
-      {/* Main Content - Positioned above background */}
-      <div className='relative z-10'>
+      {/* Main Content */}
+      <div className='relative'>
         <HeroSection />
         <AboutSection />
         <ExperienceSection />
