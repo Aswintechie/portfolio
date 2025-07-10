@@ -359,8 +359,8 @@
 
               if (shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
                 // Expansion for both mobile and desktop
-                const expandedWidth = isMobile ? '140px' : '160px';
-                const textMaxWidth = isMobile ? '80px' : '100px';
+                const expandedWidth = isMobile ? '140px' : '140px';
+                const textMaxWidth = isMobile ? '80px' : '80px';
 
                 if (isMobile) {
                   // Mobile: Always visible, just expand
@@ -377,8 +377,8 @@
                 // Force width expansion - aggressive CSS override
                 chatButton.style.cssText = `
                   position: fixed !important;
-                  bottom: 16px !important;
-                  right: 16px !important;
+                  bottom: ${isMobile ? '16px' : '20px'} !important;
+                  right: ${isMobile ? '16px' : '20px'} !important;
                   z-index: 9999 !important;
                   width: ${expandedWidth} !important;
                   height: auto !important;
@@ -407,7 +407,7 @@
                 chatButtonText.style.opacity = '1';
                 chatButtonText.style.width = 'auto';
                 chatButtonText.style.maxWidth = textMaxWidth;
-                chatButtonText.style.fontSize = isMobile ? '11px' : '13px';
+                chatButtonText.style.fontSize = isMobile ? '11px' : '14px';
                 chatButtonText.style.fontWeight = '600';
               } else if (!shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
                 // Shrink behavior
@@ -428,8 +428,8 @@
                 // Force width contraction - aggressive CSS override
                 chatButton.style.cssText = `
                   position: fixed !important;
-                  bottom: 16px !important;
-                  right: 16px !important;
+                  bottom: ${isMobile ? '16px' : '20px'} !important;
+                  right: ${isMobile ? '16px' : '20px'} !important;
                   z-index: 9999 !important;
                   width: ${buttonSize} !important;
                   height: ${buttonSize} !important;
@@ -441,8 +441,8 @@
                   font-size: 20px !important;
                   cursor: pointer !important;
                   transition: all 0.3s ease !important;
-                  opacity: 1 !important;
-                  transform: scale(1) translateX(0) !important;
+                  opacity: ${isMobile ? '1' : '0'} !important;
+                  transform: ${isMobile ? 'scale(1) translateX(0)' : 'scale(0.8) translateX(0)'} !important;
                   display: flex !important;
                   align-items: center !important;
                   justify-content: center !important;
@@ -451,7 +451,7 @@
                   white-space: nowrap !important;
                   padding-left: 0 !important;
                   padding-right: 0 !important;
-                  pointer-events: auto !important;
+                  pointer-events: ${isMobile ? 'auto' : 'none'} !important;
                 `;
 
                 chatButtonText.style.opacity = '0';
