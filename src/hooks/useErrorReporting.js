@@ -278,4 +278,5 @@ const getPerformanceMetrics = () => {
   return {};
 };
 
-export default useErrorReporting;
+// Export both named and default exports for compatibility
+export { useErrorReporting as default };
