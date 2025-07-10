@@ -63,7 +63,7 @@ const ContactSection = () => {
 
       // Fallback: If server is not available, show success message anyway
       // This allows the form to work even without backend configuration
-      if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      if (error instanceof TypeError || error.name === 'NetworkError') {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', message: '' });
         console.log('Form submitted (fallback mode - backend not configured)');

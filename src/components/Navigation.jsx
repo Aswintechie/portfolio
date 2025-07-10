@@ -8,11 +8,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Mail, Search, Code, Home, User, Briefcase, Folder } from 'lucide-react';
+import PropTypes from 'prop-types';
 import SearchModal from './SearchModal.jsx';
 import { useThrottledScroll } from '../hooks';
 
 // Performance-optimized Navigation component
-const Navigation = React.memo(function Navigation() {
+const Navigation = React.memo(function Navigation({ onOpenChat }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -116,11 +117,7 @@ const Navigation = React.memo(function Navigation() {
 
             {/* Header Chat Button - Shows when at top of page */}
             <motion.button
-              onClick={() => {
-                // We'll need to access the FloatingChatButton's openChat function
-                // For now, we'll use a custom event
-                window.dispatchEvent(new CustomEvent('openChat'));
-              }}
+              onClick={onOpenChat}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
                 opacity: scrolled ? 0 : 1,
@@ -199,5 +196,9 @@ const Navigation = React.memo(function Navigation() {
     </nav>
   );
 });
+
+Navigation.propTypes = {
+  onOpenChat: PropTypes.func.isRequired,
+};
 
 export default Navigation;

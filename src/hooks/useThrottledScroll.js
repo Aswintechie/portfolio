@@ -8,7 +8,7 @@
 import React from 'react';
 
 // Optimized throttle function for scroll events
-export const useThrottledScroll = (callback, delay = 16) => {
+export const useThrottledScroll = (callback, delay = 100) => {
   const callbackRef = React.useRef(callback);
   const throttleRef = React.useRef(null);
 

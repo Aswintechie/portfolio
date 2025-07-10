@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { useThrottledScroll } from './hooks';
 import { AnimatedParticles, FloatingElements } from './components/background';
 import Navigation from './components/Navigation.jsx';
@@ -25,9 +26,8 @@ import {
 import { initAnalytics } from './utils/analytics.js';
 
 // Floating Chat Button Component
-const FloatingChatButton = React.memo(() => {
+const FloatingChatButton = React.memo(({ isOpen, onOpen, onClose }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showChatModal, setShowChatModal] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
 
   // Handle scroll to show/hide and expand/collapse button
@@ -61,43 +61,25 @@ const FloatingChatButton = React.memo(() => {
     handleScroll(); // Set initial state based on current scroll position
   }, [handleScroll]);
 
-  const openChat = () => {
-    setShowChatModal(true);
-  };
-
-  const closeChat = () => {
-    setShowChatModal(false);
-  };
-
-  // Listen for header button clicks
-  React.useEffect(() => {
-    const handleHeaderChatClick = () => {
-      openChat();
-    };
-
-    window.addEventListener('openChat', handleHeaderChatClick);
-    return () => window.removeEventListener('openChat', handleHeaderChatClick);
-  }, []);
-
   // Handle keyboard events
   React.useEffect(() => {
     const handleKeyDown = e => {
-      if (e.key === 'Escape' && showChatModal) {
-        closeChat();
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
       }
     };
 
-    if (showChatModal) {
+    if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
     }
-  }, [showChatModal]);
+  }, [isOpen, onClose]);
 
   return (
     <>
       {/* Floating Chat Button */}
       <motion.button
-        onClick={openChat}
+        onClick={onOpen}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{
           opacity: showFloatingButton ? 1 : 0,
@@ -148,7 +130,7 @@ const FloatingChatButton = React.memo(() => {
       </motion.button>
 
       {/* Chat Modal */}
-      {showChatModal && (
+      {isOpen && (
         <div className='fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4'>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -160,7 +142,7 @@ const FloatingChatButton = React.memo(() => {
             <div className='p-6 border-b border-gray-200 flex justify-between items-center'>
               <h3 className='text-lg font-semibold text-gray-900'>Live Chat</h3>
               <button
-                onClick={closeChat}
+                onClick={onClose}
                 className='text-gray-400 hover:text-gray-600 text-2xl font-light'
                 aria-label='Close chat modal'
               >
@@ -228,16 +210,33 @@ const FloatingChatButton = React.memo(() => {
 
 FloatingChatButton.displayName = 'FloatingChatButton';
 
+FloatingChatButton.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onOpen: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
 // Main App Component
 const App = () => {
+  const [showChatModal, setShowChatModal] = useState(false);
+
   useEffect(() => {
     initAnalytics();
+  }, []);
+
+  // Chat functions that will be passed to Navigation
+  const openChat = React.useCallback(() => {
+    setShowChatModal(true);
+  }, []);
+
+  const closeChat = React.useCallback(() => {
+    setShowChatModal(false);
   }, []);
 
   return (
     <div className='min-h-screen bg-white'>
       {/* Navigation */}
-      <Navigation />
+      <Navigation onOpenChat={openChat} />
 
       {/* Background Elements */}
       <div className='fixed inset-0 pointer-events-none z-0'>
@@ -259,7 +258,7 @@ const App = () => {
       </div>
 
       {/* Floating Chat Button */}
-      <FloatingChatButton />
+      <FloatingChatButton isOpen={showChatModal} onOpen={openChat} onClose={closeChat} />
 
       {/* Search Modal */}
       <SearchModal />

@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 // Optimized Animated Background Particles Component
 const AnimatedParticles = React.memo(() => {
-  // Reduce particles from 50 to 20 for better performance
+  // Optimized particle count for better performance
   const particles = React.useMemo(
     () =>
       Array.from({ length: 20 }, (_, i) => ({
