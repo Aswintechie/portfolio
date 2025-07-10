@@ -5,20 +5,15 @@
  * @description Page transition components and utilities exports
  */
 
-export { 
+export {
   default as PageTransition,
   SectionTransition,
   StaggeredTransition,
   RouteTransition,
   ScrollTransition,
   CustomTransition,
-  withTransition,
-  pageTransitionVariants,
-  staggerVariants
 } from './PageTransition.jsx';
 
-export { 
-  default as PageLoader,
-  LoadingSpinner,
-  ProgressBar
-} from './PageLoader.jsx'; 
+export { withTransition } from './withTransition.js';
+export { pageTransitionVariants, staggerVariants } from './pageTransitionVariants.js';
+export { default as PageLoader } from './PageLoader.jsx';
