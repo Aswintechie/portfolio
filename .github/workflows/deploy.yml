@@ -40,6 +40,9 @@ jobs:
       - name: 🎨 Check Prettier formatting
         run: npm run format:check
 
+      - name: 📜 Check copyright headers
+        run: npm run copyright:check:strict
+
       - name: 🧪 Run tests
         run: npm run test:run
 
@@ -173,6 +176,7 @@ jobs:
               
               🔍 **Linting**: ✅ Passed  
               🎨 **Formatting**: ✅ Passed  
+              📜 **Copyright**: ✅ Passed  
               🧪 **Tests**: ✅ Passed  
               🔒 **Security**: ✅ Passed  
               🏗️ **Build**: ✅ Passed  

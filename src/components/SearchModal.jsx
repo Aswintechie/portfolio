@@ -1,3 +1,10 @@
+/**
+ * @file SearchModal.jsx
+ * @author Aswin
+ * @copyright © 2025 Aswin. All rights reserved.
+ * @description Search modal component with keyboard navigation and filtering
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, ArrowUp, ArrowDown } from 'lucide-react';

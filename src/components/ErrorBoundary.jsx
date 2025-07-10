@@ -1,3 +1,10 @@
+/**
+ * @file ErrorBoundary.jsx
+ * @author Aswin
+ * @copyright © 2025 Aswin. All rights reserved.
+ * @description Error boundary component for graceful error handling and recovery
+ */
+
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 

@@ -1,3 +1,10 @@
+/**
+ * @file NotFound.jsx
+ * @author Aswin
+ * @copyright © 2025 Aswin. All rights reserved.
+ * @description 404 Not Found page component with navigation and error handling
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Home, ArrowLeft, Search, AlertTriangle } from 'lucide-react';
