@@ -1,7 +1,7 @@
 /**
  * @file ExperienceSection.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Professional experience section component with timeline and dynamic content
  */
 

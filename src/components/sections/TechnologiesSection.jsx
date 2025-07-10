@@ -1,7 +1,7 @@
 /**
  * @file TechnologiesSection.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Technologies and platforms section component showcasing technical stack
  */
 

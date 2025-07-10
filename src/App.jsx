@@ -1,7 +1,7 @@
 /**
  * @file App.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Main application component with modular architecture and floating chat functionality
  */
 

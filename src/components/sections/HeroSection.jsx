@@ -1,7 +1,7 @@
 /**
  * @file HeroSection.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Modern hero section component with animated background and interactive elements
  */
 

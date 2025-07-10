@@ -1,7 +1,7 @@
 /**
  * @file ContactSection.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Contact section component with form submission and contact information
  */
 

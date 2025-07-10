@@ -1,7 +1,7 @@
 /**
  * @file ProjectsSection.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Featured projects section component with interactive cards and expandable content
  */
 

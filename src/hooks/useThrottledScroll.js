@@ -1,7 +1,7 @@
 /**
  * @file useThrottledScroll.js
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Custom React hook for optimized throttled scroll event handling
  */
 

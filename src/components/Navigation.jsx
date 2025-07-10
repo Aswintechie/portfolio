@@ -1,7 +1,7 @@
 /**
  * @file Navigation.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Performance-optimized navigation component with mobile menu and search functionality
  */
 

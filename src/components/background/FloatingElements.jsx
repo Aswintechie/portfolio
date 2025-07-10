@@ -1,7 +1,7 @@
 /**
  * @file FloatingElements.jsx
  * @author Aswin
- * @copyright © 2024 Aswin. All rights reserved.
+ * @copyright © 2025 Aswin. All rights reserved.
  * @description Performance-optimized floating background elements with animated gradients
  */
 
