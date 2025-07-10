@@ -108,12 +108,15 @@ const PageLoader = ({ isLoading, progress = 0, stage = 'loading', onComplete = (
               }}
               className='mb-8'
             >
-              <div className='relative'>
-                <div className='w-24 h-24 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4'>
-                  <Code size={40} className='text-white' />
+              <div className='relative w-28 h-28 mx-auto'>
+                {/* Icon Container - centered within the 28x28 container */}
+                <div className='absolute inset-0 flex items-center justify-center'>
+                  <div className='w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center'>
+                    <Code size={40} className='text-white' />
+                  </div>
                 </div>
 
-                {/* Rotating Ring */}
+                {/* Rotating Ring - perfectly aligned with container */}
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{
@@ -121,7 +124,7 @@ const PageLoader = ({ isLoading, progress = 0, stage = 'loading', onComplete = (
                     repeat: Infinity,
                     ease: 'linear',
                   }}
-                  className='absolute inset-0 w-28 h-28 border-2 border-transparent border-t-blue-400 border-r-purple-400 rounded-full mx-auto'
+                  className='absolute inset-0 w-28 h-28 border-2 border-transparent border-t-blue-400 border-r-purple-400 rounded-full'
                 />
               </div>
             </motion.div>
