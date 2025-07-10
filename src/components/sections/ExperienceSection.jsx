@@ -79,9 +79,9 @@ const ExperienceSection = () => {
 
         <div className='max-w-4xl mx-auto'>
           <div className='relative' style={{ minHeight: '400px' }}>
-            {/* Timeline line - properly contained and mobile responsive */}
+            {/* Timeline line - Hidden on mobile, visible on desktop */}
             <div
-              className='absolute left-5 md:left-8 top-8 w-0.5 bg-secondary-200'
+              className='hidden md:block absolute left-6 top-8 w-0.5 bg-secondary-200'
               style={{ height: 'calc(100% - 4rem)', bottom: '2rem' }}
             ></div>
 

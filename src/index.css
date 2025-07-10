@@ -277,6 +277,15 @@ html {
     @apply fixed inset-0 bg-white z-50;
   }
 
+  /* Mobile experience section improvements */
+  #experience .container-custom {
+    @apply px-3;
+  }
+
+  #experience .max-w-4xl {
+    @apply max-w-full;
+  }
+
   /* Mobile hero section fixes */
   #home {
     height: 100vh !important; /* Fixed height exactly to viewport */
