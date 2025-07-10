@@ -18,14 +18,11 @@ import {
   Circle,
 } from 'lucide-react';
 import { featuredProjects, allProjects } from '../../data/projects.jsx';
-import { useMicroInteractions } from '../../utils/microInteractions';
 
 // Projects Section Component
 const ProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [showMoreProjects, setShowMoreProjects] = useState(false);
-  const [hoveredProject, setHoveredProject] = useState(null);
-  const { variants } = useMicroInteractions();
 
   const id = useId();
   const projectsSectionListId = `projects-list-${id}`;
@@ -73,8 +70,6 @@ const ProjectsSection = () => {
               initial={{ opacity: 0, y: 60 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              onMouseEnter={() => setHoveredProject(project.id)}
-              onMouseLeave={() => setHoveredProject(null)}
               className='group relative'
             >
               {/* Optimized Glassmorphism Card with Enhanced Gradient Animation */}
@@ -217,7 +212,6 @@ const ProjectsSection = () => {
               aria-hidden='true'
             />
             <div className='absolute inset-0 bg-gradient-to-r from-white/5 via-white/10 to-white/5 rounded-2xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300'></div>
-            <div className='absolute inset-0 bg-gradient-to-br from-transparent via-secondary-300/20 to-accent-300/20 rounded-2xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500'></div>
           </button>
         </motion.div>
       </div>
