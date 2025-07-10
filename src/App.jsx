@@ -2,12 +2,15 @@
  * @file App.jsx
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Main application component with modular architecture and floating chat functionality
+ * @description Main application component with routing and modular architecture
  */
 
 import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation.jsx';
 import SearchModal from './components/SearchModal.jsx';
+import NotFound from './components/NotFound.jsx';
+import PrivacyPolicy from './components/PrivacyPolicy.jsx';
 import {
   HeroSection,
   AboutSection,
@@ -28,91 +31,146 @@ import {
 import { PageLoader } from './components/PageTransitions';
 import { usePageLoading } from './hooks';
 
-// Note: Chat functionality restored to HTML implementation in index.html
+// Home Page Component (Main Portfolio)
+const HomePage = () => {
+  return (
+    <div className='relative'>
+      {/* Above-the-fold sections - load immediately */}
+      <SectionErrorBoundary sectionName='Hero'>
+        <HeroSection />
+      </SectionErrorBoundary>
 
-// Main App Component
+      <SectionErrorBoundary sectionName='About'>
+        <AboutSection />
+      </SectionErrorBoundary>
+
+      {/* All sections - loaded directly for smooth experience */}
+      <SectionErrorBoundary sectionName='Experience'>
+        <ExperienceSection />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName='Skills'>
+        <SkillsSection />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName='Projects'>
+        <ProjectsSection />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName='Personal Projects'>
+        <PersonalProjectsSection />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName='Technologies'>
+        <TechnologiesSection />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName='Contact'>
+        <ContactSection />
+      </SectionErrorBoundary>
+
+      <SectionErrorBoundary sectionName='Footer'>
+        <Footer />
+      </SectionErrorBoundary>
+    </div>
+  );
+};
+
+// Layout Component (Wraps all pages with navigation)
+const Layout = ({ children }) => {
+  return (
+    <div className='min-h-screen bg-white'>
+      {/* Navigation */}
+      <ErrorBoundary level='component' fallbackComponent='Navigation'>
+        <Navigation />
+      </ErrorBoundary>
+
+      {/* Page Content */}
+      {children}
+
+      {/* Search Modal */}
+      <ErrorBoundary level='component' fallbackComponent='Search Modal'>
+        <SearchModal />
+      </ErrorBoundary>
+    </div>
+  );
+};
+
+// Main App Component with Routing
 const App = () => {
+  // Only show loading on initial page load, not on route changes
+  const [isInitialLoad, setIsInitialLoad] = React.useState(() => {
+    return !sessionStorage.getItem('hasLoadedBefore');
+  });
+
   const { isLoading, loadingProgress, loadingStage, completeLoading } = usePageLoading();
+
+  // Only use loading screen for initial load
+  const shouldShowLoading = isInitialLoad && isLoading;
 
   useEffect(() => {
     initAnalytics();
 
-    // Auto-complete loading to show beautiful screen
-    const autoComplete = setTimeout(() => {
-      completeLoading();
-    }, 2000); // Show beautiful loading for 2 seconds
+    // Only show loading screen on initial load
+    if (isInitialLoad) {
+      // Auto-complete loading to show beautiful screen
+      const autoComplete = setTimeout(() => {
+        completeLoading();
+        // Mark that we've loaded before
+        sessionStorage.setItem('hasLoadedBefore', 'true');
+        setIsInitialLoad(false);
+      }, 2000); // Show beautiful loading for 2 seconds
 
-    return () => {
-      clearTimeout(autoComplete);
-    };
-  }, [completeLoading]);
+      return () => {
+        clearTimeout(autoComplete);
+      };
+    }
+  }, [completeLoading, isInitialLoad]);
 
   return (
     <GlobalErrorHandler>
       <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
-        {/* Beautiful Page Loader */}
-        <PageLoader
-          isLoading={isLoading}
-          progress={loadingProgress}
-          stage={loadingStage}
-          onComplete={() => {}}
-        />
+        <Router>
+          {/* Beautiful Page Loader - Only on initial load */}
+          {shouldShowLoading && (
+            <PageLoader
+              isLoading={shouldShowLoading}
+              progress={loadingProgress}
+              stage={loadingStage}
+              onComplete={() => {}}
+            />
+          )}
 
-        {/* Main App Content */}
-        {!isLoading && (
-          <div className='min-h-screen bg-white'>
-            {/* Navigation */}
-            <ErrorBoundary level='component' fallbackComponent='Navigation'>
-              <Navigation />
-            </ErrorBoundary>
+          {/* Main App Content with Routing */}
+          {!shouldShowLoading && (
+            <Layout>
+              <Routes>
+                {/* Main Portfolio Page */}
+                <Route path='/' element={<HomePage />} />
 
-            {/* Main Content */}
-            <div className='relative'>
-              {/* Above-the-fold sections - load immediately */}
-              <SectionErrorBoundary sectionName='Hero'>
-                <HeroSection />
-              </SectionErrorBoundary>
+                {/* Privacy Policy Page */}
+                <Route
+                  path='/privacy'
+                  element={
+                    <ErrorBoundary level='page' fallbackComponent='Privacy Policy'>
+                      <PrivacyPolicy />
+                    </ErrorBoundary>
+                  }
+                />
 
-              <SectionErrorBoundary sectionName='About'>
-                <AboutSection />
-              </SectionErrorBoundary>
-
-              {/* All sections - loaded directly for smooth experience */}
-              <SectionErrorBoundary sectionName='Experience'>
-                <ExperienceSection />
-              </SectionErrorBoundary>
-
-              <SectionErrorBoundary sectionName='Skills'>
-                <SkillsSection />
-              </SectionErrorBoundary>
-
-              <SectionErrorBoundary sectionName='Projects'>
-                <ProjectsSection />
-              </SectionErrorBoundary>
-
-              <SectionErrorBoundary sectionName='Personal Projects'>
-                <PersonalProjectsSection />
-              </SectionErrorBoundary>
-
-              <SectionErrorBoundary sectionName='Technologies'>
-                <TechnologiesSection />
-              </SectionErrorBoundary>
-
-              <SectionErrorBoundary sectionName='Contact'>
-                <ContactSection />
-              </SectionErrorBoundary>
-
-              <SectionErrorBoundary sectionName='Footer'>
-                <Footer />
-              </SectionErrorBoundary>
-            </div>
-
-            {/* Search Modal */}
-            <ErrorBoundary level='component' fallbackComponent='Search Modal'>
-              <SearchModal />
-            </ErrorBoundary>
-          </div>
-        )}
+                {/* 404 Not Found Page */}
+                <Route
+                  path='*'
+                  element={
+                    <ErrorBoundary level='page' fallbackComponent='404 Page'>
+                      <NotFound />
+                    </ErrorBoundary>
+                  }
+                />
+              </Routes>
+            </Layout>
+          )}
+        </Router>
       </ErrorBoundary>
     </GlobalErrorHandler>
   );

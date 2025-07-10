@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Home, ArrowLeft, Search, AlertTriangle } from 'lucide-react';
 
@@ -67,14 +68,14 @@ const NotFound = () => {
             transition={{ delay: 0.6 }}
             className='flex flex-col sm:flex-row gap-4 justify-center'
           >
-            <a
-              href='/'
+            <Link
+              to='/'
               className='inline-flex items-center px-6 py-3 bg-gradient-to-r from-secondary-600 to-accent-600 text-white rounded-lg hover:from-secondary-700 hover:to-accent-700 transition-all duration-300 transform hover:scale-105 shadow-lg'
               aria-label='Go back to homepage'
             >
               <Home size={20} className='mr-2' />
               Go Home
-            </a>
+            </Link>
 
             <button
               onClick={() => window.history.back()}
@@ -101,34 +102,34 @@ const NotFound = () => {
             </div>
 
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm'>
-              <a
-                href='/#about'
+              <Link
+                to='/#about'
                 className='text-secondary-600 hover:text-secondary-700 transition-colors duration-200'
                 aria-label='Navigate to about section'
               >
                 About Me
-              </a>
-              <a
-                href='/#projects'
+              </Link>
+              <Link
+                to='/#projects'
                 className='text-secondary-600 hover:text-secondary-700 transition-colors duration-200'
                 aria-label='Navigate to projects section'
               >
                 My Projects
-              </a>
-              <a
-                href='/#experience'
+              </Link>
+              <Link
+                to='/#experience'
                 className='text-secondary-600 hover:text-secondary-700 transition-colors duration-200'
                 aria-label='Navigate to experience section'
               >
                 Experience
-              </a>
-              <a
-                href='/#contact'
+              </Link>
+              <Link
+                to='/#contact'
                 className='text-secondary-600 hover:text-secondary-700 transition-colors duration-200'
                 aria-label='Navigate to contact section'
               >
                 Contact Me
-              </a>
+              </Link>
             </div>
           </motion.div>
 
