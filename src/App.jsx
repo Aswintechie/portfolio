@@ -9,6 +9,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useThrottledScroll } from './hooks';
+import { ThemeProvider } from './contexts/ThemeContext.jsx';
+import { initializePWA } from './utils/pwa.js';
 import Navigation from './components/Navigation.jsx';
 import SearchModal from './components/SearchModal.jsx';
 import {
@@ -220,7 +222,11 @@ const App = () => {
   const [showChatModal, setShowChatModal] = useState(false);
 
   useEffect(() => {
+    // Initialize analytics
     initAnalytics();
+
+    // Initialize PWA features
+    initializePWA();
   }, []);
 
   // Chat functions that will be passed to Navigation
@@ -233,29 +239,31 @@ const App = () => {
   }, []);
 
   return (
-    <div className='min-h-screen bg-white'>
-      {/* Navigation */}
-      <Navigation onOpenChat={openChat} />
+    <ThemeProvider>
+      <div className='min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300'>
+        {/* Navigation */}
+        <Navigation onOpenChat={openChat} />
 
-      {/* Main Content */}
-      <div className='relative'>
-        <HeroSection />
-        <AboutSection />
-        <ExperienceSection />
-        <SkillsSection />
-        <ProjectsSection />
-        <PersonalProjectsSection />
-        <TechnologiesSection />
-        <ContactSection />
-        <Footer />
+        {/* Main Content */}
+        <div className='relative'>
+          <HeroSection />
+          <AboutSection />
+          <ExperienceSection />
+          <SkillsSection />
+          <ProjectsSection />
+          <PersonalProjectsSection />
+          <TechnologiesSection />
+          <ContactSection />
+          <Footer />
+        </div>
+
+        {/* Floating Chat Button */}
+        <FloatingChatButton isOpen={showChatModal} onOpen={openChat} onClose={closeChat} />
+
+        {/* Search Modal */}
+        <SearchModal />
       </div>
-
-      {/* Floating Chat Button */}
-      <FloatingChatButton isOpen={showChatModal} onOpen={openChat} onClose={closeChat} />
-
-      {/* Search Modal */}
-      <SearchModal />
-    </div>
+    </ThemeProvider>
   );
 };
 

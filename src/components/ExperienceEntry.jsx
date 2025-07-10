@@ -9,6 +9,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, Building, Zap, Code, Cpu } from 'lucide-react';
 import PropTypes from 'prop-types';
+import { LogoImage } from './OptimizedImage.jsx';
 
 // Experience Entry Component
 function ExperienceEntryComponent({
@@ -122,12 +123,9 @@ function ExperienceEntryComponent({
               }}
               className='flex-shrink-0'
             >
-              <img
+              <LogoImage
                 src={logo}
                 alt={`Company logo for ${company}`}
-                width={56}
-                height={56}
-                loading='lazy'
                 className='w-14 h-14 object-contain rounded-xl shadow-md bg-white p-2'
               />
             </motion.div>
