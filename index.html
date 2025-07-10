@@ -205,9 +205,11 @@
           align-items: center;
           justify-content: center;
           line-height: 1;
-          text-align: center;
-          width: 20px;
-          height: 20px;
+          font-size: 20px;
+          font-family:
+            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+          padding-left: 8px;
+          margin-top: -1px;
         "
         >💬</span
       >
@@ -305,43 +307,51 @@
           const chatButtonText = document.getElementById('chatButtonText');
           const chatButtonIcon = document.getElementById('chatButtonIcon');
 
+          // Start with button hidden
           if (chatButton) {
-            chatButton.style.opacity = '1';
-            chatButton.style.transform = 'scale(1) translateX(0)';
+            chatButton.style.opacity = '0';
+            chatButton.style.transform = 'scale(0.8) translateX(0)';
+            chatButton.style.pointerEvents = 'none';
           }
 
           // Dynamic chat button behavior based on scroll
           let lastScrollY = 0;
-          let isExpanded = false;
+          let isVisible = false;
 
           const handleScroll = () => {
             const scrollY = window.scrollY;
             const isMobile = window.innerWidth <= 768;
-            const shouldExpand = scrollY > 200; // Expand when header button is hidden
+            const shouldShow = scrollY > 100; // Show when starting to scroll
 
             // Only update if state changed to avoid unnecessary DOM updates
-            if (shouldExpand !== isExpanded) {
-              isExpanded = shouldExpand;
+            if (shouldShow !== isVisible) {
+              isVisible = shouldShow;
 
-              if (shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
+              if (shouldShow && chatButton && chatButtonText && chatButtonIcon) {
                 // Mobile-responsive expansion
                 const expandedWidth = isMobile ? '120px' : '140px';
-                const translateX = isMobile ? '-64px' : '-84px';
                 const textMaxWidth = isMobile ? '60px' : '80px';
 
-                // Expand to show text - expand left towards center
+                // Fade in and expand to show text
+                chatButton.style.opacity = '1';
+                chatButton.style.transform = 'scale(1) translateX(0)';
+                chatButton.style.pointerEvents = 'auto';
                 chatButton.style.width = expandedWidth;
                 chatButton.style.borderRadius = '28px';
                 chatButton.style.paddingLeft = '16px';
                 chatButton.style.paddingRight = '16px';
                 chatButton.style.justifyContent = 'flex-start';
-                chatButton.style.transform = `scale(1) translateX(${translateX})`;
+                chatButton.style.transformOrigin = 'right center';
                 chatButtonText.style.opacity = '1';
                 chatButtonText.style.width = 'auto';
                 chatButtonText.style.maxWidth = textMaxWidth;
                 chatButtonText.style.fontSize = isMobile ? '12px' : '14px';
-              } else if (!shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
-                // Shrink to icon only
+              } else if (!shouldShow && chatButton && chatButtonText && chatButtonIcon) {
+                // Fade out and hide
+                chatButton.style.opacity = '0';
+                chatButton.style.transform = 'scale(0.8) translateX(0)';
+                chatButton.style.pointerEvents = 'none';
+                // Reset to circular form
                 const buttonSize = isMobile ? '60px' : '56px';
                 chatButton.style.width = buttonSize;
                 chatButton.style.height = buttonSize;
@@ -349,7 +359,6 @@
                 chatButton.style.paddingLeft = '0';
                 chatButton.style.paddingRight = '0';
                 chatButton.style.justifyContent = 'center';
-                chatButton.style.transform = 'scale(1) translateX(0)';
                 chatButtonText.style.opacity = '0';
                 chatButtonText.style.width = '0';
                 chatButtonText.style.maxWidth = '0';
@@ -426,29 +435,19 @@
       // Add dynamic hover effects (desktop only)
       if (!('ontouchstart' in window)) {
         openChatBtn.addEventListener('mouseenter', function () {
-          const isMobile = window.innerWidth <= 768;
-          const isExpanded = this.style.width === (isMobile ? '120px' : '140px');
-          const translateX = isMobile ? '-64px' : '-84px';
-
-          if (isExpanded) {
-            this.style.transform = `scale(1.02) translateX(${translateX})`;
-          } else {
-            this.style.transform = 'scale(1.1) translateX(0)';
+          // Only apply hover effects when button is visible
+          if (this.style.opacity === '1') {
+            this.style.transform = 'scale(1.02) translateX(0)';
+            this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
           }
-          this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
         });
 
         openChatBtn.addEventListener('mouseleave', function () {
-          const isMobile = window.innerWidth <= 768;
-          const isExpanded = this.style.width === (isMobile ? '120px' : '140px');
-          const translateX = isMobile ? '-64px' : '-84px';
-
-          if (isExpanded) {
-            this.style.transform = `scale(1) translateX(${translateX})`;
-          } else {
+          // Only apply hover effects when button is visible
+          if (this.style.opacity === '1') {
             this.style.transform = 'scale(1) translateX(0)';
+            this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
           }
-          this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
         });
       }
 

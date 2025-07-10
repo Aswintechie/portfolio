@@ -205,12 +205,7 @@ const Navigation = React.memo(function Navigation() {
                 }}
                 aria-label='Open live chat'
               >
-                <span
-                  className='text-lg flex items-center justify-center'
-                  style={{ lineHeight: 1 }}
-                >
-                  💬
-                </span>
+                <span className='text-lg'>💬</span>
                 <span>Live Chat</span>
               </motion.button>
             )}
