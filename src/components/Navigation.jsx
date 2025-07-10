@@ -8,7 +8,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Mail, Search, Code, Home, User, Briefcase, Folder } from 'lucide-react';
-import PropTypes from 'prop-types';
 import SearchModal from './SearchModal.jsx';
 import { useThrottledScroll } from '../hooks';
 

@@ -16,7 +16,6 @@ import {
   ExternalLink,
   ChevronDown,
   Circle,
-  Github,
 } from 'lucide-react';
 import { featuredProjects, allProjects } from '../../data/projects.jsx';
 import { useMicroInteractions } from '../../utils/microInteractions';

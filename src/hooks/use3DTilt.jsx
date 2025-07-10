@@ -149,7 +149,7 @@ export const use3DTilt = (options = {}) => {
  */
 export const with3DTilt = (Component, options = {}) => {
   return function TiltWrapper(props) {
-    const { elementRef, tiltStyle, glareElementStyle, isHovered } = use3DTilt(options);
+    const { elementRef, tiltStyle, glareElementStyle } = use3DTilt(options);
 
     return (
       <div ref={elementRef} style={tiltStyle} className='relative'>
