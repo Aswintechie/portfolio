@@ -85,8 +85,7 @@
       /* Mobile optimizations */
       @media (max-width: 768px) {
         #openChat {
-          width: 60px !important;
-          height: 60px !important;
+          /* width and height removed - controlled by JavaScript */
           bottom: 16px !important;
           right: 16px !important;
           font-size: 22px !important;
@@ -307,58 +306,154 @@
           const chatButtonText = document.getElementById('chatButtonText');
           const chatButtonIcon = document.getElementById('chatButtonIcon');
 
-          // Start with button hidden
+          // Initialize button based on device type
           if (chatButton) {
-            chatButton.style.opacity = '0';
-            chatButton.style.transform = 'scale(0.8) translateX(0)';
-            chatButton.style.pointerEvents = 'none';
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+              // Mobile: Start as circular button (always visible)
+              chatButton.style.opacity = '1';
+              chatButton.style.transform = 'scale(1) translateX(0)';
+              chatButton.style.pointerEvents = 'auto';
+              chatButton.style.width = '60px';
+              chatButton.style.height = '60px';
+              chatButton.style.borderRadius = '50%';
+              chatButton.style.paddingLeft = '0';
+              chatButton.style.paddingRight = '0';
+              chatButton.style.justifyContent = 'center';
+              chatButtonText.style.opacity = '0';
+              chatButtonText.style.width = '0';
+              chatButtonText.style.maxWidth = '0';
+            } else {
+              // Desktop: Start hidden
+              chatButton.style.opacity = '0';
+              chatButton.style.transform = 'scale(0.8) translateX(0)';
+              chatButton.style.pointerEvents = 'none';
+            }
           }
 
           // Dynamic chat button behavior based on scroll
           let lastScrollY = 0;
-          let isVisible = false;
+          let isExpanded = false;
 
           const handleScroll = () => {
             const scrollY = window.scrollY;
             const isMobile = window.innerWidth <= 768;
-            const shouldShow = scrollY > 100; // Show when starting to scroll
+
+            // Simple logic: expand at 100px, contract at 50px
+            const shouldExpand = isExpanded ? scrollY > 50 : scrollY > 100;
+
+            // Debug what's happening
+            if (isMobile) {
+              console.log('Mobile scroll:', {
+                scrollY,
+                shouldExpand,
+                isExpanded,
+                currentWidth: chatButton.style.width,
+                threshold: isExpanded ? 50 : 100,
+              });
+            }
 
             // Only update if state changed to avoid unnecessary DOM updates
-            if (shouldShow !== isVisible) {
-              isVisible = shouldShow;
+            if (shouldExpand !== isExpanded) {
+              isExpanded = shouldExpand;
 
-              if (shouldShow && chatButton && chatButtonText && chatButtonIcon) {
-                // Mobile-responsive expansion
-                const expandedWidth = isMobile ? '120px' : '140px';
-                const textMaxWidth = isMobile ? '60px' : '80px';
+              if (shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
+                // Expansion for both mobile and desktop
+                const expandedWidth = isMobile ? '140px' : '160px';
+                const textMaxWidth = isMobile ? '80px' : '100px';
 
-                // Fade in and expand to show text
-                chatButton.style.opacity = '1';
-                chatButton.style.transform = 'scale(1) translateX(0)';
-                chatButton.style.pointerEvents = 'auto';
-                chatButton.style.width = expandedWidth;
-                chatButton.style.borderRadius = '28px';
-                chatButton.style.paddingLeft = '16px';
-                chatButton.style.paddingRight = '16px';
-                chatButton.style.justifyContent = 'flex-start';
-                chatButton.style.transformOrigin = 'right center';
+                if (isMobile) {
+                  // Mobile: Always visible, just expand
+                  chatButton.style.opacity = '1';
+                  chatButton.style.transform = 'scale(1) translateX(0)';
+                  chatButton.style.pointerEvents = 'auto';
+                } else {
+                  // Desktop: Fade in and expand
+                  chatButton.style.opacity = '1';
+                  chatButton.style.transform = 'scale(1) translateX(0)';
+                  chatButton.style.pointerEvents = 'auto';
+                }
+
+                // Force width expansion - aggressive CSS override
+                chatButton.style.cssText = `
+                  position: fixed !important;
+                  bottom: 16px !important;
+                  right: 16px !important;
+                  z-index: 9999 !important;
+                  width: ${expandedWidth} !important;
+                  height: auto !important;
+                  border-radius: 28px !important;
+                  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                  color: #fff !important;
+                  border: none !important;
+                  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4) !important;
+                  font-size: 20px !important;
+                  cursor: pointer !important;
+                  transition: all 0.3s ease !important;
+                  opacity: 1 !important;
+                  transform: scale(1) translateX(0) !important;
+                  display: flex !important;
+                  align-items: center !important;
+                  justify-content: flex-start !important;
+                  touch-action: manipulation !important;
+                  overflow: hidden !important;
+                  white-space: nowrap !important;
+                  padding-left: 16px !important;
+                  padding-right: 16px !important;
+                  transform-origin: right center !important;
+                  pointer-events: auto !important;
+                `;
+
                 chatButtonText.style.opacity = '1';
                 chatButtonText.style.width = 'auto';
                 chatButtonText.style.maxWidth = textMaxWidth;
-                chatButtonText.style.fontSize = isMobile ? '12px' : '14px';
-              } else if (!shouldShow && chatButton && chatButtonText && chatButtonIcon) {
-                // Fade out and hide
-                chatButton.style.opacity = '0';
-                chatButton.style.transform = 'scale(0.8) translateX(0)';
-                chatButton.style.pointerEvents = 'none';
-                // Reset to circular form
+                chatButtonText.style.fontSize = isMobile ? '11px' : '13px';
+                chatButtonText.style.fontWeight = '600';
+              } else if (!shouldExpand && chatButton && chatButtonText && chatButtonIcon) {
+                // Shrink behavior
                 const buttonSize = isMobile ? '60px' : '56px';
-                chatButton.style.width = buttonSize;
-                chatButton.style.height = buttonSize;
-                chatButton.style.borderRadius = '50%';
-                chatButton.style.paddingLeft = '0';
-                chatButton.style.paddingRight = '0';
-                chatButton.style.justifyContent = 'center';
+
+                if (isMobile) {
+                  // Mobile: Stay visible, just shrink to circular
+                  chatButton.style.opacity = '1';
+                  chatButton.style.transform = 'scale(1) translateX(0)';
+                  chatButton.style.pointerEvents = 'auto';
+                } else {
+                  // Desktop: Hide completely
+                  chatButton.style.opacity = '0';
+                  chatButton.style.transform = 'scale(0.8) translateX(0)';
+                  chatButton.style.pointerEvents = 'none';
+                }
+
+                // Force width contraction - aggressive CSS override
+                chatButton.style.cssText = `
+                  position: fixed !important;
+                  bottom: 16px !important;
+                  right: 16px !important;
+                  z-index: 9999 !important;
+                  width: ${buttonSize} !important;
+                  height: ${buttonSize} !important;
+                  border-radius: 50% !important;
+                  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                  color: #fff !important;
+                  border: none !important;
+                  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4) !important;
+                  font-size: 20px !important;
+                  cursor: pointer !important;
+                  transition: all 0.3s ease !important;
+                  opacity: 1 !important;
+                  transform: scale(1) translateX(0) !important;
+                  display: flex !important;
+                  align-items: center !important;
+                  justify-content: center !important;
+                  touch-action: manipulation !important;
+                  overflow: hidden !important;
+                  white-space: nowrap !important;
+                  padding-left: 0 !important;
+                  padding-right: 0 !important;
+                  pointer-events: auto !important;
+                `;
+
                 chatButtonText.style.opacity = '0';
                 chatButtonText.style.width = '0';
                 chatButtonText.style.maxWidth = '0';
@@ -368,7 +463,7 @@
             lastScrollY = scrollY;
           };
 
-          // Throttled scroll event
+          // Throttled scroll event for immediate response
           let ticking = false;
           const throttledScroll = () => {
             if (!ticking) {
@@ -383,10 +478,9 @@
           // Add scroll event listener
           window.addEventListener('scroll', throttledScroll, { passive: true });
 
-          // Add resize event listener for responsive updates
-          window.addEventListener('resize', () => {
-            handleScroll(); // Recalculate on resize
-          });
+          // Resize handler disabled - was causing constant resets on mobile
+          // Mobile browsers fire resize events constantly due to address bar changes
+          // The scroll handler already handles mobile/desktop detection properly
 
           // Also call handleScroll once initially to set correct state
           setTimeout(() => {
