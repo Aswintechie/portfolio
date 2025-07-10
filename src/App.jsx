@@ -11,6 +11,7 @@ import SearchModal from './components/SearchModal.jsx';
 import LoadingSpinner from './components/LoadingSpinner.jsx';
 import { HeroSection, AboutSection, Footer } from './components/sections';
 import { initAnalytics } from './utils/analytics.js';
+import { ErrorBoundary, SectionErrorBoundary, GlobalErrorHandler } from './components/ErrorBoundary/';
 
 // Lazy load below-the-fold sections for better initial performance
 const ExperienceSection = lazy(() => import('./components/sections/ExperienceSection.jsx'));
@@ -31,47 +32,75 @@ const App = () => {
   }, []);
 
   return (
-    <div className='min-h-screen bg-white'>
-      {/* Navigation */}
-      <Navigation />
+    <GlobalErrorHandler>
+      <ErrorBoundary level="app" fallbackComponent="Portfolio Application">
+        {/* Main App Content */}
+        <div className='min-h-screen bg-white'>
+          {/* Navigation */}
+          <ErrorBoundary level="component" fallbackComponent="Navigation">
+            <Navigation />
+          </ErrorBoundary>
 
-      {/* Main Content */}
-      <div className='relative'>
-        {/* Above-the-fold sections - load immediately */}
-        <HeroSection />
-        <AboutSection />
+          {/* Main Content */}
+          <div className='relative'>
+            {/* Above-the-fold sections - load immediately */}
+            <SectionErrorBoundary sectionName="Hero">
+              <HeroSection />
+            </SectionErrorBoundary>
+            
+            <SectionErrorBoundary sectionName="About">
+              <AboutSection />
+            </SectionErrorBoundary>
 
-        {/* Below-the-fold sections - lazy loaded for better performance */}
-        <Suspense fallback={<LoadingSpinner text='Loading experience...' />}>
-          <ExperienceSection />
-        </Suspense>
+            {/* Below-the-fold sections - lazy loaded for better performance */}
+            <SectionErrorBoundary sectionName="Experience">
+              <Suspense fallback={<LoadingSpinner text='Loading experience...' />}>
+                <ExperienceSection />
+              </Suspense>
+            </SectionErrorBoundary>
 
-        <Suspense fallback={<LoadingSpinner text='Loading skills...' />}>
-          <SkillsSection />
-        </Suspense>
+            <SectionErrorBoundary sectionName="Skills">
+              <Suspense fallback={<LoadingSpinner text='Loading skills...' />}>
+                <SkillsSection />
+              </Suspense>
+            </SectionErrorBoundary>
 
-        <Suspense fallback={<LoadingSpinner text='Loading projects...' />}>
-          <ProjectsSection />
-        </Suspense>
+            <SectionErrorBoundary sectionName="Projects">
+              <Suspense fallback={<LoadingSpinner text='Loading projects...' />}>
+                <ProjectsSection />
+              </Suspense>
+            </SectionErrorBoundary>
 
-        <Suspense fallback={<LoadingSpinner text='Loading personal projects...' />}>
-          <PersonalProjectsSection />
-        </Suspense>
+            <SectionErrorBoundary sectionName="Personal Projects">
+              <Suspense fallback={<LoadingSpinner text='Loading personal projects...' />}>
+                <PersonalProjectsSection />
+              </Suspense>
+            </SectionErrorBoundary>
 
-        <Suspense fallback={<LoadingSpinner text='Loading technologies...' />}>
-          <TechnologiesSection />
-        </Suspense>
+            <SectionErrorBoundary sectionName="Technologies">
+              <Suspense fallback={<LoadingSpinner text='Loading technologies...' />}>
+                <TechnologiesSection />
+              </Suspense>
+            </SectionErrorBoundary>
 
-        <Suspense fallback={<LoadingSpinner text='Loading contact...' />}>
-          <ContactSection />
-        </Suspense>
+            <SectionErrorBoundary sectionName="Contact">
+              <Suspense fallback={<LoadingSpinner text='Loading contact...' />}>
+                <ContactSection />
+              </Suspense>
+            </SectionErrorBoundary>
 
-        <Footer />
-      </div>
+            <SectionErrorBoundary sectionName="Footer">
+              <Footer />
+            </SectionErrorBoundary>
+          </div>
 
-      {/* Search Modal */}
-      <SearchModal />
-    </div>
+          {/* Search Modal */}
+          <ErrorBoundary level="component" fallbackComponent="Search Modal">
+            <SearchModal />
+          </ErrorBoundary>
+        </div>
+      </ErrorBoundary>
+    </GlobalErrorHandler>
   );
 };
 

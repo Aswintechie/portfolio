@@ -9,13 +9,16 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Mail, Search, Code, Home, User, Briefcase, Folder } from 'lucide-react';
 import SearchModal from './SearchModal.jsx';
-import { useThrottledScroll } from '../hooks';
+import { useThrottledScroll, usePageTransitions } from '../hooks';
 
 // Performance-optimized Navigation component
 const Navigation = React.memo(function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  
+  // Page transitions hook for smooth scrolling
+  const { navigateToSection, currentSection } = usePageTransitions();
 
   // Optimized scroll handler with throttling
   const handleScroll = React.useCallback(() => {
@@ -24,6 +27,14 @@ const Navigation = React.memo(function Navigation() {
   }, []);
 
   useThrottledScroll(handleScroll);
+  
+  // Handle navigation click with smooth scrolling
+  const handleNavClick = React.useCallback((e, href) => {
+    e.preventDefault();
+    const sectionId = href.replace('#', '');
+    navigateToSection(sectionId);
+    setIsMenuOpen(false);
+  }, [navigateToSection]);
 
   // Memoized navigation items
   const navigationItems = React.useMemo(
@@ -49,8 +60,8 @@ const Navigation = React.memo(function Navigation() {
       <div className='container-custom'>
         <div className='flex items-center justify-between h-16'>
           {/* Optimized Logo */}
-          <motion.a
-            href='#home'
+          <motion.button
+            onClick={(e) => handleNavClick(e, '#home')}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className={`flex items-center space-x-3 text-xl font-bold transition-all duration-200 hover:scale-105 ${
@@ -75,27 +86,36 @@ const Navigation = React.memo(function Navigation() {
             <span className='bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent'>
               Portfolio
             </span>
-          </motion.a>
+          </motion.button>
 
           {/* Desktop Navigation */}
           <div className='hidden md:flex items-center space-x-1 transition-all duration-300'>
-            {navigationItems.map((item, index) => (
-              <motion.a
-                key={item.href}
-                href={item.href}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${
-                  scrolled
-                    ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
-                    : 'text-white/90 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                <item.icon size={16} />
-                <span>{item.label}</span>
-              </motion.a>
-            ))}
+            {navigationItems.map((item, index) => {
+              const sectionId = item.href.replace('#', '');
+              const isActive = currentSection === sectionId;
+              
+              return (
+                <motion.button
+                  key={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${
+                    isActive
+                      ? scrolled
+                        ? 'bg-secondary-100 text-secondary-700 shadow-sm'
+                        : 'bg-white/20 text-white shadow-sm'
+                      : scrolled
+                      ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <item.icon size={16} />
+                  <span>{item.label}</span>
+                </motion.button>
+              );
+            })}
           </div>
 
           {/* Optimized Action Buttons */}
@@ -179,20 +199,28 @@ const Navigation = React.memo(function Navigation() {
               className='md:hidden border-t border-gray-200/20 bg-white/90 backdrop-blur-sm'
             >
               <div className='py-4 space-y-2'>
-                {navigationItems.map((item, index) => (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    onClick={() => setIsMenuOpen(false)}
-                    className='flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-secondary-600 hover:bg-secondary-50 rounded-xl transition-all duration-200'
-                  >
-                    <item.icon size={18} />
-                    <span className='font-medium'>{item.label}</span>
-                  </motion.a>
-                ))}
+                {navigationItems.map((item, index) => {
+                  const sectionId = item.href.replace('#', '');
+                  const isActive = currentSection === sectionId;
+                  
+                  return (
+                    <motion.button
+                      key={item.href}
+                      onClick={(e) => handleNavClick(e, item.href)}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 w-full text-left ${
+                        isActive
+                          ? 'bg-secondary-100 text-secondary-700 shadow-sm'
+                          : 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                      }`}
+                    >
+                      <item.icon size={18} />
+                      <span className='font-medium'>{item.label}</span>
+                    </motion.button>
+                  );
+                })}
               </div>
             </motion.div>
           )}
