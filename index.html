@@ -15,20 +15,6 @@
     <meta name="author" content="Aswin" />
     <link rel="canonical" href="https://www.aswinlocal.in/" />
 
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#667eea" />
-    <meta name="background-color" content="#ffffff" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Aswin Portfolio" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="msapplication-TileColor" content="#667eea" />
-    <meta name="msapplication-tap-highlight" content="no" />
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" />
-
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
       {
@@ -95,10 +81,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
-
-    <!-- Additional PWA Icons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
-    <link rel="mask-icon" href="/favicon.svg" color="#667eea" />
     <style>
       /* Loading animation */
       .loading {
@@ -310,6 +292,35 @@
         max-height: calc(100vh - 120px);
       "
     >
+      <!-- Close Button -->
+      <button
+        id="closeChatBtn"
+        style="
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          width: 32px;
+          height: 32px;
+          border: none;
+          background: rgba(0, 0, 0, 0.7);
+          color: white;
+          border-radius: 50%;
+          cursor: pointer;
+          font-size: 18px;
+          font-weight: 300;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10001;
+          transition: all 0.2s ease;
+          line-height: 1;
+          padding: 0;
+        "
+        title="Close chat"
+        aria-label="Close chat modal"
+      >
+        ×
+      </button>
       <iframe
         src="https://chat.aswinlocal.in/"
         style="width: 100%; height: 100%; border: none"
@@ -428,6 +439,7 @@
       const openChatBtn = document.getElementById('openChat');
       const chatModal = document.getElementById('chatModal');
       const chatModalOverlay = document.getElementById('chatModalOverlay');
+      const closeChatBtn = document.getElementById('closeChatBtn');
 
       function openChat() {
         chatModalOverlay.style.display = 'block';
@@ -443,6 +455,23 @@
         e.stopPropagation();
         openChat();
       };
+
+      // Close button click handler
+      closeChatBtn.onclick = function (e) {
+        e.stopPropagation();
+        closeChat();
+      };
+
+      // Close button hover effects
+      closeChatBtn.addEventListener('mouseenter', function () {
+        this.style.background = 'rgba(0, 0, 0, 0.9)';
+        this.style.transform = 'scale(1.1)';
+      });
+
+      closeChatBtn.addEventListener('mouseleave', function () {
+        this.style.background = 'rgba(0, 0, 0, 0.7)';
+        this.style.transform = 'scale(1)';
+      });
 
       // Add dynamic hover effects (desktop only)
       if (!('ontouchstart' in window)) {

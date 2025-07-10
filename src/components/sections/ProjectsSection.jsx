@@ -16,14 +16,17 @@ import {
   ExternalLink,
   ChevronDown,
   Circle,
+  Github,
 } from 'lucide-react';
 import { featuredProjects, allProjects } from '../../data/projects.jsx';
+import { useMicroInteractions } from '../../utils/microInteractions';
 
 // Projects Section Component
 const ProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [showMoreProjects, setShowMoreProjects] = useState(false);
   const [hoveredProject, setHoveredProject] = useState(null);
+  const { variants } = useMicroInteractions();
 
   const id = useId();
   const projectsSectionListId = `projects-list-${id}`;
@@ -71,12 +74,13 @@ const ProjectsSection = () => {
               initial={{ opacity: 0, y: 60 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
+              whileHover={variants.cardHover}
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
               className='group relative'
             >
               {/* Optimized Glassmorphism Card */}
-              <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/30 shadow-xl hover:shadow-2xl transition-shadow duration-300 overflow-hidden'>
+              <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden'>
                 {/* Optimized Background Gradient */}
                 <div className='absolute inset-0 bg-gradient-to-br from-secondary-500/3 via-accent-500/3 to-emerald-500/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
@@ -98,7 +102,7 @@ const ProjectsSection = () => {
                       </motion.div>
                     </div>
 
-                    <h3 className='text-3xl lg:text-4xl font-black text-gray-900 mb-3 text-center lg:text-left group-hover:text-secondary-600 transition-colors duration-300'>
+                    <h3 className='text-2xl lg:text-3xl font-bold text-gray-900 mb-3 text-center lg:text-left group-hover:text-secondary-600 transition-colors duration-300'>
                       {project.title}
                     </h3>
 
@@ -118,16 +122,18 @@ const ProjectsSection = () => {
                         target='_blank'
                         rel='noopener noreferrer'
                         aria-label={`Visit ${project.title} project`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary-500 via-accent-500 to-secondary-600 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-shadow duration-200 group/button'
+                        whileHover={variants.buttonHover}
+                        className='relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-secondary-500 via-accent-500 to-secondary-600 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-200 group/button overflow-hidden'
                       >
-                        <ExternalLink
-                          size={20}
-                          className='mr-2 group-hover/button:rotate-6 transition-transform duration-200'
-                        />
+                        <motion.div whileHover={variants.iconHover} className='mr-2'>
+                          <ExternalLink size={20} />
+                        </motion.div>
                         View Project
-                        <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-200'></div>
+                        <motion.div
+                          className='absolute inset-0 bg-white/10 rounded-2xl opacity-0'
+                          whileHover={{ opacity: 1 }}
+                          transition={{ duration: 0.2 }}
+                        />
                       </motion.a>
                     </div>
                   </div>
@@ -209,7 +215,6 @@ const ProjectsSection = () => {
             aria-expanded={showMoreProjects}
             aria-controls={projectsSectionListId}
             whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
             className='inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-secondary-500 to-accent-500 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-shadow duration-200 group/btn'
           >
             {showMoreProjects ? 'View Less Projects' : 'View More Projects'}

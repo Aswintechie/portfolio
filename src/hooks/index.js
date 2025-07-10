@@ -2,9 +2,9 @@
  * @file index.js
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Centralized export for all custom hooks
+ * @description Central export file for custom React hooks
  */
 
 export { useExperienceCalculator } from './useExperienceCalculator.js';
 export { useThrottledScroll } from './useThrottledScroll.js';
-export { useTheme } from './useTheme.js';
+export { use3DTilt, with3DTilt, tiltPresets } from './use3DTilt.jsx';

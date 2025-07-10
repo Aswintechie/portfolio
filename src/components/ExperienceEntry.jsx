@@ -2,14 +2,14 @@
  * @file ExperienceEntry.jsx
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Experience entry component with company-specific theming and animations
+ * @description Individual experience entry component with timeline design and company branding
  */
 
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, Building, Zap, Code, Cpu } from 'lucide-react';
 import PropTypes from 'prop-types';
-import { LogoImage } from './OptimizedImage.jsx';
+import { use3DTilt, tiltPresets } from '../hooks/use3DTilt.jsx';
 
 // Experience Entry Component
 function ExperienceEntryComponent({
@@ -68,6 +68,7 @@ function ExperienceEntryComponent({
   );
 
   const theme = React.useMemo(() => getCompanyTheme(company), [company, getCompanyTheme]);
+  const { elementRef, tiltStyle, glareElementStyle } = use3DTilt(tiltPresets.subtle);
 
   return (
     <motion.div
@@ -84,13 +85,12 @@ function ExperienceEntryComponent({
 
       {/* Enhanced card with company-specific styling - Mobile responsive margins */}
       <motion.div
-        whileHover={{
-          scale: 1.01,
-          y: -3,
-          transition: { duration: 0.2, ease: 'easeOut' },
-        }}
+        ref={elementRef}
+        style={tiltStyle}
         className={`ml-12 md:ml-20 bg-white rounded-2xl p-6 md:p-8 shadow-lg ${theme.hoverShadow} hover:shadow-xl transition-shadow duration-300 border ${theme.borderColor} overflow-hidden relative group`}
       >
+        {/* 3D Tilt Glare Effect */}
+        <div style={glareElementStyle} />
         {/* Simplified background gradient overlay */}
         <div
           className={`absolute inset-0 bg-gradient-to-br ${theme.bgGradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}
@@ -123,9 +123,12 @@ function ExperienceEntryComponent({
               }}
               className='flex-shrink-0'
             >
-              <LogoImage
+              <img
                 src={logo}
                 alt={`Company logo for ${company}`}
+                width={56}
+                height={56}
+                loading='lazy'
                 className='w-14 h-14 object-contain rounded-xl shadow-md bg-white p-2'
               />
             </motion.div>

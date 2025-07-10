@@ -9,6 +9,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Mail, MapPin, Briefcase } from 'lucide-react';
+import { useMicroInteractions } from '../../utils/microInteractions';
+import { use3DTilt, tiltPresets } from '../../hooks/use3DTilt.jsx';
 
 // Contact Section Component
 const ContactSection = () => {
@@ -20,6 +22,7 @@ const ContactSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', null
+  const { variants } = useMicroInteractions();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -171,44 +174,62 @@ const ContactSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className='space-y-6 lg:space-y-8 order-2 lg:order-1'
           >
-            {contactInfo.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
-              >
-                {/* Background gradient */}
-                <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 to-green-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+            {contactInfo.map((item, index) => {
+              const ContactCard = () => {
+                const { elementRef, tiltStyle, glareElementStyle } = use3DTilt(
+                  tiltPresets.moderate
+                );
 
-                {/* Icon */}
-                <div className='flex items-start space-x-4'>
-                  <div className='flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-500'>
-                    {item.icon}
-                  </div>
-                  <div className='relative z-10'>
-                    <h3 className='text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300'>
-                      {item.title}
-                    </h3>
-                    {item.link ? (
-                      <a
-                        href={item.link}
-                        className='text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium'
+                return (
+                  <motion.div
+                    key={index}
+                    ref={elementRef}
+                    style={tiltStyle}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                    className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
+                  >
+                    {/* 3D Tilt Glare Effect */}
+                    <div style={glareElementStyle} />
+                    {/* Background gradient */}
+                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 to-green-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+
+                    {/* Icon */}
+                    <div className='flex items-start space-x-4'>
+                      <motion.div
+                        className='flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500'
+                        whileHover={variants.iconHover}
+                        whileTap={variants.iconTap}
                       >
-                        {item.content}
-                      </a>
-                    ) : (
-                      <p className='text-gray-600 font-medium'>{item.content}</p>
-                    )}
-                  </div>
-                </div>
+                        {item.icon}
+                      </motion.div>
+                      <div className='relative z-10'>
+                        <h3 className='text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300'>
+                          {item.title}
+                        </h3>
+                        {item.link ? (
+                          <a
+                            href={item.link}
+                            className='text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium'
+                          >
+                            {item.content}
+                          </a>
+                        ) : (
+                          <p className='text-gray-600 font-medium'>{item.content}</p>
+                        )}
+                      </div>
+                    </div>
 
-                {/* Decorative elements */}
-                <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
-                <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
-              </motion.div>
-            ))}
+                    {/* Decorative elements */}
+                    <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                    <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                  </motion.div>
+                );
+              };
+
+              return <ContactCard key={index} />;
+            })}
           </motion.div>
 
           {/* Modern Contact Form */}

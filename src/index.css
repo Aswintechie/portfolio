@@ -1,74 +1,36 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Dark mode CSS variables */
-:root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --border-primary: #e5e7eb;
-  --shadow-primary: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+/* Re-enable the HTML chat button (restored to previous working state) */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
-[data-theme='dark'] {
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --border-primary: #374151;
-  --shadow-primary: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+/* Focus styles for better accessibility */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
-/* Global theme transition */
-* {
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Define utility classes for consistent styling */
-@layer utilities {
-  .section-padding {
-    @apply py-16 lg:py-24;
-  }
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
 
-  .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+}
 
-  .text-gradient {
-    @apply bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent;
-  }
-
-  .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
-  }
-
-  .glass-dark {
-    @apply dark:bg-gray-900/10 dark:backdrop-blur-md dark:border-gray-700/20;
-  }
-
-  .btn-primary {
-    @apply bg-gradient-to-r from-secondary-500 to-accent-500 text-white px-6 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg;
-  }
-
-  .btn-secondary {
-    @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-6 py-3 rounded-full font-medium border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:scale-105 hover:shadow-lg;
-  }
-
-  .card {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-xl;
-  }
-
-  .theme-transition {
-    @apply transition-all duration-300 ease-in-out;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #2563eb, #7c3aed);
 }
 
 @layer base {
@@ -86,15 +48,13 @@
   }
 
   body {
-    @apply font-sans text-gray-900 dark:text-gray-100 antialiased theme-transition;
+    @apply font-sans text-gray-900 antialiased;
     overflow-x: hidden;
     min-height: 100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
     position: relative;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
   }
 
   #root {
@@ -140,54 +100,106 @@
     }
   }
 
-  /* Custom scrollbar with dark mode support */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    background: #f1f1f1;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gradient-to-b from-purple-400 to-pink-400 dark:from-purple-500 dark:to-pink-500 rounded;
+    background: linear-gradient(to bottom, #a78bfa, #e879f9);
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600;
-  }
-
-  /* Dark mode scrollbar for Firefox */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: rgb(168 85 247) rgb(243 244 246);
-  }
-
-  .dark * {
-    scrollbar-color: rgb(147 51 234) rgb(31 41 55);
-  }
-
-  /* Selection colors */
-  ::selection {
-    @apply bg-secondary-200 text-secondary-900;
-  }
-
-  .dark ::selection {
-    @apply bg-secondary-800 text-secondary-100;
-  }
-
-  /* Focus styles */
-  *:focus {
-    outline: 2px solid theme('colors.blue.500');
-    outline-offset: 2px;
-  }
-
-  .dark *:focus {
-    outline-color: theme('colors.blue.400');
+    background: linear-gradient(to bottom, #8b5cf6, #d946ef);
   }
 }
 
-/* Animation classes */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-base transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-secondary-600 to-accent-600 text-white hover:from-secondary-700 hover:to-accent-700 shadow-lg hover:shadow-xl focus:ring-secondary-500;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-secondary-600 border-2 border-secondary-600 hover:bg-secondary-50 shadow-md hover:shadow-lg focus:ring-secondary-500;
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-white border-2 border-white/30 hover:bg-white/10 hover:border-white/50 backdrop-blur-sm;
+  }
+
+  .section-padding {
+    @apply py-20 lg:py-32;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+  }
+
+  .navbar-glass {
+    @apply bg-white/95 backdrop-blur-lg border-b border-gray-200/50;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+}
+
+/* Loading animation for images */
+.image-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Intersection Observer fade-in animation */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -227,22 +239,6 @@
   transform: translateX(0);
 }
 
-/* Dark mode specific animations */
-@keyframes fadeInDark {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.dark .fade-in {
-  animation: fadeInDark 0.6s ease-out;
-}
-
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .section-padding {
@@ -278,7 +274,7 @@
 
   /* Better mobile navigation */
   .mobile-nav {
-    @apply fixed inset-0 bg-white dark:bg-gray-900 z-50;
+    @apply fixed inset-0 bg-white z-50;
   }
 
   /* Mobile hero section fixes */
@@ -300,46 +296,60 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding: 1rem;
   }
 
-  /* Fix hero buttons for mobile */
+  /* Mobile button spacing - keep side by side */
   .hero-buttons {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0.75rem !important;
-    width: 100% !important;
-    max-width: 280px !important;
-    margin: 0 auto !important;
+    gap: 0.5rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .hero-buttons a,
   .hero-buttons button {
-    width: 100% !important;
-    max-width: 100% !important;
-    text-align: center !important;
-    justify-content: center !important;
-    white-space: nowrap !important;
+    flex: 1;
+    max-width: 140px;
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    justify-content: center;
   }
 
-  /* Adjust hero social links */
-  #home .flex.items-center.gap-4 {
-    gap: 1rem !important;
-    margin-bottom: 1.5rem !important;
+  /* Reduce mobile spacing for better fit */
+  #home h1 {
+    margin-bottom: 0.5rem !important;
   }
 
-  /* Dark mode specific mobile adjustments */
-  .dark .hero-content {
-    @apply bg-gray-900/50 backdrop-blur-sm rounded-lg;
+  #home .text-xl {
+    margin-bottom: 0.5rem !important;
   }
 
-  .dark .mobile-nav {
-    @apply border-gray-700;
+  #home p {
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* Reduce social links spacing */
+  #home .mb-8 {
+    margin-bottom: 0.25rem !important; /* Almost no gap between social links and scroll indicator */
+  }
+
+  /* Reduce buttons spacing */
+  #home .hero-buttons {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Ensure gradient backgrounds are contained within hero section */
+  #home .absolute.inset-0 {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    overflow: hidden !important;
   }
 }
 
-/* Desktop optimizations */
+/* Desktop hero section - restore original behavior */
 @media (min-width: 769px) {
   #home {
     min-height: 100vh !important;
@@ -374,18 +384,13 @@
     margin-bottom: 4rem !important;
   }
 
-  /* Dark mode desktop optimizations */
-  .dark .hero-content {
-    @apply bg-transparent backdrop-blur-none rounded-none;
-  }
-}
-
-/* Optimize animations for mobile performance */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  /* Optimize animations for mobile performance */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -415,50 +420,5 @@ body,
   .App {
     width: 100vw !important;
     overflow-x: hidden !important;
-  }
-}
-
-/* Dark mode loading screen */
-.dark .loading {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-}
-
-/* Dark mode form styles */
-.dark input,
-.dark textarea,
-.dark select {
-  @apply bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-400;
-}
-
-.dark input:focus,
-.dark textarea:focus,
-.dark select:focus {
-  @apply border-blue-500 ring-blue-500;
-}
-
-/* Dark mode button styles */
-.dark .btn-primary:hover {
-  @apply shadow-blue-500/25;
-}
-
-.dark .btn-secondary:hover {
-  @apply shadow-gray-700/25;
-}
-
-/* Print styles */
-@media print {
-  * {
-    background: white !important;
-    color: black !important;
-  }
-
-  .dark * {
-    background: white !important;
-    color: black !important;
-  }
-
-  nav,
-  .no-print {
-    display: none !important;
   }
 }
