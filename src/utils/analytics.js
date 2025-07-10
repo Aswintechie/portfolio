@@ -6,19 +6,11 @@
  */
 
 // Google Analytics configuration
-const GA_TRACKING_ID = import.meta.env.VITE_GA_TRACKING_ID;
-
-// Ensure a valid tracking ID is set in production
-if (
-  import.meta.env.MODE === 'production' &&
-  (!GA_TRACKING_ID || GA_TRACKING_ID === 'G-XXXXXXXXXX')
-) {
-  throw new Error('Google Analytics tracking ID is missing or invalid in production.');
-}
+const GA_TRACKING_ID = import.meta.env.VITE_GA_TRACKING_ID || 'G-LH6QJZSFJR';
 
 // Initialize Google Analytics
 export const initGA = () => {
-  if (typeof window !== 'undefined' && GA_TRACKING_ID !== 'G-XXXXXXXXXX') {
+  if (typeof window !== 'undefined' && GA_TRACKING_ID) {
     // Load Google Analytics script
     const script = document.createElement('script');
     script.async = true;
