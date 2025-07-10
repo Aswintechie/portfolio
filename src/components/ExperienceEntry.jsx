@@ -80,7 +80,8 @@ function ExperienceEntryComponent({
       {/* Enhanced Timeline dot with company theme - Hidden on mobile, visible on desktop */}
       <div
         aria-hidden='true'
-        className={`hidden md:block absolute left-6 top-8 w-5 h-5 ${theme.timelineColor} rounded-full border-4 border-white shadow-lg z-10`}
+        className={`hidden md:block absolute top-8 w-5 h-5 ${theme.timelineColor} rounded-full border-4 border-white shadow-lg z-10`}
+        style={{ left: '15px' }}
       ></div>
 
       {/* Enhanced card with company-specific styling - Full width on mobile, left margin on desktop */}
