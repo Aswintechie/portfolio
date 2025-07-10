@@ -2,13 +2,14 @@
  * @file ExperienceEntry.jsx
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Experience entry component with company-specific theming and animations
+ * @description Individual experience entry component with timeline design and company branding
  */
 
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, Building, Zap, Code, Cpu } from 'lucide-react';
 import PropTypes from 'prop-types';
+import { use3DTilt, tiltPresets } from '../hooks/use3DTilt.jsx';
 
 // Experience Entry Component
 function ExperienceEntryComponent({
@@ -67,29 +68,30 @@ function ExperienceEntryComponent({
   );
 
   const theme = React.useMemo(() => getCompanyTheme(company), [company, getCompanyTheme]);
+  const { elementRef, tiltStyle, glareElementStyle } = use3DTilt(tiltPresets.subtle);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay }}
-      className='relative mb-12'
+      className='relative mb-8 md:mb-12'
     >
-      {/* Enhanced Timeline dot with company theme - Mobile responsive positioning */}
+      {/* Enhanced Timeline dot with company theme - Hidden on mobile, visible on desktop */}
       <div
         aria-hidden='true'
-        className={`absolute left-3 md:left-6 top-8 w-4 h-4 md:w-5 md:h-5 ${theme.timelineColor} rounded-full border-3 md:border-4 border-white shadow-lg z-10`}
+        className={`hidden md:block absolute top-8 w-5 h-5 ${theme.timelineColor} rounded-full border-4 border-white shadow-lg z-10`}
+        style={{ left: '15px' }}
       ></div>
 
-      {/* Enhanced card with company-specific styling - Mobile responsive margins */}
+      {/* Enhanced card with company-specific styling - Full width on mobile, left margin on desktop */}
       <motion.div
-        whileHover={{
-          scale: 1.01,
-          y: -3,
-          transition: { duration: 0.2, ease: 'easeOut' },
-        }}
-        className={`ml-12 md:ml-20 bg-white rounded-2xl p-6 md:p-8 shadow-lg ${theme.hoverShadow} hover:shadow-xl transition-shadow duration-300 border ${theme.borderColor} overflow-hidden relative group`}
+        ref={elementRef}
+        style={tiltStyle}
+        className={`md:ml-20 bg-white rounded-2xl p-6 md:p-8 shadow-lg ${theme.hoverShadow} hover:shadow-xl transition-shadow duration-300 border ${theme.borderColor} overflow-hidden relative group`}
       >
+        {/* 3D Tilt Glare Effect */}
+        <div style={glareElementStyle} />
         {/* Simplified background gradient overlay */}
         <div
           className={`absolute inset-0 bg-gradient-to-br ${theme.bgGradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}
@@ -113,14 +115,14 @@ function ExperienceEntryComponent({
             <span>{period}</span>
           </div>
 
-          {/* Company header with logo and info */}
-          <div className='flex items-start gap-4 mb-6'>
+          {/* Company header with logo and info - Better mobile layout */}
+          <div className='flex flex-col sm:flex-row items-start gap-4 mb-6'>
             <motion.div
               whileHover={{
                 scale: 1.05,
                 transition: { duration: 0.2, ease: 'easeOut' },
               }}
-              className='flex-shrink-0'
+              className='flex-shrink-0 self-center sm:self-start'
             >
               <img
                 src={logo}
@@ -132,32 +134,34 @@ function ExperienceEntryComponent({
               />
             </motion.div>
 
-            <div className='flex-1'>
-              <h3 className='text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-200'>
+            <div className='flex-1 text-center sm:text-left'>
+              <h3 className='text-xl sm:text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-200'>
                 {title}
               </h3>
               <h4 className={`text-lg font-semibold mb-2 ${theme.accentColor}`}>{company}</h4>
               {location && (
-                <div className='flex items-center gap-2 text-sm text-gray-500'>
+                <div className='flex items-center justify-center sm:justify-start gap-2 text-sm text-gray-500'>
                   <MapPin size={14} />
                   <span>{location}</span>
                 </div>
               )}
             </div>
 
-            {/* Company theme icon */}
+            {/* Company theme icon - Better mobile positioning */}
             <div
-              className={`p-3 rounded-xl bg-gradient-to-br ${theme.gradient} text-white shadow-lg`}
+              className={`p-3 rounded-xl bg-gradient-to-br ${theme.gradient} text-white shadow-lg self-center sm:self-start`}
             >
               {theme.icon}
             </div>
           </div>
 
           {/* Description with better typography */}
-          <p className='text-gray-700 leading-relaxed mb-6 text-lg'>{description}</p>
+          <p className='text-gray-700 leading-relaxed mb-6 text-base sm:text-lg text-center sm:text-left'>
+            {description}
+          </p>
 
-          {/* Experience badge with theme colors */}
-          <div className='flex items-center justify-between'>
+          {/* Experience badge with theme colors - Centered on mobile */}
+          <div className='flex flex-col sm:flex-row items-center sm:justify-between gap-4'>
             <div
               className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${theme.gradient} text-white rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow duration-200`}
             >

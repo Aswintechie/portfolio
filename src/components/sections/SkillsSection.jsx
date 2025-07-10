@@ -46,8 +46,32 @@ const SkillsSection = () => {
   ];
 
   return (
-    <section id='skills' className='section-padding bg-white'>
-      <div className='container-custom'>
+    <section id='skills' className='section-padding bg-white relative overflow-hidden'>
+      {/* Enhanced Background Effects */}
+      <div className='absolute inset-0 bg-gradient-to-br from-white via-purple-50/50 to-pink-50/50'></div>
+      <div className='absolute top-0 left-0 w-full h-full'>
+        <div className='absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-purple-400/12 to-pink-400/12 rounded-full blur-3xl'></div>
+        <div className='absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-pink-400/10 to-purple-400/10 rounded-full blur-3xl'></div>
+        <div className='absolute top-1/2 right-1/3 w-48 h-48 bg-gradient-to-br from-purple-400/8 to-pink-400/8 rounded-full blur-2xl'></div>
+        <div className='absolute bottom-1/3 left-1/4 w-36 h-36 bg-gradient-to-br from-pink-300/6 to-purple-300/6 rounded-full blur-xl'></div>
+      </div>
+
+      {/* More Prominent Floating Elements */}
+      <div className='absolute inset-0 pointer-events-none'>
+        <div className='absolute top-16 left-16 w-12 h-12 border-2 border-purple-200/40 rounded-lg opacity-50 rotate-45'></div>
+        <div className='absolute bottom-20 right-24 w-10 h-10 bg-pink-200/35 rounded-full opacity-60'></div>
+        <div className='absolute top-1/4 left-1/4 w-8 h-8 border border-pink-200/30 rounded-full opacity-55'></div>
+        <div className='absolute bottom-1/3 right-1/3 w-6 h-6 bg-purple-200/40 rounded-full opacity-60'></div>
+        <div className='absolute top-1/3 right-1/4 w-14 h-14 border border-purple-200/25 rounded-lg opacity-45 rotate-12'></div>
+      </div>
+
+      {/* Additional Mesh Pattern */}
+      <div className='absolute inset-0 opacity-25'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(168,85,247,0.08)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(236,72,153,0.06)_0%,transparent_50%)]'></div>
+      </div>
+
+      <div className='container-custom relative z-10'>
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -59,7 +83,7 @@ const SkillsSection = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className='inline-flex items-center space-x-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full px-6 py-3 mb-6'
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-purple-200/30'
           >
             <Sparkles size={16} className='text-purple-500' />
             <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>

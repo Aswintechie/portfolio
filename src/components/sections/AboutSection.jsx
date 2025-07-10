@@ -40,9 +40,33 @@ const AboutSection = React.memo(() => {
   return (
     <section
       id='about'
-      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50'
+      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50 relative overflow-hidden'
     >
-      <div className='container-custom'>
+      {/* Enhanced Background Effects */}
+      <div className='absolute top-0 left-0 w-full h-full'>
+        <div className='absolute top-24 left-24 w-80 h-80 bg-gradient-to-br from-blue-400/12 to-cyan-400/12 rounded-full blur-3xl'></div>
+        <div className='absolute bottom-24 right-24 w-72 h-72 bg-gradient-to-br from-cyan-400/10 to-blue-400/10 rounded-full blur-3xl'></div>
+        <div className='absolute top-1/3 right-1/4 w-56 h-56 bg-gradient-to-br from-blue-400/8 to-cyan-400/8 rounded-full blur-2xl'></div>
+        <div className='absolute bottom-1/4 left-1/3 w-40 h-40 bg-gradient-to-br from-cyan-300/6 to-blue-300/6 rounded-full blur-xl'></div>
+      </div>
+
+      {/* More Prominent Floating Elements */}
+      <div className='absolute inset-0 pointer-events-none'>
+        <div className='absolute top-20 right-32 w-16 h-16 border-2 border-blue-200/40 rounded-full opacity-50'></div>
+        <div className='absolute bottom-32 left-20 w-12 h-12 bg-cyan-200/35 rounded-lg opacity-60 rotate-12'></div>
+        <div className='absolute top-1/4 left-1/3 w-8 h-8 border border-cyan-200/30 rounded-lg opacity-55 rotate-45'></div>
+        <div className='absolute bottom-1/4 right-1/3 w-10 h-10 bg-blue-200/30 rounded-full opacity-60'></div>
+        <div className='absolute top-1/2 left-16 w-6 h-6 bg-cyan-200/35 rounded-full opacity-55'></div>
+        <div className='absolute top-1/3 right-1/2 w-14 h-14 border border-blue-200/25 rounded-lg opacity-45 rotate-30'></div>
+      </div>
+
+      {/* Additional Mesh Pattern */}
+      <div className='absolute inset-0 opacity-25'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(59,130,246,0.08)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(34,211,238,0.06)_0%,transparent_50%)]'></div>
+      </div>
+
+      <div className='container-custom relative z-10'>
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -54,7 +78,7 @@ const AboutSection = React.memo(() => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className='inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6'
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-blue-200/30'
           >
             <Circle size={8} className='text-blue-500 fill-current' />
             <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>

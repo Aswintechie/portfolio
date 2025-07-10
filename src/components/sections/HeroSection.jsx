@@ -5,16 +5,20 @@
  * @description Modern hero section component with animated background and interactive elements
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Sparkles, Star } from 'lucide-react';
 import { useExperienceCalculator, useThrottledScroll } from '../../hooks';
 import { AnimatedParticles, FloatingElements } from '../background';
+import { useMicroInteractions } from '../../utils/microInteractions';
 
 // Modern Hero Section Component
 const HeroSection = React.memo(function HeroSection() {
   const experience = useExperienceCalculator();
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const { createRipple, variants } = useMicroInteractions();
+  const contactButtonRef = useRef(null);
+  const workButtonRef = useRef(null);
 
   // Optimized scroll handler with throttling
   const handleScrollIndicator = React.useCallback(() => {
@@ -23,6 +27,19 @@ const HeroSection = React.memo(function HeroSection() {
   }, []);
 
   useThrottledScroll(handleScrollIndicator);
+
+  // Handle button clicks with ripple effect
+  const handleContactClick = e => {
+    if (contactButtonRef.current) {
+      createRipple(e, contactButtonRef.current);
+    }
+  };
+
+  const handleWorkClick = e => {
+    if (workButtonRef.current) {
+      createRipple(e, workButtonRef.current);
+    }
+  };
 
   return (
     <section
@@ -147,14 +164,19 @@ const HeroSection = React.memo(function HeroSection() {
               transition={{ delay: 0.8 }}
             >
               <motion.a
+                ref={contactButtonRef}
                 href='#contact'
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                onClick={handleContactClick}
+                whileHover={variants.buttonHover}
+                whileTap={variants.buttonTap}
                 className='group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-pink-500/25 transition-all duration-300 overflow-hidden'
                 aria-label='Navigate to contact section'
+                style={{ position: 'relative' }}
               >
                 <span className='relative z-10 flex items-center justify-center space-x-2'>
-                  <Sparkles size={20} />
+                  <motion.div whileHover={variants.iconHover} whileTap={variants.iconTap}>
+                    <Sparkles size={20} />
+                  </motion.div>
                   <span>Get In Touch</span>
                 </span>
                 <motion.div
@@ -166,14 +188,19 @@ const HeroSection = React.memo(function HeroSection() {
               </motion.a>
 
               <motion.a
+                ref={workButtonRef}
                 href='#experience'
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className='group relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
+                onClick={handleWorkClick}
+                whileHover={variants.buttonHover}
+                whileTap={variants.buttonTap}
+                className='group relative px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 overflow-hidden'
                 aria-label='Navigate to experience section'
+                style={{ position: 'relative' }}
               >
                 <span className='flex items-center justify-center space-x-2'>
-                  <Star size={20} />
+                  <motion.div whileHover={variants.iconHover} whileTap={variants.iconTap}>
+                    <Star size={20} />
+                  </motion.div>
                   <span>View My Work</span>
                 </span>
               </motion.a>
@@ -203,14 +230,25 @@ const HeroSection = React.memo(function HeroSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.0 + index * 0.1 }}
-                  whileHover={{ scale: 1.2, y: -5 }}
+                  whileHover={{
+                    scale: 1.2,
+                    y: -8,
+                    rotateY: 5,
+                    boxShadow: '0 10px 30px rgba(255, 255, 255, 0.2)',
+                  }}
+                  whileTap={{
+                    scale: 0.9,
+                    rotateY: -5,
+                  }}
                   className='group relative p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
                   aria-label={`Visit ${social.label} profile`}
                 >
-                  <social.icon
-                    size={24}
-                    className='text-white group-hover:text-pink-400 transition-colors duration-300'
-                  />
+                  <motion.div whileHover={variants.iconHover} whileTap={variants.iconTap}>
+                    <social.icon
+                      size={24}
+                      className='text-white group-hover:text-pink-400 transition-colors duration-300'
+                    />
+                  </motion.div>
                   <motion.div className='absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
                 </motion.a>
               ))}

@@ -2,18 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hide the HTML chat button since we're using the React version */
-#openChat {
-  display: none !important;
-}
-
-/* Hide the HTML chat modal elements since we're using the React version */
-#chatModal,
-#chatModalOverlay {
-  display: none !important;
-}
-
-/* Smooth scrolling */
+/* Enable smooth scrolling globally */
 html {
   scroll-behavior: smooth;
 }
@@ -51,6 +40,7 @@ html {
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Account for fixed header */
     height: 100%;
     width: 100%;
     overflow-x: hidden;
@@ -64,6 +54,7 @@ html {
     margin: 0;
     padding: 0;
     position: relative;
+    scroll-behavior: smooth;
   }
 
   #root {
@@ -284,6 +275,15 @@ html {
   /* Better mobile navigation */
   .mobile-nav {
     @apply fixed inset-0 bg-white z-50;
+  }
+
+  /* Mobile experience section improvements */
+  #experience .container-custom {
+    @apply px-3;
+  }
+
+  #experience .max-w-4xl {
+    @apply max-w-full;
   }
 
   /* Mobile hero section fixes */

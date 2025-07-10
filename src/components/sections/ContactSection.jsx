@@ -9,6 +9,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Mail, MapPin, Briefcase } from 'lucide-react';
+import { useMicroInteractions } from '../../utils/microInteractions';
+import { use3DTilt, tiltPresets } from '../../hooks/use3DTilt.jsx';
 
 // Contact Section Component
 const ContactSection = () => {
@@ -20,6 +22,7 @@ const ContactSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', null
+  const { variants } = useMicroInteractions();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -106,9 +109,33 @@ const ContactSection = () => {
   return (
     <section
       id='contact'
-      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50'
+      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50 relative overflow-hidden'
     >
-      <div className='container-custom'>
+      {/* Enhanced Background Effects */}
+      <div className='absolute top-0 left-0 w-full h-full'>
+        <div className='absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-green-400/12 to-blue-400/12 rounded-full blur-3xl'></div>
+        <div className='absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-green-400/10 rounded-full blur-3xl'></div>
+        <div className='absolute top-1/2 right-1/3 w-48 h-48 bg-gradient-to-br from-green-400/8 to-blue-400/8 rounded-full blur-2xl'></div>
+        <div className='absolute bottom-1/3 left-1/4 w-36 h-36 bg-gradient-to-br from-blue-300/6 to-green-300/6 rounded-full blur-xl'></div>
+      </div>
+
+      {/* More Prominent Floating Elements */}
+      <div className='absolute inset-0 pointer-events-none'>
+        <div className='absolute top-16 left-16 w-12 h-12 border-2 border-green-200/40 rounded-full opacity-55'></div>
+        <div className='absolute bottom-24 right-32 w-16 h-16 bg-blue-200/35 rounded-lg opacity-60 rotate-12'></div>
+        <div className='absolute top-1/3 right-1/4 w-8 h-8 border border-blue-200/35 rounded-lg opacity-55 rotate-45'></div>
+        <div className='absolute bottom-1/3 left-1/4 w-10 h-10 bg-green-200/30 rounded-full opacity-60'></div>
+        <div className='absolute top-1/4 left-1/3 w-6 h-6 bg-blue-200/40 rounded-full opacity-55'></div>
+        <div className='absolute bottom-1/4 right-1/3 w-14 h-14 border border-green-200/25 rounded-lg opacity-45 rotate-30'></div>
+      </div>
+
+      {/* Additional Mesh Pattern */}
+      <div className='absolute inset-0 opacity-25'>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_25%_35%,rgba(34,197,94,0.08)_0%,transparent_50%)]'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_75%_65%,rgba(59,130,246,0.06)_0%,transparent_50%)]'></div>
+      </div>
+
+      <div className='container-custom relative z-10'>
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -120,7 +147,7 @@ const ContactSection = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className='inline-flex items-center space-x-2 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-full px-6 py-3 mb-6'
+            className='inline-flex items-center space-x-2 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-green-200/30'
           >
             <Mail size={16} className='text-green-500' />
             <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
@@ -147,44 +174,62 @@ const ContactSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className='space-y-6 lg:space-y-8 order-2 lg:order-1'
           >
-            {contactInfo.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
-              >
-                {/* Background gradient */}
-                <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 to-green-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+            {contactInfo.map((item, index) => {
+              const ContactCard = () => {
+                const { elementRef, tiltStyle, glareElementStyle } = use3DTilt(
+                  tiltPresets.moderate
+                );
 
-                {/* Icon */}
-                <div className='flex items-start space-x-4'>
-                  <div className='flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-500'>
-                    {item.icon}
-                  </div>
-                  <div className='relative z-10'>
-                    <h3 className='text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300'>
-                      {item.title}
-                    </h3>
-                    {item.link ? (
-                      <a
-                        href={item.link}
-                        className='text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium'
+                return (
+                  <motion.div
+                    key={index}
+                    ref={elementRef}
+                    style={tiltStyle}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                    className='group relative bg-white/70 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 overflow-hidden'
+                  >
+                    {/* 3D Tilt Glare Effect */}
+                    <div style={glareElementStyle} />
+                    {/* Background gradient */}
+                    <div className='absolute inset-0 bg-gradient-to-br from-blue-50/50 to-green-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+
+                    {/* Icon */}
+                    <div className='flex items-start space-x-4'>
+                      <motion.div
+                        className='flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500'
+                        whileHover={variants.iconHover}
+                        whileTap={variants.iconTap}
                       >
-                        {item.content}
-                      </a>
-                    ) : (
-                      <p className='text-gray-600 font-medium'>{item.content}</p>
-                    )}
-                  </div>
-                </div>
+                        {item.icon}
+                      </motion.div>
+                      <div className='relative z-10'>
+                        <h3 className='text-lg font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300'>
+                          {item.title}
+                        </h3>
+                        {item.link ? (
+                          <a
+                            href={item.link}
+                            className='text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium'
+                          >
+                            {item.content}
+                          </a>
+                        ) : (
+                          <p className='text-gray-600 font-medium'>{item.content}</p>
+                        )}
+                      </div>
+                    </div>
 
-                {/* Decorative elements */}
-                <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
-                <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
-              </motion.div>
-            ))}
+                    {/* Decorative elements */}
+                    <div className='absolute top-4 right-4 w-8 h-8 border-2 border-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                    <div className='absolute bottom-4 right-4 w-4 h-4 bg-gray-200 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500'></div>
+                  </motion.div>
+                );
+              };
+
+              return <ContactCard key={index} />;
+            })}
           </motion.div>
 
           {/* Modern Contact Form */}
