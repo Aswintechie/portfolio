@@ -1,3 +1,10 @@
+/**
+ * @file ExperienceEntry.jsx
+ * @author Aswin
+ * @copyright © 2025 Aswin. All rights reserved.
+ * @description Experience entry component with company-specific theming and animations
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, Building, Zap, Code, Cpu } from 'lucide-react';
@@ -12,7 +19,7 @@ function ExperienceEntryComponent({
   logo,
   description,
   experience,
-  inView,
+  inView = false,
   delay = 0.1,
 }) {
   // Define company-specific themes
@@ -182,11 +189,6 @@ ExperienceEntry.propTypes = {
   experience: PropTypes.string.isRequired,
   inView: PropTypes.bool,
   delay: PropTypes.number,
-};
-
-ExperienceEntry.defaultProps = {
-  delay: 0.1,
-  inView: false,
 };
 
 export default ExperienceEntry;

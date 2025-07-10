@@ -1,3 +1,10 @@
+/**
+ * @file PrivacyPolicy.jsx
+ * @author Aswin
+ * @copyright © 2025 Aswin. All rights reserved.
+ * @description Privacy policy component with comprehensive data protection information
+ */
+
 import React from 'react';
 
 const PrivacyPolicy = () => (
