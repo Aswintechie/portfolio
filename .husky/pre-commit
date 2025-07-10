@@ -3,6 +3,10 @@
 
 echo "🚀 Running pre-commit checks..."
 
+# Run copyright checks
+echo "📄 Running copyright checks..."
+npm run copyright:check
+
 # Run lint-staged for staged files
 npm run pre-commit
 

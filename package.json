@@ -28,6 +28,8 @@
     "format:check": "prettier --check .",
     "security:check": "npm run security:audit",
     "security:audit": "npm audit --audit-level=moderate",
+    "copyright:check": "node scripts/copyright-check.js",
+    "copyright:check:strict": "node scripts/copyright-check.js --strict",
     "quality:check": "npm run lint && npm run format:check && npm run test:run",
     "pre-commit": "lint-staged",
     "validate": "npm run quality:check && npm run build",
