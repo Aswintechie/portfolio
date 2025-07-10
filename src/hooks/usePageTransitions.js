@@ -9,14 +9,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAnimation } from 'framer-motion';
 
 // Fast smooth scrolling function
-const smoothScrollTo = (element) => {
+const smoothScrollTo = element => {
   // Calculate target position accounting for fixed header
   const targetPosition = element.offsetTop - 80;
-  
+
   // Use native smooth scrolling for instant response
   window.scrollTo({
     top: targetPosition,
-    behavior: 'smooth'
+    behavior: 'smooth',
   });
 };
 
@@ -24,22 +24,30 @@ const smoothScrollTo = (element) => {
 export const usePageTransitions = () => {
   const [currentSection, setCurrentSection] = useState('home');
   const [scrollDirection, setScrollDirection] = useState('down');
-  const [transitionProgress, setTransitionProgress] = useState(0);
   const controls = useAnimation();
   const lastScrollY = useRef(0);
 
   // Initialize current section on mount - detect based on scroll position
   useEffect(() => {
     const detectInitialSection = () => {
-      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'personal-projects', 'technologies', 'contact'];
+      const sections = [
+        'home',
+        'about',
+        'experience',
+        'skills',
+        'projects',
+        'personal-projects',
+        'technologies',
+        'contact',
+      ];
       const currentScrollY = window.scrollY;
-      
+
       // If at the top, set to home
       if (currentScrollY < 100) {
         setCurrentSection('home');
         return;
       }
-      
+
       // Find the section that contains the current scroll position
       for (let i = 0; i < sections.length; i++) {
         const element = document.getElementById(sections[i]);
@@ -47,7 +55,7 @@ export const usePageTransitions = () => {
           const rect = element.getBoundingClientRect();
           const elementTop = rect.top + currentScrollY;
           const elementBottom = elementTop + rect.height;
-          
+
           if (currentScrollY >= elementTop - 200 && currentScrollY < elementBottom - 200) {
             setCurrentSection(sections[i]);
             return;
@@ -63,24 +71,33 @@ export const usePageTransitions = () => {
   // Track scroll direction and current section as fallback
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
           setScrollDirection(currentScrollY > lastScrollY.current ? 'down' : 'up');
           lastScrollY.current = currentScrollY;
-          
+
           // Fallback method to detect current section based on scroll position
-          const sections = ['home', 'about', 'experience', 'skills', 'projects', 'personal-projects', 'technologies', 'contact'];
-          
+          const sections = [
+            'home',
+            'about',
+            'experience',
+            'skills',
+            'projects',
+            'personal-projects',
+            'technologies',
+            'contact',
+          ];
+
           for (let i = 0; i < sections.length; i++) {
             const element = document.getElementById(sections[i]);
             if (element) {
               const rect = element.getBoundingClientRect();
               const elementTop = rect.top + currentScrollY;
               const elementBottom = elementTop + rect.height;
-              
+
               // Check if current scroll position is within this section
               // Use a larger offset for the header
               if (currentScrollY >= elementTop - 200 && currentScrollY < elementBottom - 200) {
@@ -89,7 +106,7 @@ export const usePageTransitions = () => {
               }
             }
           }
-          
+
           ticking = false;
         });
         ticking = true;
@@ -102,35 +119,44 @@ export const usePageTransitions = () => {
 
   // Track current section - improved detection
   useEffect(() => {
-    const sections = ['home', 'about', 'experience', 'skills', 'projects', 'personal-projects', 'technologies', 'contact'];
-    
+    const sections = [
+      'home',
+      'about',
+      'experience',
+      'skills',
+      'projects',
+      'personal-projects',
+      'technologies',
+      'contact',
+    ];
+
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         // Find the most visible section
         let mostVisibleSection = null;
         let maxIntersectionRatio = 0;
-        
-        entries.forEach((entry) => {
+
+        entries.forEach(entry => {
           if (entry.isIntersecting && entry.intersectionRatio > maxIntersectionRatio) {
             maxIntersectionRatio = entry.intersectionRatio;
             mostVisibleSection = entry.target.id;
           }
         });
-        
+
         // If we found a visible section, update current section
         if (mostVisibleSection) {
           setCurrentSection(mostVisibleSection);
         }
       },
-      { 
+      {
         rootMargin: '-80px 0px -80px 0px', // Account for fixed header
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
       }
     );
 
     // Wait for DOM to be ready and observe sections
     const observeSections = () => {
-      sections.forEach((sectionId) => {
+      sections.forEach(sectionId => {
         const element = document.getElementById(sectionId);
         if (element) {
           observer.observe(element);
@@ -145,12 +171,12 @@ export const usePageTransitions = () => {
   }, []);
 
   // Smooth navigation with transitions
-  const navigateToSection = useCallback((sectionId) => {
+  const navigateToSection = useCallback(sectionId => {
     const element = document.getElementById(sectionId);
     if (element) {
       // Immediately update current section for instant feedback
       setCurrentSection(sectionId);
-      
+
       // Perform smooth scroll
       smoothScrollTo(element);
     }
@@ -165,22 +191,34 @@ export const usePageTransitions = () => {
   const scrollToTop = useCallback(() => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }, []);
 
   // Get next/previous section
-  const getAdjacentSection = useCallback((direction) => {
-    const sections = ['home', 'about', 'experience', 'skills', 'projects', 'personal-projects', 'technologies', 'contact'];
-    const currentIndex = sections.indexOf(currentSection);
-    
-    if (direction === 'next' && currentIndex < sections.length - 1) {
-      return sections[currentIndex + 1];
-    } else if (direction === 'prev' && currentIndex > 0) {
-      return sections[currentIndex - 1];
-    }
-    return null;
-  }, [currentSection]);
+  const getAdjacentSection = useCallback(
+    direction => {
+      const sections = [
+        'home',
+        'about',
+        'experience',
+        'skills',
+        'projects',
+        'personal-projects',
+        'technologies',
+        'contact',
+      ];
+      const currentIndex = sections.indexOf(currentSection);
+
+      if (direction === 'next' && currentIndex < sections.length - 1) {
+        return sections[currentIndex + 1];
+      } else if (direction === 'prev' && currentIndex > 0) {
+        return sections[currentIndex - 1];
+      }
+      return null;
+    },
+    [currentSection]
+  );
 
   // Navigate to next section
   const goToNextSection = useCallback(() => {
@@ -200,7 +238,7 @@ export const usePageTransitions = () => {
 
   // Keyboard navigation (only for specific key combinations to avoid interfering with normal scrolling)
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       // Only handle keyboard navigation if Ctrl/Cmd is pressed to avoid interfering with normal scrolling
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {
@@ -232,11 +270,10 @@ export const usePageTransitions = () => {
     // State
     currentSection,
     scrollDirection,
-    transitionProgress,
-    
+
     // Controls
     controls,
-    
+
     // Functions
     navigateToSection,
     startPageLoadAnimation,
@@ -263,13 +300,13 @@ export const useScrollAnimations = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const observeSection = useCallback((sectionId) => {
+  const observeSection = useCallback(sectionId => {
     const element = document.getElementById(sectionId);
     if (!element) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             setVisibleSections(prev => new Set([...prev, sectionId]));
           }
@@ -292,16 +329,16 @@ export const useScrollAnimations = () => {
 // Hook for staggered animations
 export const useStaggeredAnimations = (itemCount, delay = 0.1) => {
   const controls = useAnimation();
-  
+
   const startStaggeredAnimation = useCallback(async () => {
-    await controls.start((i) => ({
+    await controls.start(i => ({
       opacity: 1,
       y: 0,
       transition: {
         delay: i * delay,
         duration: 0.5,
-        ease: 'easeOut'
-      }
+        ease: 'easeOut',
+      },
     }));
   }, [controls, delay]);
 
@@ -309,21 +346,21 @@ export const useStaggeredAnimations = (itemCount, delay = 0.1) => {
     await controls.start({
       opacity: 0,
       y: 20,
-      transition: { duration: 0 }
+      transition: { duration: 0 },
     });
   }, [controls]);
 
   return {
     controls,
     startStaggeredAnimation,
-    resetAnimation
+    resetAnimation,
   };
 };
 
 // Hook for page loading states
 export const usePageLoading = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingProgress, setLoadingProgress] = useState(10); // Start with some progress
   const [loadingStage, setLoadingStage] = useState('initializing');
 
   const startLoading = useCallback(() => {
@@ -340,22 +377,37 @@ export const usePageLoading = () => {
   const completeLoading = useCallback(() => {
     setLoadingProgress(100);
     setLoadingStage('complete');
-    
+
     setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 800); // Show completion animation
   }, []);
 
-  // Auto-complete loading after a timeout
+  // Simulate automatic progress and stages
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isLoading) {
-        completeLoading();
-      }
-    }, 3000);
+    if (!isLoading) return;
 
-    return () => clearTimeout(timer);
-  }, [isLoading, completeLoading]);
+    const progressSteps = [
+      { progress: 30, stage: 'initializing', delay: 300 },
+      { progress: 50, stage: 'loading assets', delay: 400 },
+      { progress: 70, stage: 'preparing interface', delay: 400 },
+      { progress: 90, stage: 'finalizing', delay: 300 },
+    ];
+
+    const timers = progressSteps.map(({ progress, stage, delay }, index) => {
+      const totalDelay = progressSteps
+        .slice(0, index + 1)
+        .reduce((sum, step) => sum + step.delay, 0);
+      return setTimeout(() => {
+        setLoadingProgress(progress);
+        setLoadingStage(stage);
+      }, totalDelay);
+    });
+
+    return () => {
+      timers.forEach(timer => clearTimeout(timer));
+    };
+  }, [isLoading]);
 
   return {
     isLoading,
@@ -363,8 +415,8 @@ export const usePageLoading = () => {
     loadingStage,
     startLoading,
     updateLoadingProgress,
-    completeLoading
+    completeLoading,
   };
 };
 
-export default usePageTransitions; 
+export default usePageTransitions;

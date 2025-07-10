@@ -5,15 +5,16 @@
  * @description Global error handler for unhandled promise rejections and uncaught errors
  */
 
+/* eslint-disable no-undef */
 import React, { useEffect } from 'react';
 
 // Global Error Handler Component
 const GlobalErrorHandler = ({ children }) => {
   useEffect(() => {
     // Handle unhandled promise rejections
-    const handleUnhandledRejection = (event) => {
+    const handleUnhandledRejection = event => {
       console.error('Unhandled Promise Rejection:', event.reason);
-      
+
       // Create error data
       const errorData = {
         type: 'unhandled_promise_rejection',
@@ -35,12 +36,12 @@ const GlobalErrorHandler = ({ children }) => {
       try {
         const errors = JSON.parse(localStorage.getItem('portfolio_errors') || '[]');
         errors.push(errorData);
-        
+
         // Keep only last 50 errors
         if (errors.length > 50) {
           errors.splice(0, errors.length - 50);
         }
-        
+
         localStorage.setItem('portfolio_errors', JSON.stringify(errors));
       } catch (e) {
         console.warn('Failed to log error to localStorage:', e);
@@ -63,9 +64,9 @@ const GlobalErrorHandler = ({ children }) => {
     };
 
     // Handle uncaught JavaScript errors
-    const handleUncaughtError = (event) => {
+    const handleUncaughtError = event => {
       console.error('Uncaught JavaScript Error:', event.error);
-      
+
       // Create error data
       const errorData = {
         type: 'uncaught_javascript_error',
@@ -91,12 +92,12 @@ const GlobalErrorHandler = ({ children }) => {
       try {
         const errors = JSON.parse(localStorage.getItem('portfolio_errors') || '[]');
         errors.push(errorData);
-        
+
         // Keep only last 50 errors
         if (errors.length > 50) {
           errors.splice(0, errors.length - 50);
         }
-        
+
         localStorage.setItem('portfolio_errors', JSON.stringify(errors));
       } catch (e) {
         console.warn('Failed to log error to localStorage:', e);
@@ -116,9 +117,9 @@ const GlobalErrorHandler = ({ children }) => {
     };
 
     // Handle resource loading errors
-    const handleResourceError = (event) => {
+    const handleResourceError = event => {
       const element = event.target;
-      
+
       if (element && element.tagName) {
         const errorData = {
           type: 'resource_loading_error',
@@ -137,12 +138,12 @@ const GlobalErrorHandler = ({ children }) => {
         try {
           const errors = JSON.parse(localStorage.getItem('portfolio_errors') || '[]');
           errors.push(errorData);
-          
+
           // Keep only last 50 errors
           if (errors.length > 50) {
             errors.splice(0, errors.length - 50);
           }
-          
+
           localStorage.setItem('portfolio_errors', JSON.stringify(errors));
         } catch (e) {
           console.warn('Failed to log error to localStorage:', e);
@@ -178,4 +179,4 @@ const GlobalErrorHandler = ({ children }) => {
   return children;
 };
 
-export default GlobalErrorHandler; 
+export default GlobalErrorHandler;
