@@ -19,17 +19,13 @@ import {
   Shield,
   ExternalLink,
   ChevronDown,
-  List,
-  Grid,
 } from 'lucide-react';
-import VirtualizedProjectList from '../VirtualizedProjectList.jsx';
 
 // Personal Projects Section Component
 const PersonalProjectsSection = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [hoveredProject, setHoveredProject] = useState(null);
   const [showAllProjects, setShowAllProjects] = useState(false);
-  const [useVirtualScrolling, setUseVirtualScrolling] = useState(false);
 
   const id = useId();
   const personalProjectsListId = `personal-projects-list-${id}`;
@@ -185,186 +181,134 @@ const PersonalProjectsSection = () => {
           </p>
         </motion.div>
 
-        {/* Virtual Scrolling Toggle */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className='flex items-center justify-center mb-8'
-        >
-          <div className='bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-white/30 shadow-lg'>
-            <div className='flex items-center space-x-4'>
-              <span className='text-sm font-medium text-gray-700'>View Mode:</span>
-              <button
-                onClick={() => setUseVirtualScrolling(false)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-200 ${
-                  !useVirtualScrolling
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'text-gray-600 hover:bg-orange-50'
-                }`}
+        <div className='grid md:grid-cols-2 gap-8' id={personalProjectsListId}>
+          {(showAllProjects ? personalProjects : personalProjects.slice(0, 2)).map(
+            (project, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className='group relative h-full'
+                onMouseEnter={() => setHoveredProject(index)}
+                onMouseLeave={() => setHoveredProject(null)}
               >
-                <Grid size={16} />
-                <span className='text-sm font-medium'>Grid</span>
-              </button>
-              <button
-                onClick={() => setUseVirtualScrolling(true)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-200 ${
-                  useVirtualScrolling
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'text-gray-600 hover:bg-orange-50'
-                }`}
-              >
-                <List size={16} />
-                <span className='text-sm font-medium'>Virtual List</span>
-              </button>
-            </div>
-            <p className='text-xs text-gray-500 mt-2 text-center'>
-              Compare grid vs virtual scrolling performance
-            </p>
-          </div>
-        </motion.div>
+                {/* Glassmorphism Card */}
+                <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col'>
+                  {/* Animated Background Gradient */}
+                  <div className='absolute inset-0 bg-gradient-to-br from-orange-500/5 via-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
-        {/* Conditional Rendering: Grid vs Virtual List */}
-        {useVirtualScrolling ? (
-          <VirtualizedProjectList
-            projects={showAllProjects ? personalProjects : personalProjects.slice(0, 2)}
-            height={800}
-            itemHeight={500}
-            className='max-w-6xl mx-auto'
-          />
-        ) : (
-          <div className='grid md:grid-cols-2 gap-8' id={personalProjectsListId}>
-            {(showAllProjects ? personalProjects : personalProjects.slice(0, 2)).map(
-              (project, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className='group relative h-full'
-                  onMouseEnter={() => setHoveredProject(index)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                >
-                  {/* Glassmorphism Card */}
-                  <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col'>
-                    {/* Animated Background Gradient */}
-                    <div className='absolute inset-0 bg-gradient-to-br from-orange-500/5 via-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+                  {/* Floating Orbs */}
+                  <div className='absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                  <div className='absolute -bottom-16 -left-16 w-24 h-24 bg-gradient-to-br from-red-400/20 to-orange-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700'></div>
 
-                    {/* Floating Orbs */}
-                    <div className='absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-                    <div className='absolute -bottom-16 -left-16 w-24 h-24 bg-gradient-to-br from-red-400/20 to-orange-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700'></div>
-
-                    {/* Project Header */}
-                    <div className='flex items-start justify-between mb-6 relative z-10'>
-                      <motion.div
-                        animate={hoveredProject === index ? { scale: 1.02 } : { scale: 1 }}
-                        transition={{ duration: 0.2 }}
-                        className='relative p-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl text-white shadow-lg'
-                      >
-                        {project.icon}
-                        <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
-                      </motion.div>
-                      <div className='flex flex-col items-end space-y-2'>
-                        <span className='px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full border border-green-200'>
-                          {project.status}
-                        </span>
-                        <span className='px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full border border-gray-200'>
-                          {project.access}
-                        </span>
-                      </div>
+                  {/* Project Header */}
+                  <div className='flex items-start justify-between mb-6 relative z-10'>
+                    <motion.div
+                      animate={hoveredProject === index ? { scale: 1.02 } : { scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                      className='relative p-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl text-white shadow-lg'
+                    >
+                      {project.icon}
+                      <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
+                    </motion.div>
+                    <div className='flex flex-col items-end space-y-2'>
+                      <span className='px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full border border-green-200'>
+                        {project.status}
+                      </span>
+                      <span className='px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full border border-gray-200'>
+                        {project.access}
+                      </span>
                     </div>
+                  </div>
 
-                    {/* Project Title and Domain */}
-                    <div className='mb-6 relative z-10'>
-                      <h3 className='text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-200'>
-                        {project.title}
-                      </h3>
-                      {project.domain && (
-                        <div className='flex items-center justify-between mb-4'>
-                          <span className='text-sm text-gray-500 font-mono bg-gray-100 px-3 py-1 rounded-lg border'>
-                            {project.domain}
-                          </span>
-                          <motion.a
-                            href={project.link}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            aria-label={`Visit ${project.title} infrastructure`}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-200 group/button'
+                  {/* Project Title and Domain */}
+                  <div className='mb-6 relative z-10'>
+                    <h3 className='text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-200'>
+                      {project.title}
+                    </h3>
+                    {project.domain && (
+                      <div className='flex items-center justify-between mb-4'>
+                        <span className='text-sm text-gray-500 font-mono bg-gray-100 px-3 py-1 rounded-lg border'>
+                          {project.domain}
+                        </span>
+                        <motion.a
+                          href={project.link}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          aria-label={`Visit ${project.title} infrastructure`}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-200 group/button'
+                        >
+                          <ExternalLink
+                            size={16}
+                            className='mr-2 group-hover/button:rotate-3 transition-transform duration-200'
+                          />
+                          Visit
+                          <div className='absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-200'></div>
+                        </motion.a>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Project Description */}
+                  <p className='text-gray-600 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
+                    {project.description}
+                  </p>
+
+                  {/* Content Area - Flexible */}
+                  <div className='flex-1 flex flex-col relative z-10'>
+                    {/* Technologies */}
+                    <div className='mb-6'>
+                      <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                        <Code size={16} className='mr-2 text-orange-600' />
+                        Technologies
+                      </h4>
+                      <div className='flex flex-wrap gap-2'>
+                        {project.technologies.map((tech, techIndex) => (
+                          <motion.span
+                            key={techIndex}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={inView ? { opacity: 1, scale: 1 } : {}}
+                            transition={{ duration: 0.3, delay: index * 0.1 + techIndex * 0.03 }}
+                            className='px-3 py-1 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 text-sm font-bold rounded-full border border-orange-200 hover:shadow-sm transition-all duration-200'
                           >
-                            <ExternalLink
-                              size={16}
-                              className='mr-2 group-hover/button:rotate-3 transition-transform duration-200'
-                            />
-                            Visit
-                            <div className='absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-200'></div>
-                          </motion.a>
-                        </div>
-                      )}
+                            {tech}
+                          </motion.span>
+                        ))}
+                      </div>
                     </div>
 
-                    {/* Project Description */}
-                    <p className='text-gray-600 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
-                      {project.description}
-                    </p>
-
-                    {/* Content Area - Flexible */}
-                    <div className='flex-1 flex flex-col relative z-10'>
-                      {/* Technologies */}
-                      <div className='mb-6'>
-                        <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                          <Code size={16} className='mr-2 text-orange-600' />
-                          Technologies
-                        </h4>
-                        <div className='flex flex-wrap gap-2'>
-                          {project.technologies.map((tech, techIndex) => (
-                            <motion.span
-                              key={techIndex}
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              animate={inView ? { opacity: 1, scale: 1 } : {}}
-                              transition={{ duration: 0.3, delay: index * 0.1 + techIndex * 0.03 }}
-                              className='px-3 py-1 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 text-sm font-bold rounded-full border border-orange-200 hover:shadow-sm transition-all duration-200'
-                            >
-                              {tech}
-                            </motion.span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Key Features */}
-                      <div className='flex-1'>
-                        <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                          <Zap size={16} className='mr-2 text-red-600' />
-                          Key Features
-                        </h4>
-                        <div className='space-y-2'>
-                          {project.features.map((feature, featureIndex) => (
-                            <motion.div
-                              key={featureIndex}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={inView ? { opacity: 1, x: 0 } : {}}
-                              transition={{
-                                duration: 0.3,
-                                delay: index * 0.1 + featureIndex * 0.05,
-                              }}
-                              className='flex items-center space-x-3 p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:shadow-sm transition-all duration-200'
-                            >
-                              <div className='p-1 bg-gradient-to-br from-red-500 to-orange-500 rounded-full'>
-                                <Shield size={12} className='text-white' />
-                              </div>
-                              <span className='text-gray-700 font-medium text-sm'>{feature}</span>
-                            </motion.div>
-                          ))}
-                        </div>
+                    {/* Key Features */}
+                    <div className='flex-1'>
+                      <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
+                        <Zap size={16} className='mr-2 text-red-600' />
+                        Key Features
+                      </h4>
+                      <div className='space-y-2'>
+                        {project.features.map((feature, featureIndex) => (
+                          <motion.div
+                            key={featureIndex}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={inView ? { opacity: 1, x: 0 } : {}}
+                            transition={{ duration: 0.3, delay: index * 0.1 + featureIndex * 0.05 }}
+                            className='flex items-center space-x-3 p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:shadow-sm transition-all duration-200'
+                          >
+                            <div className='p-1 bg-gradient-to-br from-red-500 to-orange-500 rounded-full'>
+                              <Shield size={12} className='text-white' />
+                            </div>
+                            <span className='text-gray-700 font-medium text-sm'>{feature}</span>
+                          </motion.div>
+                        ))}
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              )
-            )}
-          </div>
-        )}
+                </div>
+              </motion.div>
+            )
+          )}
+        </div>
 
         {/* View More/Less Projects Button */}
         <motion.div

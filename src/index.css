@@ -422,26 +422,3 @@ body,
     overflow-x: hidden !important;
   }
 }
-
-/* Virtual Scrolling Scrollbar Styles */
-.scrollbar-thin::-webkit-scrollbar {
-  width: 6px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: rgba(229, 231, 235, 0.5);
-  border-radius: 3px;
-}
-
-.scrollbar-thumb-secondary-300::-webkit-scrollbar-thumb {
-  background: rgba(147, 51, 234, 0.3);
-  border-radius: 3px;
-}
-
-.scrollbar-thumb-secondary-300::-webkit-scrollbar-thumb:hover {
-  background: rgba(147, 51, 234, 0.5);
-}
-
-.scrollbar-track-gray-100::-webkit-scrollbar-track {
-  background: rgba(243, 244, 246, 0.8);
-}
