@@ -12,4 +12,8 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: true,
   },
+  define: {
+    // Define process.env for compatibility with some libraries
+    'process.env': {},
+  },
 });

@@ -81,8 +81,8 @@ class ErrorAnalytics {
     }
 
     // Custom analytics endpoint (if available)
-    if (process.env.REACT_APP_ANALYTICS_ENDPOINT) {
-      fetch(process.env.REACT_APP_ANALYTICS_ENDPOINT, {
+    if (import.meta.env.VITE_ANALYTICS_ENDPOINT) {
+      fetch(import.meta.env.VITE_ANALYTICS_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -81,7 +81,7 @@ class SectionErrorBoundary extends React.Component {
     console.error(`Section Error in ${this.props.sectionName}:`, error);
 
     // Log to analytics if available
-    if (process.env.NODE_ENV === 'production' && typeof gtag !== 'undefined') {
+    if (import.meta.env.PROD && typeof gtag !== 'undefined') {
       // eslint-disable-next-line no-undef
       gtag('event', 'exception', {
         description: `Section Error: ${this.props.sectionName} - ${error.message}`,

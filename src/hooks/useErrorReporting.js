@@ -155,8 +155,8 @@ export const useErrorReporting = () => {
       }
 
       // Send to custom analytics endpoint
-      if (process.env.REACT_APP_ANALYTICS_ENDPOINT) {
-        fetch(process.env.REACT_APP_ANALYTICS_ENDPOINT, {
+      if (import.meta.env.VITE_ANALYTICS_ENDPOINT) {
+        fetch(import.meta.env.VITE_ANALYTICS_ENDPOINT, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ export const useErrorReporting = () => {
     };
 
     // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log('🔍 User Action:', actionData);
     }
 

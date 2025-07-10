@@ -99,7 +99,7 @@ const Layout = ({ children }) => {
 // Main App Component with Routing
 const App = () => {
   // Skip loading screen in test environment
-  const isTestEnvironment = process.env.NODE_ENV === 'test' || process.env.VITEST;
+  const isTestEnvironment = import.meta.env.MODE === 'test' || import.meta.env.VITEST;
 
   // Only show loading on initial page load, not on route changes
   const [isInitialLoad, setIsInitialLoad] = React.useState(() => {

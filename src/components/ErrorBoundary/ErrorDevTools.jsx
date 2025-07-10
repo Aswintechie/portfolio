@@ -38,7 +38,7 @@ const ErrorDevTools = () => {
 
   useEffect(() => {
     // Only track errors in development mode
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       const handleError = error => {
         setErrors(prev => [
           ...prev.slice(-9),
@@ -64,7 +64,7 @@ const ErrorDevTools = () => {
   }, []);
 
   // Don't render anything in production
-  if (process.env.NODE_ENV !== 'development') {
+  if (!import.meta.env.DEV) {
     return null;
   }
 
