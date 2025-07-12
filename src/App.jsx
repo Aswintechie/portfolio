@@ -2,7 +2,7 @@
  * @file App.jsx
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Main application component with routing and modular architecture
+ * @description Main application component with routing and cosmic space theme architecture
  */
 
 import React, { useEffect } from 'react';
@@ -34,59 +34,83 @@ import { usePageLoading } from './hooks';
 // Home Page Component (Main Portfolio)
 const HomePage = () => {
   return (
-    <div className='relative'>
-      {/* Above-the-fold sections - load immediately */}
-      <SectionErrorBoundary sectionName='Hero'>
-        <HeroSection />
-      </SectionErrorBoundary>
+    <div className='relative bg-deep-space'>
+      {/* Cosmic Background Layer */}
+      <div className='fixed inset-0 z-0'>
+        <div className='absolute inset-0 bg-gradient-deep-space'></div>
+        <div className='absolute inset-0 bg-gradient-cosmic opacity-60'></div>
+        <div className='starfield'></div>
+      </div>
 
-      <SectionErrorBoundary sectionName='About'>
-        <AboutSection />
-      </SectionErrorBoundary>
+      {/* Content Layer */}
+      <div className='relative z-10'>
+        {/* Above-the-fold sections - load immediately */}
+        <SectionErrorBoundary sectionName='Hero'>
+          <HeroSection />
+        </SectionErrorBoundary>
 
-      {/* All sections - loaded directly for smooth experience */}
-      <SectionErrorBoundary sectionName='Experience'>
-        <ExperienceSection />
-      </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName='About'>
+          <AboutSection />
+        </SectionErrorBoundary>
 
-      <SectionErrorBoundary sectionName='Skills'>
-        <SkillsSection />
-      </SectionErrorBoundary>
+        {/* All sections - loaded directly for smooth experience */}
+        <SectionErrorBoundary sectionName='Experience'>
+          <ExperienceSection />
+        </SectionErrorBoundary>
 
-      <SectionErrorBoundary sectionName='Projects'>
-        <ProjectsSection />
-      </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName='Skills'>
+          <SkillsSection />
+        </SectionErrorBoundary>
 
-      <SectionErrorBoundary sectionName='Personal Projects'>
-        <PersonalProjectsSection />
-      </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName='Projects'>
+          <ProjectsSection />
+        </SectionErrorBoundary>
 
-      <SectionErrorBoundary sectionName='Technologies'>
-        <TechnologiesSection />
-      </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName='Personal Projects'>
+          <PersonalProjectsSection />
+        </SectionErrorBoundary>
 
-      <SectionErrorBoundary sectionName='Contact'>
-        <ContactSection />
-      </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName='Technologies'>
+          <TechnologiesSection />
+        </SectionErrorBoundary>
 
-      <SectionErrorBoundary sectionName='Footer'>
-        <Footer />
-      </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName='Contact'>
+          <ContactSection />
+        </SectionErrorBoundary>
+
+        <SectionErrorBoundary sectionName='Footer'>
+          <Footer />
+        </SectionErrorBoundary>
+      </div>
     </div>
   );
 };
 
-// Layout Component (Wraps all pages with navigation)
+// Layout Component (Wraps all pages with cosmic navigation)
 const Layout = ({ children }) => {
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen bg-deep-space'>
+      {/* Cosmic Background */}
+      <div className='fixed inset-0 z-0'>
+        <div className='absolute inset-0 bg-gradient-deep-space'></div>
+        <div className='absolute inset-0 bg-gradient-cosmic opacity-60'></div>
+        <div className='starfield'></div>
+
+        {/* Cosmic Atmosphere */}
+        <div className='absolute inset-0 opacity-20'>
+          <div className='absolute top-0 left-0 w-full h-full bg-gradient-energy'></div>
+          <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,212,255,0.1)_0%,transparent_50%)]'></div>
+          <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,0,110,0.1)_0%,transparent_50%)]'></div>
+        </div>
+      </div>
+
       {/* Navigation */}
       <ErrorBoundary level='component' fallbackComponent='Navigation'>
         <Navigation />
       </ErrorBoundary>
 
       {/* Page Content */}
-      {children}
+      <div className='relative z-10'>{children}</div>
 
       {/* Search Modal */}
       <ErrorBoundary level='component' fallbackComponent='Search Modal'>
@@ -116,13 +140,13 @@ const App = () => {
 
     // Only show loading screen on initial load
     if (isInitialLoad) {
-      // Auto-complete loading to show beautiful screen
+      // Auto-complete loading to show beautiful interface
       const autoComplete = setTimeout(() => {
         completeLoading();
         // Mark that we've loaded before
         sessionStorage.setItem('hasLoadedBefore', 'true');
         setIsInitialLoad(false);
-      }, 2000); // Show beautiful loading for 2 seconds
+      }, 3000); // Show loading screen for 3 seconds
 
       return () => {
         clearTimeout(autoComplete);
@@ -134,7 +158,7 @@ const App = () => {
     <GlobalErrorHandler>
       <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
         <Router>
-          {/* Beautiful Page Loader - Only on initial load */}
+          {/* Page Loader - Only on initial load */}
           {shouldShowLoading && (
             <PageLoader
               isLoading={shouldShowLoading}

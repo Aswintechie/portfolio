@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gradient Aurora Theme Sample</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        min-height: 100vh;
+        padding: 2rem;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 20% 80%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(69, 183, 209, 0.3) 0%, transparent 50%);
+        animation: auroraMove 20s linear infinite;
+        z-index: -1;
+      }
+
+      @keyframes auroraMove {
+        0% {
+          transform: translateX(-100px) rotate(0deg);
+        }
+        50% {
+          transform: translateX(100px) rotate(180deg);
+        }
+        100% {
+          transform: translateX(-100px) rotate(360deg);
+        }
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.2rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .aurora-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .aurora-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: shimmer 3s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      .aurora-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .aurora-card h3 {
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .aurora-card p {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      .aurora-button {
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .aurora-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+      }
+
+      .aurora-button:hover::before {
+        left: 100%;
+      }
+
+      .aurora-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .skill-tag {
+        display: inline-block;
+        background: linear-gradient(45deg, rgba(255, 107, 107, 0.3), rgba(78, 205, 196, 0.3));
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        margin: 0.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(5px);
+      }
+
+      .profile-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 30px;
+        padding: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .profile-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+          from 0deg,
+          transparent,
+          rgba(255, 107, 107, 0.3),
+          transparent,
+          rgba(78, 205, 196, 0.3),
+          transparent
+        );
+        animation: rotate 10s linear infinite;
+        z-index: -1;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+      }
+
+      .floating-orb {
+        position: absolute;
+        border-radius: 50%;
+        animation: floatOrb 6s ease-in-out infinite;
+      }
+
+      .floating-orb:nth-child(1) {
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle, rgba(255, 107, 107, 0.4), transparent);
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .floating-orb:nth-child(2) {
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle, rgba(78, 205, 196, 0.4), transparent);
+        top: 60%;
+        right: 10%;
+        animation-delay: 2s;
+      }
+
+      .floating-orb:nth-child(3) {
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle, rgba(69, 183, 209, 0.4), transparent);
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+
+      @keyframes floatOrb {
+        0%,
+        100% {
+          transform: translateY(0px) translateX(0px);
+        }
+        33% {
+          transform: translateY(-20px) translateX(10px);
+        }
+        66% {
+          transform: translateY(10px) translateX(-10px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="floating-orb"></div>
+    <div class="floating-orb"></div>
+    <div class="floating-orb"></div>
+
+    <div class="container">
+      <div class="header">
+        <h1>Gradient Aurora Theme</h1>
+        <p>Flowing gradients with aurora-like color schemes</p>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">👨‍💻</div>
+        <h2
+          style="
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+          "
+        >
+          Software Engineer
+        </h2>
+        <p style="color: rgba(255, 255, 255, 0.9)">
+          Full-stack developer specializing in modern web technologies
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="aurora-card">
+          <h3>About Me</h3>
+          <p>
+            Passionate software engineer with expertise in creating modern, responsive web
+            applications. I love working with cutting-edge technologies and bringing innovative
+            ideas to life.
+          </p>
+          <button class="aurora-button">Learn More</button>
+        </div>
+
+        <div class="aurora-card">
+          <h3>Skills</h3>
+          <div>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">AWS</span>
+            <span class="skill-tag">Docker</span>
+          </div>
+        </div>
+
+        <div class="aurora-card">
+          <h3>Latest Project</h3>
+          <p>
+            E-commerce platform built with React and Node.js, featuring real-time inventory
+            management and secure payment processing.
+          </p>
+          <button class="aurora-button">View Project</button>
+        </div>
+
+        <div class="aurora-card">
+          <h3>Experience</h3>
+          <p>
+            5+ years of experience in full-stack development, working with startups and enterprise
+            clients to deliver scalable solutions.
+          </p>
+          <button class="aurora-button">View Resume</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -2,7 +2,7 @@
  * @file PersonalProjectsSection.jsx
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Personal infrastructure projects section showcasing self-hosted solutions
+ * @description Cosmic personal infrastructure projects section with holographic cards and stellar effects
  */
 
 import React, { useState, useId } from 'react';
@@ -19,6 +19,8 @@ import {
   Shield,
   ExternalLink,
   ChevronDown,
+  Orbit,
+  Star,
 } from 'lucide-react';
 
 // Personal Projects Section Component
@@ -48,6 +50,8 @@ const PersonalProjectsSection = () => {
       access: 'Private (requires credentials)',
       domain: 'plex.aswinlocal.in',
       link: 'https://plex.aswinlocal.in',
+      color: 'from-energy-electric to-energy-quantum',
+      glow: 'energy-electric',
     },
     {
       title: 'TrueNAS Storage Server',
@@ -66,88 +70,140 @@ const PersonalProjectsSection = () => {
       access: 'Private (requires credentials)',
       domain: 'truenas.aswinlocal.in',
       link: 'https://truenas.aswinlocal.in',
+      color: 'from-energy-plasma to-energy-cosmic',
+      glow: 'energy-plasma',
     },
     {
-      title: 'Jellyfin Media Server',
+      title: 'Proxmox Virtualization',
       description:
-        'Open-source alternative to Plex, providing media streaming without licensing restrictions. Self-hosted solution for personal media library management.',
-      technologies: ['Docker', 'Linux', 'Web Interface', 'Mobile Apps', 'Transcoding'],
+        'Enterprise virtualization platform running multiple virtual machines and containers. Provides scalable infrastructure for development, testing, and production workloads.',
+      technologies: ['Proxmox VE', 'KVM', 'LXC', 'Clustering', 'High Availability'],
       features: [
-        'No licensing fees or restrictions',
-        'Web-based media interface',
-        'Mobile and TV client apps',
-        'Hardware-accelerated transcoding',
-        'Multi-user support',
+        'VM and container management',
+        'Live migration capabilities',
+        'Backup and snapshot features',
+        'Web-based management interface',
+        'High availability clustering',
       ],
       icon: <Server size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'watch.aswinlocal.in',
-      link: 'https://watch.aswinlocal.in',
+      domain: 'proxmox.aswinlocal.in',
+      link: 'https://proxmox.aswinlocal.in',
+      color: 'from-energy-nuclear to-energy-solar',
+      glow: 'energy-nuclear',
     },
     {
-      title: 'Cloud Storage Server',
+      title: 'Cloudflare Integration',
       description:
-        'Personal cloud storage solution with Nextcloud, providing file synchronization, sharing, and collaboration tools similar to Google Drive or Dropbox.',
-      technologies: ['Nextcloud', 'Docker', 'Linux', 'SSL/TLS', 'Database'],
+        'Global CDN and security services integration for enhanced performance and protection. Provides DNS management, SSL certificates, and advanced security features.',
+      technologies: ['Cloudflare', 'CDN', 'DNS', 'SSL/TLS', 'Security Rules'],
       features: [
-        'File synchronization across devices',
-        'Secure file sharing and collaboration',
-        'Calendar and contact sync',
-        'Mobile apps for all platforms',
-        'End-to-end encryption support',
+        'Global CDN acceleration',
+        'DDoS protection',
+        'SSL/TLS encryption',
+        'DNS management',
+        'Analytics and monitoring',
       ],
       icon: <Cloud size={48} />,
       status: 'Active',
-      access: 'Private (requires credentials)',
-      domain: 'cloud.aswinlocal.in',
-      link: 'https://cloud.aswinlocal.in',
-    },
-    {
-      title: 'Ubuntu VPS Server',
-      description:
-        'Virtual Private Server running Ubuntu for hosting various services, development environments, and infrastructure management. Provides a robust foundation for self-hosted applications.',
-      technologies: ['Ubuntu', 'SSH', 'Docker', 'Nginx', 'SSL/TLS', 'Server Management'],
-      features: [
-        'Remote server administration via SSH',
-        'Containerized application deployment',
-        'Reverse proxy and load balancing',
-        'Automated SSL certificate management',
-        'System monitoring and maintenance',
-      ],
-      icon: <Cpu size={48} />,
-      status: 'Active',
-      access: 'Private (requires credentials)',
-      domain: 'ubuntu.aswinlocal.in',
-      link: 'https://ubuntu.aswinlocal.in',
-    },
-    {
-      title: 'qBittorrent Download Server',
-      description:
-        'Web-based BitTorrent client for remote torrent management and file downloads. Provides secure access to download and manage torrents from anywhere with a web interface.',
-      technologies: ['qBittorrent', 'Docker', 'Web UI', 'BitTorrent', 'SSL/TLS', 'Remote Access'],
-      features: [
-        'Web-based torrent management interface',
-        'Remote download monitoring and control',
-        'Automatic download scheduling',
-        'Bandwidth and speed limiting',
-        'Secure remote access via HTTPS',
-      ],
-      icon: <Zap size={48} />,
-      status: 'Active',
-      access: 'Private (requires credentials)',
-      domain: 'torrent.aswinlocal.in',
-      link: 'https://torrent.aswinlocal.in',
+      access: 'Public (with security)',
+      domain: 'cloudflare.com',
+      link: 'https://cloudflare.com',
+      color: 'from-nebula-purple to-nebula-pink',
+      glow: 'nebula-purple',
     },
   ];
 
   return (
-    <section id='personal-projects' className='section-padding relative overflow-hidden'>
-      {/* Modern Background */}
-      <div className='absolute inset-0 bg-gradient-to-br from-orange-50 via-red-50 to-orange-50'></div>
-      <div className='absolute top-0 left-0 w-full h-full'>
-        <div className='absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-orange-400/10 to-red-400/10 rounded-full blur-2xl'></div>
-        <div className='absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-br from-red-400/10 to-orange-400/10 rounded-full blur-2xl'></div>
+    <section
+      id='personal-projects'
+      className='section-padding relative overflow-hidden bg-gradient-to-br from-galaxy-center via-galaxy-arm to-galaxy-dust'
+    >
+      {/* Cosmic Background Effects */}
+      <div className='absolute inset-0'>
+        <div className='absolute inset-0 bg-gradient-cosmic opacity-30'></div>
+        <div className='absolute inset-0 bg-gradient-energy opacity-20'></div>
+
+        {/* Nebula Formations */}
+        <div className='absolute top-20 left-20 w-96 h-96 bg-gradient-radial from-nebula-orange/12 to-transparent rounded-full blur-3xl animate-pulse-slow'></div>
+        <div className='absolute bottom-20 right-20 w-80 h-80 bg-gradient-radial from-nebula-red/10 to-transparent rounded-full blur-3xl animate-pulse-slow animation-delay-400'></div>
+        <div className='absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-radial from-nebula-cyan/8 to-transparent rounded-full blur-2xl animate-pulse-slow animation-delay-800'></div>
+        <div className='absolute bottom-1/3 right-1/4 w-48 h-48 bg-gradient-radial from-energy-electric/6 to-transparent rounded-full blur-xl animate-pulse-slow animation-delay-1200'></div>
+      </div>
+
+      {/* Cosmic Particles */}
+      <div className='absolute inset-0 pointer-events-none'>
+        {Array.from({ length: 6 }, (_, i) => (
+          <motion.div
+            key={i}
+            className='absolute w-1 h-1 bg-stellar-400/60 rounded-full'
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.3, 1, 0.3],
+            }}
+            transition={{
+              duration: Math.random() * 3 + 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Holographic Grid */}
+      <div className='absolute inset-0 opacity-5'>
+        <div
+          className='w-full h-full'
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0,212,255,0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0,212,255,0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+      </div>
+
+      {/* Orbital Rings */}
+      <div className='absolute inset-0 pointer-events-none'>
+        <motion.div
+          className='absolute w-56 h-56 border border-energy-electric/10 rounded-full'
+          style={{
+            left: '20%',
+            top: '15%',
+          }}
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 28,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
+
+        <motion.div
+          className='absolute w-40 h-40 border border-energy-plasma/8 rounded-full'
+          style={{
+            right: '25%',
+            bottom: '20%',
+          }}
+          animate={{
+            rotate: [360, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
       </div>
 
       <div className='container-custom relative z-10'>
@@ -158,27 +214,48 @@ const PersonalProjectsSection = () => {
           transition={{ duration: 0.6 }}
           className='text-center mb-16'
         >
+          {/* Status Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className='inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-orange-200/50'
+            className='inline-flex items-center space-x-3 holographic rounded-full px-8 py-4 mb-8'
           >
-            <Server size={16} className='text-orange-500' />
-            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
-              Self-Hosted Solutions
+            <motion.div
+              className='w-2 h-2 bg-energy-nuclear rounded-full'
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className='text-sm font-cosmic text-stellar-200 uppercase tracking-widest'>
+              Infrastructure
             </span>
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+            >
+              <Server size={12} className='text-energy-electric' />
+            </motion.div>
           </motion.div>
 
-          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
-            <span className='bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent'>
-              Personal Infrastructure
-            </span>
-          </h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+          {/* Title */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className='text-4xl lg:text-6xl font-cosmic font-black mb-6 text-cosmic'
+          >
+            PERSONAL INFRASTRUCTURE
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className='text-xl text-stellar-300 max-w-3xl mx-auto leading-relaxed'
+          >
             Self-hosted services and infrastructure projects I maintain with enterprise-grade
             reliability
-          </p>
+          </motion.p>
         </motion.div>
 
         <div className='grid md:grid-cols-2 gap-8' id={personalProjectsListId}>
@@ -193,30 +270,41 @@ const PersonalProjectsSection = () => {
                 onMouseEnter={() => setHoveredProject(index)}
                 onMouseLeave={() => setHoveredProject(null)}
               >
-                {/* Glassmorphism Card */}
-                <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col'>
+                {/* Holographic Card */}
+                <div className='relative holographic rounded-3xl p-8 transition-all duration-300 overflow-hidden h-full flex flex-col'>
                   {/* Animated Background Gradient */}
-                  <div className='absolute inset-0 bg-gradient-to-br from-orange-500/5 via-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-5 group-hover:opacity-15 transition-opacity duration-300`}
+                  ></div>
+
+                  {/* Glow Effect */}
+                  <motion.div
+                    className='absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300'
+                    style={{
+                      background: `radial-gradient(circle at 50% 50%, rgba(0,212,255,0.2) 0%, transparent 70%)`,
+                      filter: 'blur(10px)',
+                    }}
+                  />
 
                   {/* Floating Orbs */}
-                  <div className='absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-                  <div className='absolute -bottom-16 -left-16 w-24 h-24 bg-gradient-to-br from-red-400/20 to-orange-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700'></div>
+                  <div className='absolute -top-16 -right-16 w-32 h-32 bg-gradient-to-br from-energy-electric/20 to-energy-plasma/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                  <div className='absolute -bottom-16 -left-16 w-24 h-24 bg-gradient-to-br from-energy-nuclear/20 to-energy-solar/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700'></div>
 
                   {/* Project Header */}
                   <div className='flex items-start justify-between mb-6 relative z-10'>
                     <motion.div
                       animate={hoveredProject === index ? { scale: 1.02 } : { scale: 1 }}
                       transition={{ duration: 0.2 }}
-                      className='relative p-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl text-white shadow-lg'
+                      className={`relative p-4 bg-gradient-to-br ${project.color} rounded-2xl text-white shadow-${project.glow}`}
                     >
                       {project.icon}
                       <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
                     </motion.div>
                     <div className='flex flex-col items-end space-y-2'>
-                      <span className='px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full border border-green-200'>
+                      <span className='px-3 py-1 bg-gradient-to-r from-energy-electric/20 to-energy-plasma/20 text-energy-electric text-xs font-cosmic font-bold rounded-full border border-energy-electric/30'>
                         {project.status}
                       </span>
-                      <span className='px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full border border-gray-200'>
+                      <span className='px-3 py-1 glass-cosmic text-stellar-300 text-xs font-cosmic font-bold rounded-full border border-stellar-400/30'>
                         {project.access}
                       </span>
                     </div>
@@ -224,12 +312,12 @@ const PersonalProjectsSection = () => {
 
                   {/* Project Title and Domain */}
                   <div className='mb-6 relative z-10'>
-                    <h3 className='text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-200'>
+                    <h3 className='text-2xl font-cosmic font-bold text-stellar-100 mb-3 group-hover:text-cosmic transition-colors duration-200'>
                       {project.title}
                     </h3>
                     {project.domain && (
                       <div className='flex items-center justify-between mb-4'>
-                        <span className='text-sm text-gray-500 font-mono bg-gray-100 px-3 py-1 rounded-lg border'>
+                        <span className='text-sm text-stellar-300 font-mono glass-cosmic px-3 py-1 rounded-lg border border-stellar-400/20'>
                           {project.domain}
                         </span>
                         <motion.a
@@ -239,7 +327,7 @@ const PersonalProjectsSection = () => {
                           aria-label={`Visit ${project.title} infrastructure`}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-200 group/button'
+                          className={`inline-flex items-center px-4 py-2 bg-gradient-to-r ${project.color} text-white rounded-xl font-cosmic font-bold shadow-${project.glow} hover:shadow-energy transition-all duration-200 group/button`}
                         >
                           <ExternalLink
                             size={16}
@@ -253,16 +341,18 @@ const PersonalProjectsSection = () => {
                   </div>
 
                   {/* Project Description */}
-                  <p className='text-gray-600 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
+                  <p className='text-stellar-300 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
                     {project.description}
                   </p>
 
                   {/* Content Area - Flexible */}
-                  <div className='flex-1 flex flex-col relative z-10'>
+                  <div className='flex-1 flex flex-col space-y-6 relative z-10'>
                     {/* Technologies */}
-                    <div className='mb-6'>
-                      <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                        <Code size={16} className='mr-2 text-orange-600' />
+                    <div>
+                      <h4 className='text-lg font-cosmic font-bold text-stellar-100 mb-3 flex items-center'>
+                        <div className={`p-2 bg-gradient-to-br ${project.color} rounded-lg mr-3`}>
+                          <Code size={16} className='text-white' />
+                        </div>
                         Technologies
                       </h4>
                       <div className='flex flex-wrap gap-2'>
@@ -271,8 +361,8 @@ const PersonalProjectsSection = () => {
                             key={techIndex}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={inView ? { opacity: 1, scale: 1 } : {}}
-                            transition={{ duration: 0.3, delay: index * 0.1 + techIndex * 0.03 }}
-                            className='px-3 py-1 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 text-sm font-bold rounded-full border border-orange-200 hover:shadow-sm transition-all duration-200'
+                            transition={{ duration: 0.3, delay: index * 0.05 + techIndex * 0.02 }}
+                            className='px-3 py-1 holographic text-stellar-200 text-xs font-cosmic font-bold rounded-full border border-energy-electric/30'
                           >
                             {tech}
                           </motion.span>
@@ -280,76 +370,89 @@ const PersonalProjectsSection = () => {
                       </div>
                     </div>
 
-                    {/* Key Features */}
+                    {/* Features */}
                     <div className='flex-1'>
-                      <h4 className='text-sm font-semibold text-gray-900 mb-3 flex items-center'>
-                        <Zap size={16} className='mr-2 text-red-600' />
-                        Key Features
+                      <h4 className='text-lg font-cosmic font-bold text-stellar-100 mb-3 flex items-center'>
+                        <div className={`p-2 bg-gradient-to-br ${project.color} rounded-lg mr-3`}>
+                          <Star size={16} className='text-white' />
+                        </div>
+                        Features
                       </h4>
-                      <div className='space-y-2'>
+                      <div className='grid gap-2'>
                         {project.features.map((feature, featureIndex) => (
                           <motion.div
                             key={featureIndex}
-                            initial={{ opacity: 0, x: -20 }}
+                            initial={{ opacity: 0, x: -10 }}
                             animate={inView ? { opacity: 1, x: 0 } : {}}
-                            transition={{ duration: 0.3, delay: index * 0.1 + featureIndex * 0.05 }}
-                            className='flex items-center space-x-3 p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:shadow-sm transition-all duration-200'
+                            transition={{
+                              duration: 0.3,
+                              delay: index * 0.05 + featureIndex * 0.05,
+                            }}
+                            className='flex items-center space-x-3 p-2 glass-cosmic rounded-lg border border-stellar-400/20'
                           >
-                            <div className='p-1 bg-gradient-to-br from-red-500 to-orange-500 rounded-full'>
+                            <div className={`p-1 bg-gradient-to-br ${project.color} rounded-full`}>
                               <Shield size={12} className='text-white' />
                             </div>
-                            <span className='text-gray-700 font-medium text-sm'>{feature}</span>
+                            <span className='text-stellar-300 text-sm font-medium'>{feature}</span>
                           </motion.div>
                         ))}
                       </div>
                     </div>
                   </div>
+
+                  {/* Scan Lines */}
+                  <motion.div
+                    className='absolute inset-0 pointer-events-none'
+                    animate={{
+                      background: [
+                        'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
+                        'linear-gradient(45deg, transparent 100%, rgba(255,255,255,0.03) 50%, transparent 0%)',
+                      ],
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, delay: index * 0.5 }}
+                  />
                 </div>
               </motion.div>
             )
           )}
         </div>
 
-        {/* View More/Less Projects Button */}
+        {/* View More/Less Button */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           className='text-center mt-12'
         >
           <motion.button
-            type='button'
             onClick={() => setShowAllProjects(!showAllProjects)}
             aria-expanded={showAllProjects}
             aria-controls={personalProjectsListId}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className='inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-shadow duration-200 group/btn'
+            className='relative inline-flex items-center gap-2 px-8 py-4 glass-cosmic text-stellar-100 rounded-2xl font-cosmic font-bold border-2 border-energy-electric/30 hover:border-energy-electric/50 hover:shadow-energy transition-all duration-300 group/btn overflow-hidden'
+            whileHover={{ scale: 1.05, rotateY: 5 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {showAllProjects
-              ? 'View Less Projects'
-              : `View More Projects (${personalProjects.length - 2} more)`}
+            {showAllProjects ? 'View Less Infrastructure' : 'View More Infrastructure'}
             <ChevronDown
-              className={`h-5 w-5 transition-transform duration-200 group-hover/btn:scale-105 ${showAllProjects ? 'rotate-180' : ''}`}
+              className={`h-5 w-5 transition-transform duration-300 group-hover/btn:rotate-3 ${showAllProjects ? 'rotate-180' : ''}`}
               aria-hidden='true'
             />
-          </motion.button>
-        </motion.div>
+            <div className='absolute inset-0 bg-gradient-to-r from-energy-electric/5 via-energy-plasma/5 to-energy-nuclear/5 rounded-2xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300'></div>
 
-        {/* Note about access */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className='mt-8 text-center'
-        >
-          <div className='inline-flex items-center px-8 py-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-orange-200/50 shadow-lg'>
-            <Shield size={20} className='text-orange-600 mr-3' />
-            <p className='text-gray-700 font-medium'>
-              These services are private and require authentication. Contact me for access
-              credentials.
-            </p>
-          </div>
+            {/* Orbital Animation */}
+            <motion.div
+              className='absolute top-2 right-2 w-2 h-2 bg-energy-electric rounded-full'
+              animate={{
+                rotate: [0, 360],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+          </motion.button>
         </motion.div>
       </div>
     </section>

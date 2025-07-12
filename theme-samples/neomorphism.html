@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neomorphism Theme Sample</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'SF Pro Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #e0e5ec;
+        color: #333;
+        min-height: 100vh;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        color: #333;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow:
+          2px 2px 4px rgba(255, 255, 255, 0.8),
+          -2px -2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header p {
+        color: #666;
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+
+      .neu-card {
+        background: #e0e5ec;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow:
+          9px 9px 16px rgba(163, 177, 198, 0.6),
+          -9px -9px 16px rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .neu-card:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          12px 12px 20px rgba(163, 177, 198, 0.8),
+          -12px -12px 20px rgba(255, 255, 255, 0.7);
+      }
+
+      .neu-card.pressed {
+        box-shadow:
+          inset 9px 9px 16px rgba(163, 177, 198, 0.6),
+          inset -9px -9px 16px rgba(255, 255, 255, 0.5);
+      }
+
+      .neu-card h3 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .neu-card p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      .neu-button {
+        background: #e0e5ec;
+        color: #333;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow:
+          6px 6px 12px rgba(163, 177, 198, 0.6),
+          -6px -6px 12px rgba(255, 255, 255, 0.5);
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .neu-button:hover {
+        transform: translateY(-1px);
+        box-shadow:
+          8px 8px 16px rgba(163, 177, 198, 0.8),
+          -8px -8px 16px rgba(255, 255, 255, 0.7);
+      }
+
+      .neu-button:active {
+        transform: translateY(0);
+        box-shadow:
+          inset 4px 4px 8px rgba(163, 177, 198, 0.6),
+          inset -4px -4px 8px rgba(255, 255, 255, 0.5);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .skill-tag {
+        display: inline-block;
+        background: #e0e5ec;
+        color: #333;
+        padding: 0.5rem 1rem;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin: 0.25rem;
+        font-weight: 500;
+        box-shadow:
+          4px 4px 8px rgba(163, 177, 198, 0.6),
+          -4px -4px 8px rgba(255, 255, 255, 0.5);
+      }
+
+      .profile-card {
+        background: #e0e5ec;
+        border-radius: 30px;
+        padding: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow:
+          15px 15px 30px rgba(163, 177, 198, 0.6),
+          -15px -15px 30px rgba(255, 255, 255, 0.5);
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #e0e5ec;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #333;
+        box-shadow:
+          12px 12px 24px rgba(163, 177, 198, 0.6),
+          -12px -12px 24px rgba(255, 255, 255, 0.5);
+      }
+
+      .progress-bar {
+        background: #e0e5ec;
+        height: 20px;
+        border-radius: 10px;
+        margin: 1rem 0;
+        box-shadow:
+          inset 6px 6px 12px rgba(163, 177, 198, 0.6),
+          inset -6px -6px 12px rgba(255, 255, 255, 0.5);
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        box-shadow:
+          3px 3px 6px rgba(163, 177, 198, 0.6),
+          -3px -3px 6px rgba(255, 255, 255, 0.5);
+        transition: width 0.8s ease;
+      }
+
+      .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+        background: #e0e5ec;
+        border-radius: 15px;
+        box-shadow:
+          inset 4px 4px 8px rgba(163, 177, 198, 0.6),
+          inset -4px -4px 8px rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .toggle-switch::before {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 24px;
+        height: 24px;
+        background: #e0e5ec;
+        border-radius: 50%;
+        box-shadow:
+          3px 3px 6px rgba(163, 177, 198, 0.6),
+          -3px -3px 6px rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .toggle-switch.active::before {
+        left: 33px;
+        box-shadow:
+          -3px -3px 6px rgba(163, 177, 198, 0.6),
+          3px 3px 6px rgba(255, 255, 255, 0.5);
+      }
+
+      .input-field {
+        background: #e0e5ec;
+        border: none;
+        border-radius: 15px;
+        padding: 1rem;
+        font-size: 1rem;
+        color: #333;
+        width: 100%;
+        box-shadow:
+          inset 6px 6px 12px rgba(163, 177, 198, 0.6),
+          inset -6px -6px 12px rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .input-field:focus {
+        outline: none;
+        box-shadow:
+          inset 8px 8px 16px rgba(163, 177, 198, 0.8),
+          inset -8px -8px 16px rgba(255, 255, 255, 0.7);
+      }
+
+      .input-field::placeholder {
+        color: #999;
+      }
+
+      .floating-element {
+        position: absolute;
+        background: #e0e5ec;
+        border-radius: 50%;
+        box-shadow:
+          6px 6px 12px rgba(163, 177, 198, 0.6),
+          -6px -6px 12px rgba(255, 255, 255, 0.5);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .floating-element:nth-child(1) {
+        width: 60px;
+        height: 60px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .floating-element:nth-child(2) {
+        width: 80px;
+        height: 80px;
+        top: 60%;
+        right: 10%;
+        animation-delay: 2s;
+      }
+
+      .floating-element:nth-child(3) {
+        width: 40px;
+        height: 40px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .stat-item {
+        background: #e0e5ec;
+        padding: 1.5rem;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow:
+          9px 9px 16px rgba(163, 177, 198, 0.6),
+          -9px -9px 16px rgba(255, 255, 255, 0.5);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+
+    <div class="container">
+      <div class="header">
+        <h1>Neomorphism Design</h1>
+        <p>Soft shadows and highlights for 3D-like effects</p>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">👨‍💻</div>
+        <h2 style="color: #333; margin-bottom: 1rem; font-size: 2rem">Software Engineer</h2>
+        <p style="color: #666">Modern developer specializing in clean, intuitive user interfaces</p>
+      </div>
+
+      <div class="grid">
+        <div class="neu-card">
+          <h3>About Me</h3>
+          <p>
+            Passionate about creating beautiful, functional software with attention to detail and
+            user experience. I believe in the power of clean design and smooth interactions.
+          </p>
+          <button class="neu-button">Learn More</button>
+        </div>
+
+        <div class="neu-card">
+          <h3>Skills</h3>
+          <div>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">AWS</span>
+            <span class="skill-tag">Docker</span>
+          </div>
+          <div style="margin-top: 1rem">
+            <label style="display: block; margin-bottom: 0.5rem; color: #666"
+              >React Proficiency</label
+            >
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 90%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="neu-card">
+          <h3>Latest Project</h3>
+          <p>
+            Intuitive task management app with neumorphic design principles, featuring smooth
+            animations and tactile interactions.
+          </p>
+          <button class="neu-button">View Project</button>
+        </div>
+
+        <div class="neu-card">
+          <h3>Contact</h3>
+          <div style="margin-bottom: 1rem">
+            <input
+              type="text"
+              class="input-field"
+              placeholder="Your Name"
+              style="margin-bottom: 1rem"
+            />
+            <input type="email" class="input-field" placeholder="Your Email" />
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center">
+            <span style="color: #666">Send notifications</span>
+            <div class="toggle-switch" onclick="this.classList.toggle('active')"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">5+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100+</div>
+          <div class="stat-label">Happy Clients</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Support</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

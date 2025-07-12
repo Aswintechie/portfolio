@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Theme Samples</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        min-height: 100vh;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .themes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .theme-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .theme-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+      }
+
+      .theme-card:hover::before {
+        left: 100%;
+      }
+
+      .theme-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .theme-preview {
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .theme-preview iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        transform: scale(0.7);
+        transform-origin: top left;
+        width: 142.86%;
+        height: 142.86%;
+      }
+
+      .theme-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: white;
+        font-weight: 600;
+      }
+
+      .theme-card p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .theme-features {
+        list-style: none;
+        margin-bottom: 2rem;
+      }
+
+      .theme-features li {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        padding-left: 1.5rem;
+      }
+
+      .theme-features li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #4ade80;
+        font-weight: bold;
+      }
+
+      .theme-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .popularity-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(45deg, #f59e0b, #d97706);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .trending-badge {
+        background: linear-gradient(45deg, #ef4444, #dc2626);
+      }
+
+      .new-badge {
+        background: linear-gradient(45deg, #10b981, #059669);
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+      }
+
+      .comparison-note {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 3rem;
+        text-align: center;
+      }
+
+      .comparison-note h3 {
+        color: #4ade80;
+        margin-bottom: 0.5rem;
+      }
+
+      .comparison-note p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 768px) {
+        .themes-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .theme-actions {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎨 Modern Portfolio Themes</h1>
+        <p>
+          Explore different design approaches for your portfolio. Each theme showcases unique visual
+          styles and modern design principles.
+        </p>
+      </div>
+
+      <div class="comparison-note">
+        <h3>💡 How to Choose</h3>
+        <p>
+          Click "View Sample" to see each theme in action. Consider your industry, personal style,
+          and the impression you want to make with potential clients or employers.
+        </p>
+      </div>
+
+      <div class="themes-grid">
+        <div class="theme-card">
+          <div class="popularity-badge trending-badge">🔥 Trending</div>
+          <div class="theme-preview">
+            <iframe src="glassmorphism.html" title="Glassmorphism Theme Preview"></iframe>
+          </div>
+          <h3>Glassmorphism</h3>
+          <p>
+            Modern frosted glass aesthetic with backdrop blur effects. Perfect for creating elegant,
+            sophisticated portfolios.
+          </p>
+          <ul class="theme-features">
+            <li>Frosted glass cards with backdrop blur</li>
+            <li>Translucent backgrounds with subtle borders</li>
+            <li>Light/shadow interplay for depth</li>
+            <li>Very popular in modern UI design</li>
+          </ul>
+          <div class="theme-actions">
+            <a href="glassmorphism.html" class="btn btn-primary" target="_blank">View Sample</a>
+            <a href="#" class="btn btn-secondary">Use This Theme</a>
+          </div>
+        </div>
+
+        <div class="theme-card">
+          <div class="popularity-badge">⚡ Popular</div>
+          <div class="theme-preview">
+            <iframe src="gradient-aurora.html" title="Gradient Aurora Theme Preview"></iframe>
+          </div>
+          <h3>Gradient Aurora</h3>
+          <p>
+            Flowing gradients with aurora-like color schemes. Instagram-inspired aesthetic with
+            vibrant colors.
+          </p>
+          <ul class="theme-features">
+            <li>Animated flowing gradients</li>
+            <li>Aurora borealis color schemes</li>
+            <li>Smooth color transitions</li>
+            <li>Instagram-style gradient overlays</li>
+          </ul>
+          <div class="theme-actions">
+            <a href="gradient-aurora.html" class="btn btn-primary" target="_blank">View Sample</a>
+            <a href="#" class="btn btn-secondary">Use This Theme</a>
+          </div>
+        </div>
+
+        <div class="theme-card">
+          <div class="popularity-badge trending-badge">🎮 Gaming</div>
+          <div class="theme-preview">
+            <iframe src="cyberpunk-neon.html" title="Cyberpunk Neon Theme Preview"></iframe>
+          </div>
+          <h3>Cyberpunk Neon</h3>
+          <p>
+            Electric neon colors with glitch effects and terminal styling. Perfect for tech
+            professionals and gamers.
+          </p>
+          <ul class="theme-features">
+            <li>Electric neon colors (pink, cyan, yellow)</li>
+            <li>Glitch effects and scan lines</li>
+            <li>Terminal/console styling</li>
+            <li>Matrix-inspired animations</li>
+          </ul>
+          <div class="theme-actions">
+            <a href="cyberpunk-neon.html" class="btn btn-primary" target="_blank">View Sample</a>
+            <a href="#" class="btn btn-secondary">Use This Theme</a>
+          </div>
+        </div>
+
+        <div class="theme-card">
+          <div class="popularity-badge">📱 Apple-like</div>
+          <div class="theme-preview">
+            <iframe src="neomorphism.html" title="Neomorphism Theme Preview"></iframe>
+          </div>
+          <h3>Neomorphism</h3>
+          <p>
+            Soft shadows and highlights for 3D-like effects. Clean, Apple-inspired design with
+            tactile interactions.
+          </p>
+          <ul class="theme-features">
+            <li>Soft shadows and highlights</li>
+            <li>Monochromatic color schemes</li>
+            <li>3D-like floating elements</li>
+            <li>Instagram/Apple-inspired aesthetic</li>
+          </ul>
+          <div class="theme-actions">
+            <a href="neomorphism.html" class="btn btn-primary" target="_blank">View Sample</a>
+            <a href="#" class="btn btn-secondary">Use This Theme</a>
+          </div>
+        </div>
+
+        <div class="theme-card">
+          <div class="popularity-badge new-badge">🎯 Interactive</div>
+          <div class="theme-preview">
+            <iframe src="3d-isometric.html" title="3D Isometric Theme Preview"></iframe>
+          </div>
+          <h3>3D Isometric</h3>
+          <p>
+            Layered depth effects with geometric 3D transformations. Engaging and interactive design
+            approach.
+          </p>
+          <ul class="theme-features">
+            <li>Isometric card layouts</li>
+            <li>3D transformations on hover</li>
+            <li>Layered depth effects</li>
+            <li>Modern geometric shapes</li>
+          </ul>
+          <div class="theme-actions">
+            <a href="3d-isometric.html" class="btn btn-primary" target="_blank">View Sample</a>
+            <a href="#" class="btn btn-secondary">Use This Theme</a>
+          </div>
+        </div>
+
+        <div class="theme-card">
+          <div class="popularity-badge">🌌 Current</div>
+          <div class="theme-preview">
+            <div
+              style="
+                background: linear-gradient(45deg, #0f0f23, #1a1a2e, #16213e);
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #00ffff;
+                font-size: 1.2rem;
+                font-weight: bold;
+              "
+            >
+              Space Theme<br /><small style="font-size: 0.8rem; color: #888"
+                >Currently Active</small
+              >
+            </div>
+          </div>
+          <h3>Space Theme (Current)</h3>
+          <p>
+            Your current cosmic portfolio with holographic effects and stellar animations.
+            Transformed from your original design.
+          </p>
+          <ul class="theme-features">
+            <li>Cosmic backgrounds with galaxy gradients</li>
+            <li>Holographic card styling</li>
+            <li>Animated cosmic particles</li>
+            <li>Glass-morphic design patterns</li>
+          </ul>
+          <div class="theme-actions">
+            <a href="../index.html" class="btn btn-primary" target="_blank">View Current</a>
+            <a href="#" class="btn btn-secondary">Keep This Theme</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>
+          💡 Each theme can be fully customized to match your brand and preferences. Click any
+          sample to see the full implementation.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
