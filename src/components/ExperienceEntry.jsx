@@ -23,45 +23,45 @@ function ExperienceEntryComponent({
   inView = false,
   delay = 0.1,
 }) {
-  // Define company-specific themes
+  // Define company-specific themes with dark mode colors
   const getCompanyTheme = React.useMemo(
     () => companyName => {
       if (companyName.includes('MulticoreWare')) {
         return {
-          gradient: 'from-blue-500 to-indigo-600',
-          bgGradient: 'from-blue-50 to-indigo-50',
+          gradient: 'from-cyan-500 to-purple-600',
+          bgGradient: 'from-cyan-500/10 to-purple-500/10',
           icon: <Cpu size={20} />,
-          accentColor: 'text-blue-600',
-          borderColor: 'border-blue-200',
-          timelineColor: 'bg-blue-600',
-          tagBg: 'bg-blue-100',
-          tagText: 'text-blue-800',
-          hoverShadow: 'hover:shadow-blue-500/20',
+          accentColor: 'text-cyan-400',
+          borderColor: 'border-cyan-400/30',
+          timelineColor: 'bg-gradient-to-b from-cyan-400 to-purple-400',
+          tagBg: 'bg-cyan-500/20',
+          tagText: 'text-cyan-300',
+          hoverShadow: 'hover:shadow-cyan-500/20',
         };
       } else if (companyName.includes('Lenovo')) {
         return {
-          gradient: 'from-emerald-500 to-teal-600',
-          bgGradient: 'from-emerald-50 to-teal-50',
+          gradient: 'from-purple-500 to-pink-600',
+          bgGradient: 'from-purple-500/10 to-pink-500/10',
           icon: <Code size={20} />,
-          accentColor: 'text-emerald-600',
-          borderColor: 'border-emerald-200',
-          timelineColor: 'bg-emerald-600',
-          tagBg: 'bg-emerald-100',
-          tagText: 'text-emerald-800',
-          hoverShadow: 'hover:shadow-emerald-500/20',
+          accentColor: 'text-purple-400',
+          borderColor: 'border-purple-400/30',
+          timelineColor: 'bg-gradient-to-b from-purple-400 to-pink-400',
+          tagBg: 'bg-purple-500/20',
+          tagText: 'text-purple-300',
+          hoverShadow: 'hover:shadow-purple-500/20',
         };
       }
       // Default theme
       return {
-        gradient: 'from-gray-500 to-gray-600',
-        bgGradient: 'from-gray-50 to-gray-50',
+        gradient: 'from-pink-500 to-cyan-600',
+        bgGradient: 'from-pink-500/10 to-cyan-500/10',
         icon: <Building size={20} />,
-        accentColor: 'text-gray-600',
-        borderColor: 'border-gray-200',
-        timelineColor: 'bg-gray-600',
-        tagBg: 'bg-gray-100',
-        tagText: 'text-gray-800',
-        hoverShadow: 'hover:shadow-gray-500/20',
+        accentColor: 'text-pink-400',
+        borderColor: 'border-pink-400/30',
+        timelineColor: 'bg-gradient-to-b from-pink-400 to-cyan-400',
+        tagBg: 'bg-pink-500/20',
+        tagText: 'text-pink-300',
+        hoverShadow: 'hover:shadow-pink-500/20',
       };
     },
     []
@@ -80,37 +80,31 @@ function ExperienceEntryComponent({
       {/* Enhanced Timeline dot with company theme - Hidden on mobile, visible on desktop */}
       <div
         aria-hidden='true'
-        className={`hidden md:block absolute top-8 w-5 h-5 ${theme.timelineColor} rounded-full border-4 border-white shadow-lg z-10`}
+        className={`hidden md:block absolute top-8 w-5 h-5 ${theme.timelineColor} rounded-full border-4 border-gray-800 shadow-xl z-10`}
         style={{ left: '15px' }}
       ></div>
 
-      {/* Enhanced card with company-specific styling - Full width on mobile, left margin on desktop */}
+      {/* Enhanced card with glassmorphism styling - Full width on mobile, left margin on desktop */}
       <motion.div
         ref={elementRef}
         style={tiltStyle}
-        className={`md:ml-20 bg-white rounded-2xl p-6 md:p-8 shadow-lg ${theme.hoverShadow} hover:shadow-xl transition-shadow duration-300 border ${theme.borderColor} overflow-hidden relative group`}
+        className={`md:ml-20 bg-white/15 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-2xl ${theme.hoverShadow} hover:shadow-3xl transition-all duration-300 border ${theme.borderColor} overflow-hidden relative group`}
       >
         {/* 3D Tilt Glare Effect */}
         <div style={glareElementStyle} />
-        {/* Simplified background gradient overlay */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-br ${theme.bgGradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}
-        ></div>
+        
+        {/* Enhanced background layers */}
+        <div className='absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-gray-900/80 rounded-2xl'></div>
+        <div className={`absolute inset-0 bg-gradient-to-br ${theme.bgGradient} opacity-100 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl`}></div>
 
-        {/* Simplified decorative elements - Removed blur for performance */}
-        <div
-          className={`absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br ${theme.gradient} opacity-5 rounded-full group-hover:opacity-10 transition-opacity duration-300`}
-        ></div>
-        <div
-          className={`absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br ${theme.gradient} opacity-5 rounded-full group-hover:opacity-10 transition-opacity duration-300`}
-        ></div>
+        {/* Enhanced floating orbs */}
+        <div className={`absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br ${theme.gradient}/20 rounded-full blur-xl group-hover:opacity-100 transition-opacity duration-300`}></div>
+        <div className={`absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br ${theme.gradient}/15 rounded-full blur-lg group-hover:opacity-100 transition-opacity duration-300`}></div>
 
         {/* Content */}
         <div className='relative z-10'>
           {/* Period with enhanced styling */}
-          <div
-            className={`inline-flex items-center gap-2 px-4 py-2 ${theme.tagBg} ${theme.tagText} rounded-full text-sm font-semibold mb-4`}
-          >
+          <div className={`inline-flex items-center gap-2 px-4 py-2 ${theme.tagBg} backdrop-blur-sm ${theme.tagText} rounded-full text-sm font-semibold mb-4 border border-white/10`}>
             <Calendar size={16} />
             <span>{period}</span>
           </div>
@@ -130,17 +124,17 @@ function ExperienceEntryComponent({
                 width={56}
                 height={56}
                 loading='lazy'
-                className='w-14 h-14 object-contain rounded-xl shadow-md bg-white p-2'
+                className='w-14 h-14 object-contain rounded-xl shadow-xl bg-white/10 backdrop-blur-sm p-2 border border-white/20'
               />
             </motion.div>
 
             <div className='flex-1 text-center sm:text-left'>
-              <h3 className='text-xl sm:text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-200'>
+              <h3 className='text-xl sm:text-2xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors duration-200 drop-shadow-lg'>
                 {title}
               </h3>
-              <h4 className={`text-lg font-semibold mb-2 ${theme.accentColor}`}>{company}</h4>
+              <h4 className={`text-lg font-semibold mb-2 ${theme.accentColor} drop-shadow-sm`}>{company}</h4>
               {location && (
-                <div className='flex items-center justify-center sm:justify-start gap-2 text-sm text-gray-500'>
+                <div className='flex items-center justify-center sm:justify-start gap-2 text-sm text-gray-300'>
                   <MapPin size={14} />
                   <span>{location}</span>
                 </div>
@@ -148,31 +142,25 @@ function ExperienceEntryComponent({
             </div>
 
             {/* Company theme icon - Better mobile positioning */}
-            <div
-              className={`p-3 rounded-xl bg-gradient-to-br ${theme.gradient} text-white shadow-lg self-center sm:self-start`}
-            >
+            <div className={`p-3 rounded-xl bg-gradient-to-br ${theme.gradient} text-white shadow-xl self-center sm:self-start hover:scale-105 transition-transform duration-200`}>
               {theme.icon}
             </div>
           </div>
 
           {/* Description with better typography */}
-          <p className='text-gray-700 leading-relaxed mb-6 text-base sm:text-lg text-center sm:text-left'>
+          <p className='text-gray-200 leading-relaxed mb-6 text-base sm:text-lg text-center sm:text-left drop-shadow-sm'>
             {description}
           </p>
 
           {/* Experience badge with theme colors - Centered on mobile */}
           <div className='flex flex-col sm:flex-row items-center sm:justify-between gap-4'>
-            <div
-              className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${theme.gradient} text-white rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow duration-200`}
-            >
+            <div className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${theme.gradient} text-white rounded-full text-sm font-semibold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-200`}>
               <Zap size={16} />
               <span>{experience}</span>
             </div>
 
-            {/* Simplified decorative corner element */}
-            <div
-              className={`w-8 h-8 rounded-full bg-gradient-to-br ${theme.gradient} opacity-15 group-hover:opacity-25 transition-opacity duration-200`}
-            ></div>
+            {/* Enhanced decorative corner element */}
+            <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${theme.gradient} opacity-30 group-hover:opacity-50 transition-opacity duration-200 shadow-lg`}></div>
           </div>
         </div>
       </motion.div>
