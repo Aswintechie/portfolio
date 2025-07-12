@@ -92,9 +92,10 @@
         }
 
         #chatModal {
-          bottom: 80px !important;
+          top: 50% !important;
           right: 16px !important;
           left: 16px !important;
+          transform: translateY(-50%) !important;
           width: auto !important;
           height: 70vh !important;
           max-width: none !important;
@@ -128,11 +129,11 @@
 
       /* Chat Modal Responsive Fixes */
       #chatModal {
-        width: 350px !important;
-        height: calc(100vh - 120px) !important;
+        width: 400px !important;
+        height: 600px !important;
         max-width: calc(100vw - 40px) !important;
-        max-height: calc(100vh - 120px) !important;
-        min-height: 300px !important;
+        max-height: calc(100vh - 100px) !important;
+        min-height: 500px !important;
       }
 
       @media (max-width: 768px) {
@@ -141,16 +142,25 @@
           height: calc(100vh - 120px) !important;
           right: 16px !important;
           left: 16px !important;
-          bottom: 80px !important;
-          min-height: 250px !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          min-height: 500px !important;
+        }
+      }
+
+      @media (max-height: 800px) {
+        #chatModal {
+          height: calc(100vh - 100px) !important;
+          max-height: calc(100vh - 100px) !important;
+          min-height: 450px !important;
         }
       }
 
       @media (max-height: 600px) {
         #chatModal {
-          height: calc(100vh - 100px) !important;
-          max-height: calc(100vh - 100px) !important;
-          min-height: 200px !important;
+          height: calc(100vh - 80px) !important;
+          max-height: calc(100vh - 80px) !important;
+          min-height: 400px !important;
         }
       }
 
@@ -160,8 +170,18 @@
           height: calc(100vh - 120px) !important;
           right: 12px !important;
           left: 12px !important;
-          min-height: 200px !important;
+          min-height: 450px !important;
         }
+      }
+
+      /* Ensure iframe content fits properly */
+      #chatModal iframe {
+        width: 100% !important;
+        height: 100% !important;
+        border: none !important;
+        border-radius: 32px !important;
+        overflow: hidden !important;
+        display: block !important;
       }
     </style>
   </head>
@@ -188,7 +208,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         opacity: 0;
-        transform: scale(0.8) translateX(0);
+        transform: scale(0.8);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -250,14 +270,15 @@
       style="
         display: none;
         position: fixed;
-        bottom: 80px;
+        top: 50%;
         right: 20px;
+        transform: translateY(-50%);
         width: 350px;
-        height: calc(100vh - 120px);
+        height: 600px;
         z-index: 10000;
         background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+        border-radius: 32px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
         overflow: hidden;
         max-width: calc(100vw - 40px);
         max-height: calc(100vh - 120px);
@@ -312,7 +333,7 @@
             if (isMobile) {
               // Mobile: Start as circular button (always visible)
               chatButton.style.opacity = '1';
-              chatButton.style.transform = 'scale(1) translateX(0)';
+              chatButton.style.transform = 'scale(1)';
               chatButton.style.pointerEvents = 'auto';
               chatButton.style.width = '60px';
               chatButton.style.height = '60px';
@@ -326,7 +347,7 @@
             } else {
               // Desktop: Start hidden
               chatButton.style.opacity = '0';
-              chatButton.style.transform = 'scale(0.8) translateX(0)';
+              chatButton.style.transform = 'scale(0.8)';
               chatButton.style.pointerEvents = 'none';
             }
           }
@@ -365,12 +386,12 @@
                 if (isMobile) {
                   // Mobile: Always visible, just expand
                   chatButton.style.opacity = '1';
-                  chatButton.style.transform = 'scale(1) translateX(0)';
+                  chatButton.style.transform = 'scale(1)';
                   chatButton.style.pointerEvents = 'auto';
                 } else {
                   // Desktop: Fade in and expand
                   chatButton.style.opacity = '1';
-                  chatButton.style.transform = 'scale(1) translateX(0)';
+                  chatButton.style.transform = 'scale(1)';
                   chatButton.style.pointerEvents = 'auto';
                 }
 
@@ -391,7 +412,7 @@
                   cursor: pointer !important;
                   transition: all 0.3s ease !important;
                   opacity: 1 !important;
-                  transform: scale(1) translateX(0) !important;
+                  transform: scale(1) !important;
                   display: flex !important;
                   align-items: center !important;
                   justify-content: flex-start !important;
@@ -416,12 +437,12 @@
                 if (isMobile) {
                   // Mobile: Stay visible, just shrink to circular
                   chatButton.style.opacity = '1';
-                  chatButton.style.transform = 'scale(1) translateX(0)';
+                  chatButton.style.transform = 'scale(1)';
                   chatButton.style.pointerEvents = 'auto';
                 } else {
                   // Desktop: Hide completely
                   chatButton.style.opacity = '0';
-                  chatButton.style.transform = 'scale(0.8) translateX(0)';
+                  chatButton.style.transform = 'scale(0.8)';
                   chatButton.style.pointerEvents = 'none';
                 }
 
@@ -442,7 +463,7 @@
                   cursor: pointer !important;
                   transition: all 0.3s ease !important;
                   opacity: ${isMobile ? '1' : '0'} !important;
-                  transform: ${isMobile ? 'scale(1) translateX(0)' : 'scale(0.8) translateX(0)'} !important;
+                  transform: ${isMobile ? 'scale(1)' : 'scale(0.8)'} !important;
                   display: flex !important;
                   align-items: center !important;
                   justify-content: center !important;
@@ -531,7 +552,7 @@
         openChatBtn.addEventListener('mouseenter', function () {
           // Only apply hover effects when button is visible
           if (this.style.opacity === '1') {
-            this.style.transform = 'scale(1.02) translateX(0)';
+            this.style.transform = 'scale(1.02)';
             this.style.boxShadow = '0 6px 25px rgba(102,126,234,0.6)';
           }
         });
@@ -539,7 +560,7 @@
         openChatBtn.addEventListener('mouseleave', function () {
           // Only apply hover effects when button is visible
           if (this.style.opacity === '1') {
-            this.style.transform = 'scale(1) translateX(0)';
+            this.style.transform = 'scale(1)';
             this.style.boxShadow = '0 4px 20px rgba(102,126,234,0.4)';
           }
         });
