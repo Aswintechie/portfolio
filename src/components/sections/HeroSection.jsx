@@ -221,48 +221,12 @@ const HeroSection = React.memo(function HeroSection() {
                 </motion.span>
               </motion.div>
 
-              {/* Experience Stats */}
+              {/* CTA Buttons */}
               <motion.div
+                className='flex flex-col sm:flex-row gap-4 mb-12 justify-center'
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className='flex items-center justify-center mb-8'
-              >
-                <div className='flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-4 border border-white/20'>
-                  <motion.div 
-                    className='w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 border border-white/20 flex items-center justify-center'
-                    animate={{ 
-                      rotateY: [0, 360],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity, 
-                      ease: 'easeInOut' 
-                    }}
-                  >
-                    <Code size={24} className='text-emerald-300' />
-                  </motion.div>
-                  <div className='text-center'>
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 1, delay: 0.7, type: 'spring' }}
-                      className='text-2xl font-black text-white'
-                    >
-                      {experience}
-                    </motion.div>
-                    <div className='text-white/70 text-sm font-medium'>Years Experience</div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* CTA Buttons */}
-              <motion.div
-                className='flex flex-col sm:flex-row gap-4 mb-8 justify-center'
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
               >
                 <motion.a
                   ref={contactButtonRef}
@@ -299,8 +263,8 @@ const HeroSection = React.memo(function HeroSection() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className='flex items-center justify-center space-x-6 mb-8'
+                transition={{ delay: 0.7 }}
+                className='flex items-center justify-center space-x-6'
               >
                 {[
                   { icon: Github, href: 'https://github.com/Aswin-coder', label: 'GitHub', color: 'from-gray-400 to-gray-600' },
@@ -333,122 +297,12 @@ const HeroSection = React.memo(function HeroSection() {
                   </motion.a>
                 ))}
               </motion.div>
-
-              {/* Quick Info Tags */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-                className='flex flex-wrap items-center justify-center gap-4'
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className='bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                >
-                  <div className='flex items-center space-x-3'>
-                    <motion.div 
-                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400/20 to-pink-400/20 flex items-center justify-center'
-                      animate={{ 
-                        rotate: [0, 360] 
-                      }}
-                      transition={{ 
-                        duration: 8, 
-                        repeat: Infinity, 
-                        ease: 'linear' 
-                      }}
-                    >
-                      <Cpu size={16} className='text-purple-300' />
-                    </motion.div>
-                    <div>
-                      <div className='text-white font-semibold text-sm'>Tech Enthusiast</div>
-                      <div className='text-white/60 text-xs'>Always Learning</div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className='bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                >
-                  <div className='flex items-center space-x-3'>
-                    <motion.div 
-                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center'
-                      animate={{ 
-                        scale: [1, 1.2, 1],
-                        rotateY: [0, 180, 360]
-                      }}
-                      transition={{ 
-                        duration: 4, 
-                        repeat: Infinity, 
-                        ease: 'easeInOut' 
-                      }}
-                    >
-                      <Cloud size={16} className='text-blue-300' />
-                    </motion.div>
-                    <div>
-                      <div className='text-white font-semibold text-sm'>Cloud Expert</div>
-                      <div className='text-white/60 text-xs'>Modern Infrastructure</div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className='bg-gradient-to-br from-teal-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                >
-                  <div className='flex items-center space-x-3'>
-                    <motion.div 
-                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400/20 to-cyan-400/20 flex items-center justify-center'
-                      animate={{ 
-                        rotateY: [0, 360] 
-                      }}
-                      transition={{ 
-                        duration: 6, 
-                        repeat: Infinity, 
-                        ease: 'linear' 
-                      }}
-                    >
-                      <span className='text-lg'>💡</span>
-                    </motion.div>
-                    <div>
-                      <div className='text-white font-semibold text-sm'>Innovation Focus</div>
-                      <div className='text-white/60 text-xs'>Creative Solutions</div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className='bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                >
-                  <div className='flex items-center space-x-3'>
-                    <motion.div 
-                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-400/20 to-purple-400/20 flex items-center justify-center'
-                      animate={{ 
-                        y: [0, -2, 0],
-                        rotate: [0, 5, -5, 0] 
-                      }}
-                      transition={{ 
-                        duration: 3, 
-                        repeat: Infinity, 
-                        ease: 'easeInOut' 
-                      }}
-                    >
-                      <span className='text-lg'>📍</span>
-                    </motion.div>
-                    <div>
-                      <div className='text-white font-semibold text-sm'>Based in</div>
-                      <div className='text-indigo-300 text-xs font-bold'>Pondicherry, India</div>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll to Explore Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: showScrollIndicator ? 1 : 0 }}
@@ -457,13 +311,16 @@ const HeroSection = React.memo(function HeroSection() {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className='w-6 h-10 border-2 border-white/30 rounded-full flex justify-center'
+          className='flex flex-col items-center space-y-2'
         >
-          <motion.div
-            animate={{ y: [0, 16, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className='w-1 h-3 bg-white/50 rounded-full mt-2'
-          />
+          <span className='text-white/60 text-sm font-medium'>Scroll to explore</span>
+          <div className='w-6 h-10 border-2 border-white/30 rounded-full flex justify-center'>
+            <motion.div
+              animate={{ y: [0, 16, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className='w-1 h-3 bg-white/50 rounded-full mt-2'
+            />
+          </div>
         </motion.div>
       </motion.div>
     </section>
