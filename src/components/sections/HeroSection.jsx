@@ -115,129 +115,267 @@ const HeroSection = React.memo(function HeroSection() {
       <AnimatedParticles />
       <FloatingElements />
 
-      {/* Main Content - Unified Single Container */}
+      {/* Main Content - No Card, Direct Content */}
       <div className='container-custom relative z-10 min-h-screen flex items-center py-20'>
         <div className='w-full'>
-          {/* Single Unified Hero Container */}
+          {/* Content Without Card Container */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className='relative max-w-6xl mx-auto'
           >
-            <div className='bg-white/5 backdrop-blur-xl rounded-3xl p-8 lg:p-16 border border-white/10 shadow-2xl'>
-              {/* Glassmorphism inner glow */}
-              <div className='absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none' />
-              
-              {/* Content */}
-              <div className='relative z-10'>
-                {/* Modern Greeting */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className='flex items-center justify-center space-x-3 mb-8'
+            {/* Content */}
+            <div className='relative z-10'>
+              {/* Modern Greeting */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className='flex items-center justify-center space-x-3 mb-8'
+              >
+                <div className='w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 backdrop-blur-sm border border-white/20 flex items-center justify-center'>
+                  <motion.div
+                    animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
+                    transition={{ duration: 2, delay: 1, repeat: Infinity, repeatDelay: 4 }}
+                    className='text-2xl'
+                  >
+                    👋
+                  </motion.div>
+                </div>
+                <span className='text-xl font-medium text-white/80'>Hello, I'm</span>
+              </motion.div>
+
+              {/* Main Title */}
+              <motion.h1
+                className='text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight text-center'
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <span className='relative inline-block'>
+                  <span className='bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 bg-clip-text text-transparent'>
+                    Aswin
+                  </span>
+                  {/* Neon glow effect */}
+                  <motion.div
+                    className='absolute -inset-1 bg-gradient-to-r from-cyan-400/20 to-purple-400/20 rounded-lg blur-lg'
+                    animate={{
+                      opacity: [0.3, 0.8, 0.3],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                </span>
+              </motion.h1>
+
+              {/* Subtitle */}
+              <motion.div
+                className='text-2xl sm:text-3xl lg:text-4xl mb-8 font-bold text-center'
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <span className='text-white/90'>Software Developer</span>
+                <br />
+                <span className='bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent'>
+                  Engineer
+                </span>
+              </motion.div>
+
+              {/* Description */}
+              <motion.div
+                className='text-lg text-white/70 mb-8 max-w-3xl mx-auto leading-relaxed text-center'
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+              >
+                <motion.span
+                  initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+                  animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                  transition={{ delay: 0.6, duration: 0.8, ease: 'easeOut' }}
+                  className='inline-block'
                 >
-                  <div className='w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 backdrop-blur-sm border border-white/20 flex items-center justify-center'>
+                  Crafting innovative digital solutions with modern technologies.
+                </motion.span>
+                {' '}
+                <motion.span
+                  initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+                  animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                  transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
+                  className='inline-block'
+                >
+                  Specializing in scalable applications and cloud infrastructure
+                </motion.span>
+                {' '}
+                <motion.span
+                  initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+                  animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                  transition={{ delay: 1.0, duration: 0.8, ease: 'easeOut' }}
+                  className='inline-block'
+                >
+                  with <span className='text-cyan-300 font-semibold'>{experience}</span> of experience.
+                </motion.span>
+              </motion.div>
+
+              {/* Experience Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className='flex items-center justify-center mb-8'
+              >
+                <div className='flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-4 border border-white/20'>
+                  <motion.div 
+                    className='w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 border border-white/20 flex items-center justify-center'
+                    animate={{ 
+                      rotateY: [0, 360],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      duration: 4, 
+                      repeat: Infinity, 
+                      ease: 'easeInOut' 
+                    }}
+                  >
+                    <Code size={24} className='text-emerald-300' />
+                  </motion.div>
+                  <div className='text-center'>
                     <motion.div
-                      animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
-                      transition={{ duration: 2, delay: 1, repeat: Infinity, repeatDelay: 4 }}
-                      className='text-2xl'
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 1, delay: 0.7, type: 'spring' }}
+                      className='text-2xl font-black text-white'
                     >
-                      👋
+                      {experience}
                     </motion.div>
+                    <div className='text-white/70 text-sm font-medium'>Years Experience</div>
                   </div>
-                  <span className='text-xl font-medium text-white/80'>Hello, I'm</span>
-                </motion.div>
+                </div>
+              </motion.div>
 
-                {/* Main Title */}
-                <motion.h1
-                  className='text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight text-center'
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
+              {/* CTA Buttons */}
+              <motion.div
+                className='flex flex-col sm:flex-row gap-4 mb-8 justify-center'
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <motion.a
+                  ref={contactButtonRef}
+                  href='#contact'
+                  onClick={handleContactClick}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className='group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-2xl overflow-hidden shadow-lg hover:shadow-cyan-500/25 transition-all duration-300'
                 >
-                  <span className='relative inline-block'>
-                    <span className='bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 bg-clip-text text-transparent'>
-                      Aswin
-                    </span>
-                    {/* Neon glow effect */}
-                    <motion.div
-                      className='absolute -inset-1 bg-gradient-to-r from-cyan-400/20 to-purple-400/20 rounded-lg blur-lg'
-                      animate={{
-                        opacity: [0.3, 0.8, 0.3],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }}
-                    />
+                  <span className='relative z-10 flex items-center space-x-2'>
+                    <Sparkles size={20} />
+                    <span>Let's Connect</span>
+                    <ArrowRight size={20} className='group-hover:translate-x-1 transition-transform' />
                   </span>
-                </motion.h1>
+                  <div className='absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity' />
+                </motion.a>
 
-                {/* Subtitle */}
-                <motion.div
-                  className='text-2xl sm:text-3xl lg:text-4xl mb-8 font-bold text-center'
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
+                <motion.a
+                  ref={workButtonRef}
+                  href='#experience'
+                  onClick={handleWorkClick}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className='group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
                 >
-                  <span className='text-white/90'>Software Developer</span>
-                  <br />
-                  <span className='bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent'>
-                    Engineer
+                  <span className='flex items-center space-x-2'>
+                    <Star size={20} />
+                    <span>View Work</span>
                   </span>
-                </motion.div>
+                </motion.a>
+              </motion.div>
 
-                {/* Description */}
-                <motion.div
-                  className='text-lg text-white/70 mb-8 max-w-3xl mx-auto leading-relaxed text-center'
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.8 }}
-                >
-                  <motion.span
-                    initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
-                    animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                    transition={{ delay: 0.6, duration: 0.8, ease: 'easeOut' }}
-                    className='inline-block'
+              {/* Social Links */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className='flex items-center justify-center space-x-6 mb-8'
+              >
+                {[
+                  { icon: Github, href: 'https://github.com/Aswin-coder', label: 'GitHub', color: 'from-gray-400 to-gray-600' },
+                  { icon: Linkedin, href: 'https://www.linkedin.com/in/aswin4122001/', label: 'LinkedIn', color: 'from-blue-400 to-blue-600' },
+                  { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email', color: 'from-red-400 to-red-600' },
+                ].map((social, index) => (
+                  <motion.a
+                    key={social.label}
+                    href={social.href}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    whileHover={{ 
+                      scale: 1.2, 
+                      y: -6,
+                      rotateZ: [0, 5, -5, 0]
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                    animate={{
+                      y: [0, -2, 0],
+                    }}
+                    transition={{
+                      duration: 2 + index * 0.5,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                      delay: index * 0.2
+                    }}
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300`}
                   >
-                    Crafting innovative digital solutions with modern technologies.
-                  </motion.span>
-                  {' '}
-                  <motion.span
-                    initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
-                    animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                    transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
-                    className='inline-block'
-                  >
-                    Specializing in scalable applications and cloud infrastructure
-                  </motion.span>
-                  {' '}
-                  <motion.span
-                    initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
-                    animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                    transition={{ delay: 1.0, duration: 0.8, ease: 'easeOut' }}
-                    className='inline-block'
-                  >
-                    with <span className='text-cyan-300 font-semibold'>{experience}</span> of experience.
-                  </motion.span>
-                </motion.div>
+                    <social.icon size={20} />
+                  </motion.a>
+                ))}
+              </motion.div>
 
-                {/* Experience Stats */}
+              {/* Quick Info Tags */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+                className='flex flex-wrap items-center justify-center gap-4'
+              >
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className='flex items-center justify-center mb-8'
+                  whileHover={{ scale: 1.05 }}
+                  className='bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
                 >
-                  <div className='flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-4 border border-white/20'>
+                  <div className='flex items-center space-x-3'>
                     <motion.div 
-                      className='w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 border border-white/20 flex items-center justify-center'
+                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400/20 to-pink-400/20 flex items-center justify-center'
                       animate={{ 
-                        rotateY: [0, 360],
-                        scale: [1, 1.1, 1]
+                        rotate: [0, 360] 
+                      }}
+                      transition={{ 
+                        duration: 8, 
+                        repeat: Infinity, 
+                        ease: 'linear' 
+                      }}
+                    >
+                      <Cpu size={16} className='text-purple-300' />
+                    </motion.div>
+                    <div>
+                      <div className='text-white font-semibold text-sm'>Tech Enthusiast</div>
+                      <div className='text-white/60 text-xs'>Always Learning</div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className='bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
+                >
+                  <div className='flex items-center space-x-3'>
+                    <motion.div 
+                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center'
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        rotateY: [0, 180, 360]
                       }}
                       transition={{ 
                         duration: 4, 
@@ -245,209 +383,66 @@ const HeroSection = React.memo(function HeroSection() {
                         ease: 'easeInOut' 
                       }}
                     >
-                      <Code size={24} className='text-emerald-300' />
+                      <Cloud size={16} className='text-blue-300' />
                     </motion.div>
-                    <div className='text-center'>
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 1, delay: 0.7, type: 'spring' }}
-                        className='text-2xl font-black text-white'
-                      >
-                        {experience}
-                      </motion.div>
-                      <div className='text-white/70 text-sm font-medium'>Years Experience</div>
+                    <div>
+                      <div className='text-white font-semibold text-sm'>Cloud Expert</div>
+                      <div className='text-white/60 text-xs'>Modern Infrastructure</div>
                     </div>
                   </div>
                 </motion.div>
 
-                {/* CTA Buttons */}
                 <motion.div
-                  className='flex flex-col sm:flex-row gap-4 mb-8 justify-center'
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 }}
+                  whileHover={{ scale: 1.05 }}
+                  className='bg-gradient-to-br from-teal-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
                 >
-                  <motion.a
-                    ref={contactButtonRef}
-                    href='#contact'
-                    onClick={handleContactClick}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className='group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-2xl overflow-hidden shadow-lg hover:shadow-cyan-500/25 transition-all duration-300'
-                  >
-                    <span className='relative z-10 flex items-center space-x-2'>
-                      <Sparkles size={20} />
-                      <span>Let's Connect</span>
-                      <ArrowRight size={20} className='group-hover:translate-x-1 transition-transform' />
-                    </span>
-                    <div className='absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity' />
-                  </motion.a>
-
-                  <motion.a
-                    ref={workButtonRef}
-                    href='#experience'
-                    onClick={handleWorkClick}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className='group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300'
-                  >
-                    <span className='flex items-center space-x-2'>
-                      <Star size={20} />
-                      <span>View Work</span>
-                    </span>
-                  </motion.a>
-                </motion.div>
-
-                {/* Social Links */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
-                  className='flex items-center justify-center space-x-6 mb-8'
-                >
-                  {[
-                    { icon: Github, href: 'https://github.com/Aswin-coder', label: 'GitHub', color: 'from-gray-400 to-gray-600' },
-                    { icon: Linkedin, href: 'https://www.linkedin.com/in/aswin4122001/', label: 'LinkedIn', color: 'from-blue-400 to-blue-600' },
-                    { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email', color: 'from-red-400 to-red-600' },
-                  ].map((social, index) => (
-                    <motion.a
-                      key={social.label}
-                      href={social.href}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      whileHover={{ 
-                        scale: 1.2, 
-                        y: -6,
-                        rotateZ: [0, 5, -5, 0]
+                  <div className='flex items-center space-x-3'>
+                    <motion.div 
+                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400/20 to-cyan-400/20 flex items-center justify-center'
+                      animate={{ 
+                        rotateY: [0, 360] 
                       }}
-                      whileTap={{ scale: 0.9 }}
-                      animate={{
-                        y: [0, -2, 0],
+                      transition={{ 
+                        duration: 6, 
+                        repeat: Infinity, 
+                        ease: 'linear' 
                       }}
-                      transition={{
-                        duration: 2 + index * 0.5,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.2
-                      }}
-                      className={`w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300`}
                     >
-                      <social.icon size={20} />
-                    </motion.a>
-                  ))}
+                      <span className='text-lg'>💡</span>
+                    </motion.div>
+                    <div>
+                      <div className='text-white font-semibold text-sm'>Innovation Focus</div>
+                      <div className='text-white/60 text-xs'>Creative Solutions</div>
+                    </div>
+                  </div>
                 </motion.div>
 
-                {/* Quick Info Tags */}
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 }}
-                  className='flex flex-wrap items-center justify-center gap-4'
+                  whileHover={{ scale: 1.05 }}
+                  className='bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
                 >
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className='bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                  >
-                    <div className='flex items-center space-x-3'>
-                      <motion.div 
-                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400/20 to-pink-400/20 flex items-center justify-center'
-                        animate={{ 
-                          rotate: [0, 360] 
-                        }}
-                        transition={{ 
-                          duration: 8, 
-                          repeat: Infinity, 
-                          ease: 'linear' 
-                        }}
-                      >
-                        <Cpu size={16} className='text-purple-300' />
-                      </motion.div>
-                      <div>
-                        <div className='text-white font-semibold text-sm'>Tech Enthusiast</div>
-                        <div className='text-white/60 text-xs'>Always Learning</div>
-                      </div>
+                  <div className='flex items-center space-x-3'>
+                    <motion.div 
+                      className='w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-400/20 to-purple-400/20 flex items-center justify-center'
+                      animate={{ 
+                        y: [0, -2, 0],
+                        rotate: [0, 5, -5, 0] 
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity, 
+                        ease: 'easeInOut' 
+                      }}
+                    >
+                      <span className='text-lg'>📍</span>
+                    </motion.div>
+                    <div>
+                      <div className='text-white font-semibold text-sm'>Based in</div>
+                      <div className='text-indigo-300 text-xs font-bold'>Pondicherry, India</div>
                     </div>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className='bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                  >
-                    <div className='flex items-center space-x-3'>
-                      <motion.div 
-                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center'
-                        animate={{ 
-                          scale: [1, 1.2, 1],
-                          rotateY: [0, 180, 360]
-                        }}
-                        transition={{ 
-                          duration: 4, 
-                          repeat: Infinity, 
-                          ease: 'easeInOut' 
-                        }}
-                      >
-                        <Cloud size={16} className='text-blue-300' />
-                      </motion.div>
-                      <div>
-                        <div className='text-white font-semibold text-sm'>Cloud Expert</div>
-                        <div className='text-white/60 text-xs'>Modern Infrastructure</div>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className='bg-gradient-to-br from-teal-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                  >
-                    <div className='flex items-center space-x-3'>
-                      <motion.div 
-                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400/20 to-cyan-400/20 flex items-center justify-center'
-                        animate={{ 
-                          rotateY: [0, 360] 
-                        }}
-                        transition={{ 
-                          duration: 6, 
-                          repeat: Infinity, 
-                          ease: 'linear' 
-                        }}
-                      >
-                        <span className='text-lg'>💡</span>
-                      </motion.div>
-                      <div>
-                        <div className='text-white font-semibold text-sm'>Innovation Focus</div>
-                        <div className='text-white/60 text-xs'>Creative Solutions</div>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className='bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
-                  >
-                    <div className='flex items-center space-x-3'>
-                      <motion.div 
-                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-400/20 to-purple-400/20 flex items-center justify-center'
-                        animate={{ 
-                          y: [0, -2, 0],
-                          rotate: [0, 5, -5, 0] 
-                        }}
-                        transition={{ 
-                          duration: 3, 
-                          repeat: Infinity, 
-                          ease: 'easeInOut' 
-                        }}
-                      >
-                        <span className='text-lg'>📍</span>
-                      </motion.div>
-                      <div>
-                        <div className='text-white font-semibold text-sm'>Based in</div>
-                        <div className='text-indigo-300 text-xs font-bold'>Pondicherry, India</div>
-                      </div>
-                    </div>
-                  </motion.div>
+                  </div>
                 </motion.div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
