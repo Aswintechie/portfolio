@@ -49,7 +49,7 @@ const ProjectsSection = () => {
 
       {/* Cosmic Particles */}
       <div className='absolute inset-0 pointer-events-none'>
-        {Array.from({ length: 25 }, (_, i) => (
+        {Array.from({ length: 8 }, (_, i) => (
           <motion.div
             key={i}
             className='absolute w-1 h-1 bg-stellar-400/60 rounded-full'

@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Isometric Theme Sample</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        min-height: 100vh;
+        padding: 2rem;
+        perspective: 1000px;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        transform-style: preserve-3d;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        transform: rotateX(15deg) translateZ(50px);
+        animation: floatHeader 6s ease-in-out infinite;
+      }
+
+      @keyframes floatHeader {
+        0%,
+        100% {
+          transform: rotateX(15deg) translateZ(50px) translateY(0px);
+        }
+        50% {
+          transform: rotateX(15deg) translateZ(50px) translateY(-10px);
+        }
+      }
+
+      .header h1 {
+        color: white;
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow:
+          0 0 10px rgba(255, 255, 255, 0.5),
+          0 10px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.2rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .iso-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: rotateX(15deg) rotateY(-5deg) translateZ(30px);
+        transform-style: preserve-3d;
+        position: relative;
+      }
+
+      .iso-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        border-radius: 20px;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .iso-card:hover::before {
+        opacity: 1;
+      }
+
+      .iso-card:hover {
+        transform: rotateX(25deg) rotateY(5deg) translateZ(60px) scale(1.05);
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.15),
+          0 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+
+      .iso-card h3 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        transform: translateZ(20px);
+      }
+
+      .iso-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        transform: translateZ(10px);
+      }
+
+      .iso-button {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        transform: translateZ(30px);
+        box-shadow:
+          0 10px 20px rgba(102, 126, 234, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+
+      .iso-button:hover {
+        transform: translateZ(40px) translateY(-5px);
+        box-shadow:
+          0 15px 30px rgba(102, 126, 234, 0.4),
+          0 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        transform-style: preserve-3d;
+      }
+
+      .skill-tag {
+        display: inline-block;
+        background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+        color: #333;
+        padding: 0.5rem 1rem;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin: 0.25rem;
+        font-weight: 500;
+        box-shadow:
+          0 5px 10px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+        transform: translateZ(15px);
+        transition: transform 0.3s ease;
+      }
+
+      .skill-tag:hover {
+        transform: translateZ(25px);
+      }
+
+      .profile-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 30px;
+        padding: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow:
+          0 30px 60px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+        transform: rotateX(20deg) translateZ(50px);
+        transform-style: preserve-3d;
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        box-shadow:
+          0 15px 30px rgba(102, 126, 234, 0.3),
+          0 0 0 3px rgba(255, 255, 255, 0.1);
+        transform: translateZ(40px);
+        transition: transform 0.3s ease;
+      }
+
+      .profile-avatar:hover {
+        transform: translateZ(60px) rotateY(15deg);
+      }
+
+      .isometric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+        transform: rotateX(45deg) rotateY(-15deg) translateZ(20px);
+        transform-style: preserve-3d;
+      }
+
+      .iso-cube {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 10px;
+        transform-style: preserve-3d;
+        animation: rotateCube 10s linear infinite;
+        box-shadow:
+          0 10px 20px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+
+      @keyframes rotateCube {
+        0% {
+          transform: rotateX(0deg) rotateY(0deg);
+        }
+        100% {
+          transform: rotateX(360deg) rotateY(360deg);
+        }
+      }
+
+      .iso-cube:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .iso-cube:nth-child(2) {
+        animation-delay: 1s;
+      }
+      .iso-cube:nth-child(3) {
+        animation-delay: 2s;
+      }
+      .iso-cube:nth-child(4) {
+        animation-delay: 3s;
+      }
+
+      .project-showcase {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+        transform-style: preserve-3d;
+      }
+
+      .project-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+        transform: rotateX(10deg) rotateY(-5deg) translateZ(20px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .project-card:hover {
+        transform: rotateX(20deg) rotateY(5deg) translateZ(50px) scale(1.05);
+      }
+
+      .project-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        transform: translateZ(30px);
+        box-shadow:
+          0 10px 20px rgba(102, 126, 234, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+
+      .floating-shapes {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .floating-shape {
+        position: absolute;
+        background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-radius: 10px;
+        animation: floatShape 15s ease-in-out infinite;
+      }
+
+      .floating-shape:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .floating-shape:nth-child(2) {
+        width: 60px;
+        height: 60px;
+        top: 30%;
+        right: 15%;
+        animation-delay: 3s;
+      }
+
+      .floating-shape:nth-child(3) {
+        width: 100px;
+        height: 100px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 6s;
+      }
+
+      .floating-shape:nth-child(4) {
+        width: 40px;
+        height: 40px;
+        bottom: 40%;
+        right: 10%;
+        animation-delay: 9s;
+      }
+
+      @keyframes floatShape {
+        0%,
+        100% {
+          transform: translateY(0px) translateX(0px) rotateX(0deg) rotateY(0deg);
+        }
+        25% {
+          transform: translateY(-20px) translateX(10px) rotateX(15deg) rotateY(45deg);
+        }
+        50% {
+          transform: translateY(10px) translateX(-15px) rotateX(30deg) rotateY(90deg);
+        }
+        75% {
+          transform: translateY(-15px) translateX(5px) rotateX(45deg) rotateY(135deg);
+        }
+      }
+
+      .stats-3d {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 3rem;
+        transform: rotateX(15deg) translateZ(30px);
+      }
+
+      .stat-3d {
+        text-align: center;
+        transform-style: preserve-3d;
+      }
+
+      .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: white;
+        text-shadow:
+          0 0 10px rgba(255, 255, 255, 0.5),
+          0 10px 20px rgba(0, 0, 0, 0.3);
+        transform: translateZ(40px);
+      }
+
+      .stat-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+        font-weight: 500;
+        transform: translateZ(20px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="floating-shapes">
+      <div class="floating-shape"></div>
+      <div class="floating-shape"></div>
+      <div class="floating-shape"></div>
+      <div class="floating-shape"></div>
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <h1>3D Isometric Design</h1>
+        <p>Layered depth effects with geometric 3D transformations</p>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">👨‍💻</div>
+        <h2 style="color: #333; margin-bottom: 1rem; font-size: 2rem; transform: translateZ(30px)">
+          Software Engineer
+        </h2>
+        <p style="color: #666; transform: translateZ(20px)">
+          3D-focused developer creating immersive digital experiences
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="iso-card">
+          <h3>About Me</h3>
+          <p>
+            Passionate about creating dimensional user experiences with cutting-edge 3D
+            technologies. I specialize in transforming flat designs into engaging interactive
+            environments.
+          </p>
+          <button class="iso-button">Explore More</button>
+        </div>
+
+        <div class="iso-card">
+          <h3>Skills</h3>
+          <div>
+            <span class="skill-tag">Three.js</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">WebGL</span>
+            <span class="skill-tag">CSS 3D</span>
+            <span class="skill-tag">Blender</span>
+            <span class="skill-tag">Unity</span>
+          </div>
+        </div>
+
+        <div class="iso-card">
+          <h3>Latest Project</h3>
+          <p>
+            Interactive 3D portfolio website with real-time lighting effects and physics-based
+            animations using Three.js and React.
+          </p>
+          <button class="iso-button">View Demo</button>
+        </div>
+
+        <div class="iso-card">
+          <h3>Experience</h3>
+          <p>
+            5+ years creating immersive web experiences, from simple CSS transforms to complex WebGL
+            applications and virtual reality interfaces.
+          </p>
+          <button class="iso-button">See Portfolio</button>
+        </div>
+      </div>
+
+      <div class="project-showcase">
+        <div class="project-card">
+          <div class="project-icon">🎮</div>
+          <h4 style="color: #333; margin-bottom: 0.5rem">3D Game Engine</h4>
+          <p style="color: #666; font-size: 0.9rem">
+            WebGL-based game engine with physics simulation
+          </p>
+        </div>
+        <div class="project-card">
+          <div class="project-icon">🏗️</div>
+          <h4 style="color: #333; margin-bottom: 0.5rem">AR Visualizer</h4>
+          <p style="color: #666; font-size: 0.9rem">Augmented reality furniture placement app</p>
+        </div>
+        <div class="project-card">
+          <div class="project-icon">🎨</div>
+          <h4 style="color: #333; margin-bottom: 0.5rem">3D Art Gallery</h4>
+          <p style="color: #666; font-size: 0.9rem">Virtual museum with interactive exhibits</p>
+        </div>
+        <div class="project-card">
+          <div class="project-icon">📱</div>
+          <h4 style="color: #333; margin-bottom: 0.5rem">VR Interface</h4>
+          <p style="color: #666; font-size: 0.9rem">Intuitive virtual reality user interface</p>
+        </div>
+      </div>
+
+      <div class="stats-3d">
+        <div class="stat-3d">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">3D Projects</div>
+        </div>
+        <div class="stat-3d">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-3d">
+          <div class="stat-number">100K+</div>
+          <div class="stat-label">Code Lines</div>
+        </div>
+        <div class="stat-3d">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">Client Satisfaction</div>
+        </div>
+      </div>
+
+      <div class="isometric-grid">
+        <div class="iso-cube"></div>
+        <div class="iso-cube"></div>
+        <div class="iso-cube"></div>
+        <div class="iso-cube"></div>
+      </div>
+    </div>
+  </body>
+</html>

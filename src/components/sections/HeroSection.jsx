@@ -264,7 +264,7 @@ const HeroSection = React.memo(function HeroSection() {
 
             {/* Enhanced Description */}
             <motion.p
-              className='text-lg sm:text-xl md:text-2xl mb-8 text-stellar-300 leading-relaxed max-w-4xl mx-auto px-4 sm:px-0'
+              className='text-base sm:text-lg md:text-xl mb-8 text-stellar-300 leading-relaxed max-w-4xl mx-auto px-4 sm:px-0'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
@@ -276,7 +276,7 @@ const HeroSection = React.memo(function HeroSection() {
               Specialized in <span className='text-glow font-semibold'>
                 modern architectures
               </span>{' '}
-              with <span className='text-energy-nuclear font-semibold'>{experience}</span> of
+              with <span className='text-energy-nuclear font-semibold'>2+ years</span> of
               professional experience from Pondicherry.
             </motion.p>
 

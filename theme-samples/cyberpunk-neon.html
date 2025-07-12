@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cyberpunk Neon Theme Sample</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Share Tech Mono', monospace;
+        background: #0a0a0a;
+        color: #00ff00;
+        min-height: 100vh;
+        padding: 2rem;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 255, 255, 0.03) 2px,
+            rgba(0, 255, 255, 0.03) 4px
+          ),
+          radial-gradient(circle at 30% 40%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 70% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+        animation: scanlines 0.1s linear infinite;
+        z-index: -1;
+      }
+
+      @keyframes scanlines {
+        0% {
+          transform: translateY(0px);
+        }
+        100% {
+          transform: translateY(4px);
+        }
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        font-family: 'Orbitron', monospace;
+        color: #00ffff;
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        text-shadow:
+          0 0 10px #00ffff,
+          0 0 20px #00ffff,
+          0 0 40px #00ffff,
+          0 0 80px #00ffff;
+        animation: flicker 2s infinite alternate;
+      }
+
+      @keyframes flicker {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      .header p {
+        color: #ff00ff;
+        font-size: 1.2rem;
+        text-shadow: 0 0 10px #ff00ff;
+        animation: glitch 3s infinite;
+      }
+
+      @keyframes glitch {
+        0%,
+        90%,
+        100% {
+          transform: translate3d(0, 0, 0);
+        }
+        10% {
+          transform: translate3d(-2px, 0, 0);
+        }
+        20% {
+          transform: translate3d(2px, 0, 0);
+        }
+        30% {
+          transform: translate3d(-2px, 0, 0);
+        }
+        40% {
+          transform: translate3d(2px, 0, 0);
+        }
+        50% {
+          transform: translate3d(-2px, 0, 0);
+        }
+        60% {
+          transform: translate3d(2px, 0, 0);
+        }
+        70% {
+          transform: translate3d(-2px, 0, 0);
+        }
+        80% {
+          transform: translate3d(2px, 0, 0);
+        }
+      }
+
+      .cyber-card {
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.05));
+        border: 2px solid #00ffff;
+        border-radius: 0;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        box-shadow:
+          0 0 20px rgba(0, 255, 255, 0.3),
+          inset 0 0 20px rgba(0, 255, 255, 0.05);
+      }
+
+      .cyber-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          linear-gradient(45deg, transparent 48%, rgba(0, 255, 255, 0.1) 50%, transparent 52%),
+          linear-gradient(-45deg, transparent 48%, rgba(255, 0, 255, 0.1) 50%, transparent 52%);
+        pointer-events: none;
+      }
+
+      .cyber-card:hover {
+        transform: translateY(-5px);
+        border-color: #ff00ff;
+        box-shadow:
+          0 0 30px rgba(255, 0, 255, 0.5),
+          inset 0 0 30px rgba(255, 0, 255, 0.1);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow:
+            0 0 30px rgba(255, 0, 255, 0.5),
+            inset 0 0 30px rgba(255, 0, 255, 0.1);
+        }
+        50% {
+          box-shadow:
+            0 0 50px rgba(255, 0, 255, 0.8),
+            inset 0 0 50px rgba(255, 0, 255, 0.2);
+        }
+      }
+
+      .cyber-card h3 {
+        color: #ffff00;
+        font-family: 'Orbitron', monospace;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        text-shadow: 0 0 10px #ffff00;
+        text-transform: uppercase;
+      }
+
+      .cyber-card p {
+        color: #00ff00;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        font-family: 'Share Tech Mono', monospace;
+      }
+
+      .cyber-button {
+        background: linear-gradient(45deg, #ff00ff, #00ffff);
+        color: #000;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-family: 'Orbitron', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+      }
+
+      .cyber-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.5s;
+      }
+
+      .cyber-button:hover::before {
+        left: 100%;
+      }
+
+      .cyber-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 40px rgba(255, 0, 255, 0.8);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .skill-tag {
+        display: inline-block;
+        background: rgba(0, 255, 255, 0.2);
+        color: #00ffff;
+        padding: 0.5rem 1rem;
+        border: 1px solid #00ffff;
+        font-size: 0.9rem;
+        margin: 0.25rem;
+        font-family: 'Share Tech Mono', monospace;
+        text-transform: uppercase;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+      }
+
+      .profile-card {
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(255, 0, 255, 0.1));
+        border: 3px solid #00ffff;
+        padding: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+        box-shadow:
+          0 0 40px rgba(0, 255, 255, 0.4),
+          inset 0 0 40px rgba(0, 255, 255, 0.1);
+      }
+
+      .profile-card::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+        z-index: -1;
+        animation: borderGlow 3s linear infinite;
+      }
+
+      @keyframes borderGlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #ff00ff, #00ffff);
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #000;
+        border: 3px solid #ffff00;
+        box-shadow:
+          0 0 30px rgba(255, 0, 255, 0.5),
+          inset 0 0 30px rgba(0, 255, 255, 0.3);
+      }
+
+      .terminal-window {
+        background: #000;
+        border: 2px solid #00ff00;
+        border-radius: 0;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        font-family: 'Share Tech Mono', monospace;
+        position: relative;
+      }
+
+      .terminal-header {
+        background: #00ff00;
+        color: #000;
+        padding: 0.5rem;
+        margin: -1rem -1rem 1rem -1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .terminal-content {
+        color: #00ff00;
+        line-height: 1.4;
+      }
+
+      .terminal-cursor {
+        display: inline-block;
+        background: #00ff00;
+        width: 10px;
+        height: 20px;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .neon-text {
+        animation: neonGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes neonGlow {
+        from {
+          text-shadow:
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 30px #00ffff,
+            0 0 40px #00ffff;
+        }
+        to {
+          text-shadow:
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 15px #00ffff,
+            0 0 20px #00ffff;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="neon-text">CYBERPUNK NEON</h1>
+        <p>Electric neon colors with glitch effects and terminal styling</p>
+      </div>
+
+      <div class="terminal-window">
+        <div class="terminal-header">System Status</div>
+        <div class="terminal-content">
+          > Initializing neural interface...<br />
+          > Connecting to mainframe...<br />
+          > Access granted. Welcome, User.<br />
+          > Portfolio.exe loaded successfully<span class="terminal-cursor"></span>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">🤖</div>
+        <h2
+          style="
+            color: #ffff00;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            text-shadow: 0 0 20px #ffff00;
+          "
+        >
+          CYBER ENGINEER
+        </h2>
+        <p style="color: #00ff00">
+          Neural-enhanced developer specializing in quantum computing and AI systems
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="cyber-card">
+          <h3>Neural Profile</h3>
+          <p>
+            Enhanced cognitive software engineer with direct neural interface capabilities.
+            Specializing in quantum algorithms and AI consciousness development.
+          </p>
+          <button class="cyber-button">Access Data</button>
+        </div>
+
+        <div class="cyber-card">
+          <h3>Skill Matrix</h3>
+          <div>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Neural.js</span>
+            <span class="skill-tag">Quantum</span>
+            <span class="skill-tag">AI/ML</span>
+            <span class="skill-tag">Blockchain</span>
+            <span class="skill-tag">Cybersec</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <h3>Active Project</h3>
+          <p>
+            Quantum-encrypted blockchain platform with AI-powered smart contracts and neural network
+            validation protocols.
+          </p>
+          <button class="cyber-button">View Code</button>
+        </div>
+
+        <div class="cyber-card">
+          <h3>System Stats</h3>
+          <p>
+            Runtime: 2847.5 hours | Neural efficiency: 97.3% | Quantum coherence: STABLE | AI
+            integration: ACTIVE
+          </p>
+          <button class="cyber-button">Full Report</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

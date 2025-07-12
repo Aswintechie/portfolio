@@ -14,10 +14,10 @@ const AnimatedParticles = React.memo(() => {
   const starLayers = React.useMemo(() => {
     const layers = [];
 
-    // Layer 1: Distant stars (small, slow)
+    // Layer 1: Distant stars (small, slow) - OPTIMIZED
     layers.push({
       name: 'distant',
-      count: 50,
+      count: 15,
       sizeRange: [0.5, 1.5],
       opacityRange: [0.3, 0.8],
       animationDuration: [3, 6],
@@ -25,10 +25,10 @@ const AnimatedParticles = React.memo(() => {
       blur: 0,
     });
 
-    // Layer 2: Medium stars (medium, moderate speed)
+    // Layer 2: Medium stars (medium, moderate speed) - OPTIMIZED
     layers.push({
       name: 'medium',
-      count: 30,
+      count: 10,
       sizeRange: [1, 2.5],
       opacityRange: [0.4, 0.9],
       animationDuration: [2, 4],
@@ -36,10 +36,10 @@ const AnimatedParticles = React.memo(() => {
       blur: 0.5,
     });
 
-    // Layer 3: Close stars (larger, faster)
+    // Layer 3: Close stars (larger, faster) - OPTIMIZED
     layers.push({
       name: 'close',
-      count: 20,
+      count: 8,
       sizeRange: [1.5, 3],
       opacityRange: [0.5, 1],
       animationDuration: [1, 3],
@@ -47,10 +47,10 @@ const AnimatedParticles = React.memo(() => {
       blur: 1,
     });
 
-    // Layer 4: Bright stars (special twinkling)
+    // Layer 4: Bright stars (special twinkling) - OPTIMIZED
     layers.push({
       name: 'bright',
-      count: 15,
+      count: 5,
       sizeRange: [2, 4],
       opacityRange: [0.6, 1],
       animationDuration: [0.5, 2],
@@ -76,10 +76,10 @@ const AnimatedParticles = React.memo(() => {
     }));
   }, []);
 
-  // Shooting stars
+  // Shooting stars - OPTIMIZED
   const shootingStars = React.useMemo(
     () =>
-      Array.from({ length: 3 }, (_, i) => ({
+      Array.from({ length: 2 }, (_, i) => ({
         id: `shooting-${i}`,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -90,10 +90,10 @@ const AnimatedParticles = React.memo(() => {
     []
   );
 
-  // Cosmic dust particles
+  // Cosmic dust particles - OPTIMIZED
   const cosmicDust = React.useMemo(
     () =>
-      Array.from({ length: 40 }, (_, i) => ({
+      Array.from({ length: 12 }, (_, i) => ({
         id: `dust-${i}`,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -107,12 +107,14 @@ const AnimatedParticles = React.memo(() => {
   );
 
   return (
-    <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-      {/* Nebula Background Glow */}
+    <div
+      className='absolute inset-0 overflow-hidden pointer-events-none'
+      style={{ willChange: 'transform' }}
+    >
+      {/* Nebula Background Glow - OPTIMIZED */}
       <div className='absolute inset-0'>
-        <div className='absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-radial from-nebula-purple/10 to-transparent rounded-full blur-3xl animate-pulse-slow'></div>
-        <div className='absolute bottom-1/3 right-1/3 w-80 h-80 bg-gradient-radial from-nebula-blue/8 to-transparent rounded-full blur-3xl animate-pulse-slow animation-delay-400'></div>
-        <div className='absolute top-1/2 right-1/4 w-72 h-72 bg-gradient-radial from-nebula-cyan/6 to-transparent rounded-full blur-3xl animate-pulse-slow animation-delay-800'></div>
+        <div className='absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-radial from-nebula-purple/8 to-transparent rounded-full blur-2xl animate-pulse-slow'></div>
+        <div className='absolute bottom-1/3 right-1/3 w-64 h-64 bg-gradient-radial from-nebula-blue/6 to-transparent rounded-full blur-2xl animate-pulse-slow animation-delay-400'></div>
       </div>
 
       {/* Star Layers */}
@@ -143,6 +145,7 @@ const AnimatedParticles = React.memo(() => {
                 delay: star.delay,
                 repeat: Infinity,
                 ease: 'easeInOut',
+                repeatType: 'reverse',
               }}
             />
           ))}

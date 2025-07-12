@@ -51,7 +51,7 @@ const Footer = () => {
 
       {/* Cosmic Particles */}
       <div className='absolute inset-0 pointer-events-none'>
-        {Array.from({ length: 12 }, (_, i) => (
+        {Array.from({ length: 4 }, (_, i) => (
           <motion.div
             key={i}
             className='absolute w-1 h-1 bg-stellar-400/40 rounded-full'

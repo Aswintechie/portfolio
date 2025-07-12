@@ -112,9 +112,11 @@ const Navigation = () => {
             </motion.div>
 
             <div className='hidden sm:block'>
-              <h1 className='text-xl font-cosmic font-bold text-cosmic'>ASWIN.SPACE</h1>
+              <h1 className='text-xl font-cosmic font-bold text-cosmic'>
+                {isScrolled ? 'ASWIN' : 'PORTFOLIO'}
+              </h1>
               <p className='text-xs text-stellar-400 font-space tracking-wider'>
-                SOFTWARE ENGINEER
+                {isScrolled ? 'SOFTWARE ENGINEER' : ''}
               </p>
             </div>
           </motion.div>

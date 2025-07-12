@@ -13,7 +13,7 @@ const FloatingElements = React.memo(() => {
   // Nebula cloud configurations
   const nebulaClouds = React.useMemo(
     () =>
-      Array.from({ length: 8 }, (_, i) => ({
+      Array.from({ length: 3 }, (_, i) => ({
         id: `nebula-${i}`,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -39,7 +39,7 @@ const FloatingElements = React.memo(() => {
   // Cosmic gas formations
   const cosmicGas = React.useMemo(
     () =>
-      Array.from({ length: 12 }, (_, i) => ({
+      Array.from({ length: 4 }, (_, i) => ({
         id: `gas-${i}`,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -62,7 +62,7 @@ const FloatingElements = React.memo(() => {
   // Plasma streams
   const plasmaStreams = React.useMemo(
     () =>
-      Array.from({ length: 6 }, (_, i) => ({
+      Array.from({ length: 2 }, (_, i) => ({
         id: `plasma-${i}`,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -87,7 +87,7 @@ const FloatingElements = React.memo(() => {
   // Cosmic dust swirls
   const dustSwirls = React.useMemo(
     () =>
-      Array.from({ length: 15 }, (_, i) => ({
+      Array.from({ length: 5 }, (_, i) => ({
         id: `dust-swirl-${i}`,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -104,7 +104,7 @@ const FloatingElements = React.memo(() => {
   // Aurora-like energy waves
   const energyWaves = React.useMemo(
     () =>
-      Array.from({ length: 4 }, (_, i) => ({
+      Array.from({ length: 2 }, (_, i) => ({
         id: `energy-${i}`,
         x: Math.random() * 100,
         y: Math.random() * 100,

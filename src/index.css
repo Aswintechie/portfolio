@@ -58,6 +58,21 @@ button,
     box-sizing: border-box;
   }
 
+  /* Performance optimizations for animations */
+  .particle-cosmic,
+  [data-animate='true'] {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+  }
+
+  /* Optimize particle animations */
+  .particle-cosmic {
+    contain: layout style paint;
+    pointer-events: none;
+  }
+
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px; /* Account for fixed header */
