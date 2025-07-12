@@ -2,13 +2,13 @@
  * @file ExperienceSection.jsx
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Professional experience section component with timeline and dynamic content
+ * @description Cosmic experience section component with stellar timeline and holographic design
  */
 
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Briefcase } from 'lucide-react';
+import { Briefcase, Zap, Star, Orbit } from 'lucide-react';
 import { useExperienceCalculator } from '../../hooks';
 import { getExperienceData } from '../../data/experienceData.js';
 import ExperienceEntry from '../ExperienceEntry.jsx';
@@ -21,29 +21,94 @@ const ExperienceSection = () => {
   const experienceData = useMemo(() => getExperienceData(experience), [experience]);
 
   return (
-    <section id='experience' className='section-padding relative overflow-hidden'>
-      {/* Enhanced Background Effects */}
-      <div className='absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/60 to-indigo-50/70'></div>
-      <div className='absolute top-0 left-0 w-full h-full'>
-        <div className='absolute top-32 left-16 w-72 h-72 bg-gradient-to-br from-blue-400/15 to-indigo-400/15 rounded-full blur-3xl'></div>
-        <div className='absolute bottom-32 right-16 w-80 h-80 bg-gradient-to-br from-indigo-400/12 to-blue-400/12 rounded-full blur-3xl'></div>
-        <div className='absolute top-1/2 left-1/3 w-48 h-48 bg-gradient-to-br from-slate-400/10 to-blue-400/10 rounded-full blur-2xl'></div>
-        <div className='absolute top-20 right-1/3 w-32 h-32 bg-gradient-to-br from-blue-300/8 to-indigo-300/8 rounded-full blur-xl'></div>
+    <section
+      id='experience'
+      className='section-padding relative overflow-hidden bg-gradient-to-br from-galaxy-center via-galaxy-arm to-galaxy-dust'
+    >
+      {/* Cosmic Background Effects */}
+      <div className='absolute inset-0'>
+        <div className='absolute inset-0 bg-gradient-cosmic opacity-30'></div>
+        <div className='absolute inset-0 bg-gradient-energy opacity-20'></div>
+
+        {/* Nebula Formations */}
+        <div className='absolute top-20 left-20 w-96 h-96 bg-gradient-radial from-nebula-blue/12 to-transparent rounded-full blur-3xl animate-pulse-slow'></div>
+        <div className='absolute bottom-20 right-20 w-80 h-80 bg-gradient-radial from-nebula-purple/10 to-transparent rounded-full blur-3xl animate-pulse-slow animation-delay-400'></div>
+        <div className='absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-radial from-nebula-cyan/8 to-transparent rounded-full blur-2xl animate-pulse-slow animation-delay-800'></div>
+        <div className='absolute top-20 right-1/3 w-48 h-48 bg-gradient-radial from-energy-electric/6 to-transparent rounded-full blur-xl animate-pulse-slow animation-delay-1200'></div>
       </div>
 
-      {/* More Prominent Floating Elements */}
+      {/* Cosmic Particles */}
       <div className='absolute inset-0 pointer-events-none'>
-        <div className='absolute top-20 right-20 w-12 h-12 border-2 border-blue-200/40 rounded-full opacity-60'></div>
-        <div className='absolute bottom-40 left-32 w-8 h-8 bg-indigo-200/30 rounded-full opacity-70'></div>
-        <div className='absolute top-1/3 right-1/4 w-6 h-6 bg-blue-300/40 rounded-full opacity-60'></div>
-        <div className='absolute bottom-1/4 left-1/4 w-10 h-10 border border-indigo-200/35 rounded-lg opacity-50 rotate-45'></div>
-        <div className='absolute top-1/4 right-1/3 w-4 h-4 bg-blue-200/40 rounded-full opacity-65'></div>
+        {Array.from({ length: 15 }, (_, i) => (
+          <motion.div
+            key={i}
+            className='absolute w-1 h-1 bg-stellar-400/60 rounded-full'
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.3, 1, 0.3],
+            }}
+            transition={{
+              duration: Math.random() * 3 + 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
       </div>
 
-      {/* Additional Mesh Pattern */}
-      <div className='absolute inset-0 opacity-30'>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(59,130,246,0.1)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_75%_75%,rgba(99,102,241,0.08)_0%,transparent_50%)]'></div>
+      {/* Holographic Grid */}
+      <div className='absolute inset-0 opacity-5'>
+        <div
+          className='w-full h-full'
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0,212,255,0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0,212,255,0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+      </div>
+
+      {/* Orbital Rings */}
+      <div className='absolute inset-0 pointer-events-none'>
+        <motion.div
+          className='absolute w-64 h-64 border border-energy-electric/10 rounded-full'
+          style={{
+            left: '10%',
+            top: '20%',
+          }}
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
+
+        <motion.div
+          className='absolute w-48 h-48 border border-energy-plasma/8 rounded-full'
+          style={{
+            right: '15%',
+            bottom: '25%',
+          }}
+          animate={{
+            rotate: [360, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
       </div>
 
       <div className='container-custom relative z-10'>
@@ -54,36 +119,89 @@ const ExperienceSection = () => {
           transition={{ duration: 0.8 }}
           className='text-center mb-16'
         >
+          {/* Status Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className='inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full px-6 py-3 mb-6 backdrop-blur-sm border border-blue-200/30'
+            className='inline-flex items-center space-x-3 holographic rounded-full px-8 py-4 mb-8'
           >
-            <Briefcase size={16} className='text-blue-500' />
-            <span className='text-sm font-semibold text-gray-600 uppercase tracking-wide'>
+            <motion.div
+              className='w-2 h-2 bg-energy-nuclear rounded-full'
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className='text-sm font-cosmic text-stellar-200 uppercase tracking-widest'>
               Professional Journey
             </span>
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+            >
+              <Briefcase size={12} className='text-energy-electric' />
+            </motion.div>
           </motion.div>
 
-          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
-            <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent'>
-              Experience
-            </span>
-          </h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+          {/* Title */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className='text-4xl lg:text-6xl font-cosmic font-black mb-6 text-cosmic'
+          >
+            EXPERIENCE
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className='text-xl text-stellar-300 max-w-3xl mx-auto leading-relaxed'
+          >
             Building innovative solutions and driving technological excellence across diverse
             industries
-          </p>
+          </motion.p>
         </motion.div>
 
         <div className='max-w-4xl mx-auto'>
           <div className='relative' style={{ minHeight: '400px' }}>
-            {/* Timeline line - Hidden on mobile, visible on desktop */}
-            <div
-              className='hidden md:block absolute left-6 top-8 w-0.5 bg-secondary-200'
+            {/* Holographic Timeline */}
+            <motion.div
+              className='hidden md:block absolute left-6 top-8 w-0.5 bg-gradient-to-b from-energy-electric via-energy-plasma to-energy-nuclear'
               style={{ height: 'calc(100% - 4rem)', bottom: '2rem' }}
-            ></div>
+              animate={{
+                boxShadow: [
+                  '0 0 10px rgba(0,212,255,0.3)',
+                  '0 0 20px rgba(0,212,255,0.6)',
+                  '0 0 10px rgba(0,212,255,0.3)',
+                ],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
+
+            {/* Timeline Nodes */}
+            {experienceData.map((entry, index) => (
+              <motion.div
+                key={`node-${index}`}
+                className='hidden md:block absolute left-4 w-4 h-4 bg-energy-electric rounded-full border-2 border-stellar-100 shadow-energy'
+                style={{
+                  top: `${8 + index * 120}px`,
+                }}
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.7, 1, 0.7],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  delay: index * 0.3,
+                }}
+              />
+            ))}
 
             {/* Experience Entries */}
             {experienceData.map(entry => (
