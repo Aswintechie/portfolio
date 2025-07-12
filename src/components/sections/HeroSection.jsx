@@ -199,7 +199,7 @@ const HeroSection = React.memo(function HeroSection() {
                   transition={{ delay: 0.6, duration: 0.8, ease: 'easeOut' }}
                   className='inline-block'
                 >
-                  Crafting innovative digital solutions with modern technologies.
+                  Passionate about software development and modern technologies.
                 </motion.span>
                 {' '}
                 <motion.span
@@ -208,7 +208,7 @@ const HeroSection = React.memo(function HeroSection() {
                   transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
                   className='inline-block'
                 >
-                  Specializing in scalable applications and cloud infrastructure
+                  Specializing in building efficient software solutions with a keen interest in cloud infrastructure.
                 </motion.span>
                 {' '}
                 <motion.span
@@ -217,7 +217,7 @@ const HeroSection = React.memo(function HeroSection() {
                   transition={{ delay: 1.0, duration: 0.8, ease: 'easeOut' }}
                   className='inline-block'
                 >
-                  with <span className='text-cyan-300 font-semibold'>{experience}</span> of experience.
+                  Based in the beautiful city of <span className='text-indigo-300 font-semibold'>Pondicherry</span> with <span className='text-cyan-300 font-semibold'>{experience}</span> of professional experience.
                 </motion.span>
               </motion.div>
 
