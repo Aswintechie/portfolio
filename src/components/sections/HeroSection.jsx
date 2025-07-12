@@ -7,7 +7,7 @@
 
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Sparkles, Star, ArrowRight, Download, Code, Zap, Cpu, Rocket, Brain, Monitor, Cloud } from 'lucide-react';
+import { Github, Linkedin, Mail, Sparkles, Star, ArrowRight, Code, Cpu, Cloud } from 'lucide-react';
 import { useExperienceCalculator, useThrottledScroll } from '../../hooks';
 import { AnimatedParticles, FloatingElements } from '../background';
 import { useMicroInteractions } from '../../utils/microInteractions';
@@ -16,7 +16,7 @@ import { useMicroInteractions } from '../../utils/microInteractions';
 const HeroSection = React.memo(function HeroSection() {
   const experience = useExperienceCalculator();
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
-  const { createRipple, variants } = useMicroInteractions();
+  const { createRipple } = useMicroInteractions();
   const contactButtonRef = useRef(null);
   const workButtonRef = useRef(null);
 
@@ -115,18 +115,17 @@ const HeroSection = React.memo(function HeroSection() {
       <AnimatedParticles />
       <FloatingElements />
 
-      {/* Main Content - Bento Grid Layout */}
+      {/* Main Content - Unified Single Container */}
       <div className='container-custom relative z-10 min-h-screen flex items-center py-20'>
-        <div className='w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8'>
-          
-          {/* Main Hero Card - Takes most space */}
+        <div className='w-full'>
+          {/* Single Unified Hero Container */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className='lg:col-span-8 lg:row-span-2 relative'
+            className='relative max-w-6xl mx-auto'
           >
-            <div className='h-full bg-white/5 backdrop-blur-xl rounded-3xl p-8 lg:p-12 border border-white/10 shadow-2xl'>
+            <div className='bg-white/5 backdrop-blur-xl rounded-3xl p-8 lg:p-16 border border-white/10 shadow-2xl'>
               {/* Glassmorphism inner glow */}
               <div className='absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none' />
               
@@ -137,7 +136,7 @@ const HeroSection = React.memo(function HeroSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className='flex items-center space-x-3 mb-6'
+                  className='flex items-center justify-center space-x-3 mb-8'
                 >
                   <div className='w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 backdrop-blur-sm border border-white/20 flex items-center justify-center'>
                     <motion.div
@@ -153,7 +152,7 @@ const HeroSection = React.memo(function HeroSection() {
 
                 {/* Main Title */}
                 <motion.h1
-                  className='text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight'
+                  className='text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight text-center'
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -179,7 +178,7 @@ const HeroSection = React.memo(function HeroSection() {
 
                 {/* Subtitle */}
                 <motion.div
-                  className='text-2xl sm:text-3xl lg:text-4xl mb-8 font-bold'
+                  className='text-2xl sm:text-3xl lg:text-4xl mb-8 font-bold text-center'
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
@@ -193,7 +192,7 @@ const HeroSection = React.memo(function HeroSection() {
 
                 {/* Description */}
                 <motion.div
-                  className='text-lg text-white/70 mb-8 max-w-2xl leading-relaxed'
+                  className='text-lg text-white/70 mb-8 max-w-3xl mx-auto leading-relaxed text-center'
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5, duration: 0.8 }}
@@ -226,12 +225,48 @@ const HeroSection = React.memo(function HeroSection() {
                   </motion.span>
                 </motion.div>
 
-                {/* CTA Buttons */}
+                {/* Experience Stats */}
                 <motion.div
-                  className='flex flex-col sm:flex-row gap-4 mb-8'
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
+                  className='flex items-center justify-center mb-8'
+                >
+                  <div className='flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-8 py-4 border border-white/20'>
+                    <motion.div 
+                      className='w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 border border-white/20 flex items-center justify-center'
+                      animate={{ 
+                        rotateY: [0, 360],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        duration: 4, 
+                        repeat: Infinity, 
+                        ease: 'easeInOut' 
+                      }}
+                    >
+                      <Code size={24} className='text-emerald-300' />
+                    </motion.div>
+                    <div className='text-center'>
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 1, delay: 0.7, type: 'spring' }}
+                        className='text-2xl font-black text-white'
+                      >
+                        {experience}
+                      </motion.div>
+                      <div className='text-white/70 text-sm font-medium'>Years Experience</div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* CTA Buttons */}
+                <motion.div
+                  className='flex flex-col sm:flex-row gap-4 mb-8 justify-center'
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
                 >
                   <motion.a
                     ref={contactButtonRef}
@@ -263,217 +298,155 @@ const HeroSection = React.memo(function HeroSection() {
                     </span>
                   </motion.a>
                 </motion.div>
-              </div>
-            </div>
-          </motion.div>
 
-          {/* Stats Card */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className='lg:col-span-4 relative'
-          >
-            <div className='h-full bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/10'>
-              <div className='flex items-center justify-center h-full'>
-                <div className='text-center'>
-                  <motion.div 
-                    className='w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-teal-500/20 border border-white/20 flex items-center justify-center'
-                    animate={{ 
-                      rotateY: [0, 360],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity, 
-                      ease: 'easeInOut' 
-                    }}
-                  >
-                    <Code size={32} className='text-emerald-300' />
-                  </motion.div>
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 1, delay: 0.5, type: 'spring' }}
-                    className='text-3xl font-black text-white mb-2'
-                  >
-                    {experience}
-                  </motion.div>
-                  <div className='text-white/70 text-sm font-medium'>Years Experience</div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Social Links Card */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className='lg:col-span-4 relative'
-          >
-            <div className='h-full bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/10'>
-              <div className='flex items-center justify-center space-x-4 h-full'>
-                {[
-                  { icon: Github, href: 'https://github.com/Aswin-coder', label: 'GitHub', color: 'from-gray-400 to-gray-600' },
-                  { icon: Linkedin, href: 'https://www.linkedin.com/in/aswin4122001/', label: 'LinkedIn', color: 'from-blue-400 to-blue-600' },
-                  { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email', color: 'from-red-400 to-red-600' },
-                ].map((social, index) => (
-                  <motion.a
-                    key={social.label}
-                    href={social.href}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    whileHover={{ 
-                      scale: 1.2, 
-                      y: -6,
-                      rotateZ: [0, 5, -5, 0]
-                    }}
-                    whileTap={{ scale: 0.9 }}
-                    animate={{
-                      y: [0, -2, 0],
-                    }}
-                    transition={{
-                      duration: 2 + index * 0.5,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                      delay: index * 0.2
-                    }}
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300`}
-                  >
-                    <social.icon size={20} />
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Quick Info Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className='lg:col-span-8 grid grid-cols-2 gap-4'
-          >
-            <motion.div
-              whileHover={{ scale: 1.05, rotateY: 5 }}
-              className='bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl p-4 border border-white/10'
-            >
-              <div className='flex items-center space-x-3'>
-                <motion.div 
-                  className='w-10 h-10 rounded-lg bg-gradient-to-br from-purple-400/20 to-pink-400/20 flex items-center justify-center'
-                  animate={{ 
-                    rotate: [0, 360] 
-                  }}
-                  transition={{ 
-                    duration: 8, 
-                    repeat: Infinity, 
-                    ease: 'linear' 
-                  }}
-                >
-                  <Cpu size={20} className='text-purple-300' />
-                </motion.div>
-                <div>
-                  <div className='text-white font-semibold'>Tech Enthusiast</div>
-                  <div className='text-white/60 text-sm'>Always Learning</div>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.05, rotateY: -5 }}
-              className='bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl p-4 border border-white/10'
-            >
-              <div className='flex items-center space-x-3'>
-                <motion.div 
-                  className='w-10 h-10 rounded-lg bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center'
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotateY: [0, 180, 360]
-                  }}
-                  transition={{ 
-                    duration: 4, 
-                    repeat: Infinity, 
-                    ease: 'easeInOut' 
-                  }}
-                >
-                  <Cloud size={20} className='text-blue-300' />
-                </motion.div>
-                <div>
-                  <div className='text-white font-semibold'>Cloud Enthusiast</div>
-                  <div className='text-white/60 text-sm'>Modern Infrastructure</div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Innovation Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className='lg:col-span-6 relative'
-          >
-            <div className='h-full bg-gradient-to-br from-teal-500/10 to-cyan-500/10 backdrop-blur-xl rounded-3xl p-6 border border-white/10'>
-              <div className='text-center'>
+                {/* Social Links */}
                 <motion.div
-                  animate={{ 
-                    rotateY: [0, 360] 
-                  }}
-                  transition={{ 
-                    duration: 6, 
-                    repeat: Infinity, 
-                    ease: 'linear' 
-                  }}
-                  className='text-2xl mb-2'
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  className='flex items-center justify-center space-x-6 mb-8'
                 >
-                  💡
+                  {[
+                    { icon: Github, href: 'https://github.com/Aswin-coder', label: 'GitHub', color: 'from-gray-400 to-gray-600' },
+                    { icon: Linkedin, href: 'https://www.linkedin.com/in/aswin4122001/', label: 'LinkedIn', color: 'from-blue-400 to-blue-600' },
+                    { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email', color: 'from-red-400 to-red-600' },
+                  ].map((social, index) => (
+                    <motion.a
+                      key={social.label}
+                      href={social.href}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      whileHover={{ 
+                        scale: 1.2, 
+                        y: -6,
+                        rotateZ: [0, 5, -5, 0]
+                      }}
+                      whileTap={{ scale: 0.9 }}
+                      animate={{
+                        y: [0, -2, 0],
+                      }}
+                      transition={{
+                        duration: 2 + index * 0.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.2
+                      }}
+                      className={`w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300`}
+                    >
+                      <social.icon size={20} />
+                    </motion.a>
+                  ))}
                 </motion.div>
-                <div className='text-white font-semibold'>Innovation Focus</div>
-                <motion.div 
-                  className='text-cyan-300 font-bold text-lg'
-                  animate={{ 
-                    scale: [1, 1.1, 1] 
-                  }}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity, 
-                    ease: 'easeInOut' 
-                  }}
-                >
-                  Creative Solutions
-                </motion.div>
-              </div>
-            </div>
-          </motion.div>
 
-          {/* Location Card with Enhanced Animation */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className='lg:col-span-6 relative'
-          >
-            <div className='h-full bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-xl rounded-3xl p-6 border border-white/10'>
-              <div className='flex items-center justify-center h-full'>
-                <div className='text-center'>
-                  <motion.div 
-                    className='text-2xl mb-2'
-                    animate={{ 
-                      y: [0, -5, 0],
-                      rotate: [0, 5, -5, 0] 
-                    }}
-                    transition={{ 
-                      duration: 3, 
-                      repeat: Infinity, 
-                      ease: 'easeInOut' 
-                    }}
+                {/* Quick Info Tags */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 }}
+                  className='flex flex-wrap items-center justify-center gap-4'
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className='bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
                   >
-                    📍
+                    <div className='flex items-center space-x-3'>
+                      <motion.div 
+                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400/20 to-pink-400/20 flex items-center justify-center'
+                        animate={{ 
+                          rotate: [0, 360] 
+                        }}
+                        transition={{ 
+                          duration: 8, 
+                          repeat: Infinity, 
+                          ease: 'linear' 
+                        }}
+                      >
+                        <Cpu size={16} className='text-purple-300' />
+                      </motion.div>
+                      <div>
+                        <div className='text-white font-semibold text-sm'>Tech Enthusiast</div>
+                        <div className='text-white/60 text-xs'>Always Learning</div>
+                      </div>
+                    </div>
                   </motion.div>
-                  <div className='text-white font-semibold'>Based in</div>
-                  <div className='text-indigo-300 font-bold'>Pondicherry, India</div>
-                </div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className='bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
+                  >
+                    <div className='flex items-center space-x-3'>
+                      <motion.div 
+                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center'
+                        animate={{ 
+                          scale: [1, 1.2, 1],
+                          rotateY: [0, 180, 360]
+                        }}
+                        transition={{ 
+                          duration: 4, 
+                          repeat: Infinity, 
+                          ease: 'easeInOut' 
+                        }}
+                      >
+                        <Cloud size={16} className='text-blue-300' />
+                      </motion.div>
+                      <div>
+                        <div className='text-white font-semibold text-sm'>Cloud Expert</div>
+                        <div className='text-white/60 text-xs'>Modern Infrastructure</div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className='bg-gradient-to-br from-teal-500/10 to-cyan-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
+                  >
+                    <div className='flex items-center space-x-3'>
+                      <motion.div 
+                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400/20 to-cyan-400/20 flex items-center justify-center'
+                        animate={{ 
+                          rotateY: [0, 360] 
+                        }}
+                        transition={{ 
+                          duration: 6, 
+                          repeat: Infinity, 
+                          ease: 'linear' 
+                        }}
+                      >
+                        <span className='text-lg'>💡</span>
+                      </motion.div>
+                      <div>
+                        <div className='text-white font-semibold text-sm'>Innovation Focus</div>
+                        <div className='text-white/60 text-xs'>Creative Solutions</div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className='bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl px-6 py-3 border border-white/10'
+                  >
+                    <div className='flex items-center space-x-3'>
+                      <motion.div 
+                        className='w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-400/20 to-purple-400/20 flex items-center justify-center'
+                        animate={{ 
+                          y: [0, -2, 0],
+                          rotate: [0, 5, -5, 0] 
+                        }}
+                        transition={{ 
+                          duration: 3, 
+                          repeat: Infinity, 
+                          ease: 'easeInOut' 
+                        }}
+                      >
+                        <span className='text-lg'>📍</span>
+                      </motion.div>
+                      <div>
+                        <div className='text-white font-semibold text-sm'>Based in</div>
+                        <div className='text-indigo-300 text-xs font-bold'>Pondicherry, India</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
               </div>
             </div>
           </motion.div>
