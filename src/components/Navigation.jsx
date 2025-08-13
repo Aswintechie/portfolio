@@ -5,7 +5,7 @@
  * @description Performance-optimized navigation component with routing and mobile menu support
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Mail, Search, Code, Home, User, Briefcase, Folder } from 'lucide-react';
@@ -17,6 +17,7 @@ const Navigation = React.memo(function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const location = useLocation();
 
   // Page transitions hook for smooth scrolling (only on home page)
@@ -32,6 +33,20 @@ const Navigation = React.memo(function Navigation() {
   }, []);
 
   useThrottledScroll(handleScroll);
+
+  // Initialize and persist dark mode
+  useEffect(() => {
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialDark = stored ? stored === 'dark' : prefersDark;
+    setIsDark(initialDark);
+    document.documentElement.classList.toggle('dark', initialDark);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
 
   // Handle navigation click - either route navigation or section scrolling
   const handleNavClick = React.useCallback(
@@ -72,8 +87,8 @@ const Navigation = React.memo(function Navigation() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         // Use solid background on non-home pages or when scrolled
         !isHomePage || scrolled
-          ? 'bg-white/85 backdrop-blur-md shadow-lg border-b border-gray-200/20'
-          : 'bg-black/5 backdrop-blur-sm'
+          ? 'navbar-glass shadow-lg'
+          : 'bg-black/5 dark:bg-white/5 backdrop-blur-sm'
       }`}
     >
       <div className='container-custom'>
@@ -157,6 +172,39 @@ const Navigation = React.memo(function Navigation() {
 
           {/* Optimized Action Buttons */}
           <div className='flex items-center space-x-3'>
+            {/* Dark mode toggle */}
+            <motion.button
+              onClick={() => setIsDark(d => !d)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`p-2 rounded-xl transition-all duration-300 ${
+                !isHomePage || scrolled
+                  ? 'text-gray-700 hover:text-secondary-600 hover:bg-secondary-50'
+                  : 'text-white/90 hover:text-white hover:bg-white/10'
+              }`}
+              aria-label='Toggle theme'
+              title='Toggle theme'
+            >
+              {isDark ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-5 w-5'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                >
+                  <path d='M21.64 13.64A9 9 0 1 1 10.36 2.36a7 7 0 1 0 11.28 11.28z' />
+                </svg>
+              ) : (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-5 w-5'
+                  viewBox='0 0 24 24'
+                  fill='currentColor'
+                >
+                  <path d='M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zm9-10v-2h-3v2h3zM6.76 19.16l-1.42 1.42 1.8 1.79 1.41-1.41-1.79-1.8zM13 1h-2v3h2V1zm7.04 3.46l-1.41-1.41-1.8 1.79 1.42 1.42 1.79-1.8zM12 6a6 6 0 100 12 6 6 0 000-12z' />
+                </svg>
+              )}
+            </motion.button>
             <motion.button
               onClick={() => setIsSearchOpen(true)}
               whileHover={{ scale: 1.05 }}

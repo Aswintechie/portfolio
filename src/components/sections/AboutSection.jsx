@@ -40,7 +40,7 @@ const AboutSection = React.memo(() => {
   return (
     <section
       id='about'
-      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50 relative overflow-hidden'
+      className='section-padding bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900 relative overflow-hidden'
     >
       {/* Enhanced Background Effects */}
       <div className='absolute top-0 left-0 w-full h-full'>
@@ -86,12 +86,12 @@ const AboutSection = React.memo(() => {
             </span>
           </motion.div>
 
-          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900 dark:text-white'>
             <span className='bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent'>
               Crafting Digital Excellence
             </span>
           </h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+          <p className='text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed'>
             Passionate about building innovative solutions that make a difference
           </p>
         </motion.div>
@@ -103,7 +103,7 @@ const AboutSection = React.memo(() => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className='relative h-full flex flex-col justify-center'
           >
-            <div className='space-y-6 text-lg text-gray-700 leading-relaxed'>
+            <div className='space-y-6 text-lg text-gray-700 dark:text-gray-300 leading-relaxed'>
               <div className='relative'>
                 <div className='absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 rounded-full'></div>
                 <p className='pl-8'>
@@ -155,7 +155,7 @@ const AboutSection = React.memo(() => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                className='group relative bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-white/20 overflow-hidden'
+                className='group relative bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-white/20 dark:border-white/10 overflow-hidden'
               >
                 {/* Simplified gradient background */}
                 <div className='absolute inset-0 opacity-20'>

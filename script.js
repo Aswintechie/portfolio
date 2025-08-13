@@ -153,7 +153,7 @@ if (contactForm) {
     // Create mailto link
     const subject = `Portfolio Contact from ${name}`;
     const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
-    const mailtoLink = `mailto:contact@aswinlocal.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:contact@aswincloud.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
     // Open default email client
     window.location.href = mailtoLink;

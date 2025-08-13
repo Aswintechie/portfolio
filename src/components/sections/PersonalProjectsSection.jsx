@@ -46,8 +46,8 @@ const PersonalProjectsSection = () => {
       icon: <Monitor size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'plex.aswinlocal.in',
-      link: 'https://plex.aswinlocal.in',
+      domain: 'plex.aswincloud.com',
+      link: 'https://plex.aswincloud.com',
     },
     {
       title: 'TrueNAS Storage Server',
@@ -64,8 +64,8 @@ const PersonalProjectsSection = () => {
       icon: <Database size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'truenas.aswinlocal.in',
-      link: 'https://truenas.aswinlocal.in',
+      domain: 'truenas.aswincloud.com',
+      link: 'https://truenas.aswincloud.com',
     },
     {
       title: 'Jellyfin Media Server',
@@ -82,8 +82,8 @@ const PersonalProjectsSection = () => {
       icon: <Server size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'watch.aswinlocal.in',
-      link: 'https://watch.aswinlocal.in',
+      domain: 'watch.aswincloud.com',
+      link: 'https://watch.aswincloud.com',
     },
     {
       title: 'Cloud Storage Server',
@@ -100,8 +100,8 @@ const PersonalProjectsSection = () => {
       icon: <Cloud size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'cloud.aswinlocal.in',
-      link: 'https://cloud.aswinlocal.in',
+      domain: 'cloud.aswincloud.com',
+      link: 'https://cloud.aswincloud.com',
     },
     {
       title: 'Ubuntu VPS Server',
@@ -118,8 +118,8 @@ const PersonalProjectsSection = () => {
       icon: <Cpu size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'ubuntu.aswinlocal.in',
-      link: 'https://ubuntu.aswinlocal.in',
+      domain: 'ubuntu.aswincloud.com',
+      link: 'https://ubuntu.aswincloud.com',
     },
     {
       title: 'qBittorrent Download Server',
@@ -136,15 +136,15 @@ const PersonalProjectsSection = () => {
       icon: <Zap size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'torrent.aswinlocal.in',
-      link: 'https://torrent.aswinlocal.in',
+      domain: 'torrent.aswincloud.com',
+      link: 'https://torrent.aswincloud.com',
     },
   ];
 
   return (
     <section id='personal-projects' className='section-padding relative overflow-hidden'>
       {/* Modern Background */}
-      <div className='absolute inset-0 bg-gradient-to-br from-orange-50 via-red-50 to-orange-50'></div>
+      <div className='absolute inset-0 bg-gradient-to-br from-orange-50 via-red-50 to-orange-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900'></div>
       <div className='absolute top-0 left-0 w-full h-full'>
         <div className='absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-orange-400/10 to-red-400/10 rounded-full blur-2xl'></div>
         <div className='absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-br from-red-400/10 to-orange-400/10 rounded-full blur-2xl'></div>
@@ -194,7 +194,7 @@ const PersonalProjectsSection = () => {
                 onMouseLeave={() => setHoveredProject(null)}
               >
                 {/* Glassmorphism Card */}
-                <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col'>
+                <div className='relative bg-white/90 dark:bg-slate-900/80 backdrop-blur-sm rounded-3xl p-8 border border-white/20 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col'>
                   {/* Animated Background Gradient */}
                   <div className='absolute inset-0 bg-gradient-to-br from-orange-500/5 via-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
@@ -224,7 +224,7 @@ const PersonalProjectsSection = () => {
 
                   {/* Project Title and Domain */}
                   <div className='mb-6 relative z-10'>
-                    <h3 className='text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-200'>
+                    <h3 className='text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-200 transition-colors duration-200'>
                       {project.title}
                     </h3>
                     {project.domain && (
@@ -253,7 +253,7 @@ const PersonalProjectsSection = () => {
                   </div>
 
                   {/* Project Description */}
-                  <p className='text-gray-600 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
+                  <p className='text-gray-600 dark:text-gray-300 leading-relaxed mb-6 relative z-10 flex-shrink-0'>
                     {project.description}
                   </p>
 

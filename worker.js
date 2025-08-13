@@ -104,7 +104,7 @@ function createAutoReplyHTML(name, message) {
 // 2. Domain verification in Resend dashboard (completed)
 // 3. Proper error handling and logging
 //
-async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', env) {
+async function sendEmail(to, subject, html, text, hostname = 'aswincloud.com', env) {
   console.log('🚀 Starting email send process:', {
     to,
     subject,
@@ -125,7 +125,7 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', en
     console.log('📧 Preview deployment - email would be sent:', {
       to,
       subject,
-      from: 'contact@aswinlocal.in',
+      from: 'contact@aswincloud.com',
       hostname,
       timestamp: new Date().toISOString(),
     });
@@ -145,7 +145,7 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', en
         },
       ],
       from: {
-        email: 'contact@aswinlocal.in',
+        email: 'contact@aswincloud.com',
         name: 'Aswin Portfolio',
       },
       subject: subject,
@@ -177,7 +177,7 @@ async function sendEmail(to, subject, html, text, hostname = 'aswinlocal.in', en
 
     // Resend API payload
     const resendPayload = {
-      from: 'contact@aswinlocal.in', // Now using your verified domain
+      from: 'contact@aswincloud.com', // Now using your verified domain
       to: [to],
       subject: subject,
       html: html,
@@ -445,12 +445,12 @@ async function handleContactForm(request, env) {
       name,
       email,
       messageLength: message.length,
-      hostname: request.headers.get('host') || 'aswinlocal.in',
+      hostname: request.headers.get('host') || 'aswincloud.com',
       userAgent: request.headers.get('user-agent'),
       timestamp: new Date().toISOString(),
     });
 
-    console.log('📧 Preparing to send notification email to:', 'contact@aswinlocal.in');
+    console.log('📧 Preparing to send notification email to:', 'contact@aswincloud.com');
     console.log('📧 Preparing to send auto-reply email to:', email);
 
     try {
@@ -458,11 +458,11 @@ async function handleContactForm(request, env) {
 
       const [notificationResult, autoReplyResult] = await Promise.all([
         sendEmail(
-          'contact@aswinlocal.in',
+          'contact@aswincloud.com',
           `New Portfolio Contact from ${name}`,
           notificationHTML,
           notificationText,
-          request.headers.get('host') || 'aswinlocal.in',
+          request.headers.get('host') || 'aswincloud.com',
           env
         ),
         sendEmail(
@@ -470,7 +470,7 @@ async function handleContactForm(request, env) {
           'Thank you for contacting me!',
           autoReplyHTML,
           autoReplyText,
-          request.headers.get('host') || 'aswinlocal.in',
+          request.headers.get('host') || 'aswincloud.com',
           env
         ),
       ]);

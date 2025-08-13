@@ -30,7 +30,7 @@ const ProjectsSection = () => {
   return (
     <section id='projects' className='section-padding relative overflow-hidden' ref={ref}>
       {/* Modern Background */}
-      <div className='absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100'></div>
+      <div className='absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900'></div>
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.05),transparent_50%)]'></div>
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,119,198,0.05),transparent_50%)]'></div>
 
@@ -73,7 +73,7 @@ const ProjectsSection = () => {
               className='group relative'
             >
               {/* Optimized Glassmorphism Card with Enhanced Gradient Animation */}
-              <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden'>
+              <div className='relative bg-white/90 dark:bg-slate-900/80 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/30 dark:border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden'>
                 {/* Enhanced Multi-layer Background Gradients */}
                 <div className='absolute inset-0 bg-gradient-to-br from-secondary-500/5 via-accent-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                 <div className='absolute inset-0 bg-gradient-to-tl from-blue-500/3 via-purple-500/3 to-teal-500/3 opacity-0 group-hover:opacity-80 transition-opacity duration-700'></div>
@@ -95,12 +95,14 @@ const ProjectsSection = () => {
                       </div>
                     </div>
 
-                    <h3 className='text-2xl lg:text-3xl font-bold text-gray-900 mb-3 text-center lg:text-left group-hover:text-secondary-600 transition-colors duration-300'>
+                    <h3 className='text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3 text-center lg:text-left group-hover:text-secondary-600 transition-colors duration-300'>
                       {project.title}
                     </h3>
 
                     <div className='flex items-center justify-center lg:justify-start space-x-3 mb-6'>
-                      <span className='text-sm text-gray-500 font-medium'>{project.domain}</span>
+                      <span className='text-sm text-gray-500 dark:text-gray-400 font-medium'>
+                        {project.domain}
+                      </span>
                       <div className='flex items-center space-x-1'>
                         <Circle size={8} className='text-green-500 fill-current' />
                         <span className='px-3 py-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs font-bold rounded-full border border-green-200'>
@@ -130,7 +132,7 @@ const ProjectsSection = () => {
 
                   {/* Project Details */}
                   <div className='lg:col-span-3'>
-                    <p className='text-gray-700 text-lg leading-relaxed mb-8 font-medium'>
+                    <p className='text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-8 font-medium'>
                       {project.description}
                     </p>
 

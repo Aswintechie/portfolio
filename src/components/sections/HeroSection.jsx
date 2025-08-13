@@ -48,7 +48,7 @@ const HeroSection = React.memo(function HeroSection() {
     >
       {/* Optimized Gradient Background - Extended to prevent white bars */}
       <div className='absolute inset-0'>
-        <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'></div>
+        <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-950 dark:via-purple-950 dark:to-slate-950'></div>
         <div className='absolute inset-0 bg-gradient-to-tr from-blue-900/40 via-transparent to-pink-900/40'></div>
       </div>
 
@@ -220,7 +220,7 @@ const HeroSection = React.memo(function HeroSection() {
                   href: 'https://www.linkedin.com/in/aswin4122001/',
                   label: 'LinkedIn',
                 },
-                { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email' },
+                { icon: Mail, href: 'mailto:contact@aswincloud.com', label: 'Email' },
               ].map((social, index) => (
                 <motion.a
                   key={social.label}

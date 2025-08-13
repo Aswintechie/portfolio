@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -68,6 +69,11 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Cal Sans', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        'elev-1': '0 1px 2px 0 rgba(0,0,0,0.06), 0 1px 3px 0 rgba(0,0,0,0.1)',
+        'elev-2': '0 4px 10px rgba(0,0,0,0.08)',
+        'elev-3': '0 10px 25px rgba(0,0,0,0.12)',
       },
       animation: {
         float: 'float 3s ease-in-out infinite',

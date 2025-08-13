@@ -89,8 +89,8 @@ const ContactSection = () => {
     {
       icon: <Mail size={24} />,
       title: 'Email',
-      content: 'contact@aswinlocal.in',
-      link: 'mailto:contact@aswinlocal.in',
+      content: 'contact@aswincloud.com',
+      link: 'mailto:contact@aswincloud.com',
     },
     {
       icon: <MapPin size={24} />,
@@ -261,7 +261,7 @@ const ContactSection = () => {
                         </p>
                         <p className='text-sm text-green-600 mt-1'>
                           I'll get back to you within 24-48 hours. You can also reach me directly at
-                          contact@aswinlocal.in
+                          contact@aswincloud.com
                         </p>
                       </div>
                     </div>

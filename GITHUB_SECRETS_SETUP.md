@@ -55,7 +55,7 @@ You need to add the following secrets to your GitHub repository:
 - **Format**: `your-email@domain.com`
 
 #### `FROM_EMAIL`
-- **Description**: Email address to send from (optional, defaults to noreply@aswinlocal.in)
+- **Description**: Email address to send from (optional, defaults to noreply@aswincloud.com)
 - **Format**: `noreply@yourdomain.com`
 
 ## How It Works
@@ -69,7 +69,7 @@ You need to add the following secrets to your GitHub repository:
 ### Production Deployments (Main Branch)
 - When code is pushed to main branch, the workflow deploys to production
 - Secrets are automatically set for the production environment
-- Production URL: `https://www.aswinlocal.in/`
+- Production URL: `https://www.aswincloud.com/`
 
 ## Security Notes
 

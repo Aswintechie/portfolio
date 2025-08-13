@@ -154,7 +154,7 @@ jobs:
       - name: 🎉 Deployment notification
         if: success()
         run: |
-          echo "🎉 Portfolio successfully deployed to https://www.aswinlocal.in/"
+          echo "🎉 Portfolio successfully deployed to https://www.aswincloud.com/"
           echo "✅ Deployment completed at $(date)"
 
   pr-comment:
