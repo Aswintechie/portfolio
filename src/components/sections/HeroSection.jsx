@@ -220,7 +220,7 @@ const HeroSection = React.memo(function HeroSection() {
                   href: 'https://www.linkedin.com/in/aswin4122001/',
                   label: 'LinkedIn',
                 },
-                { icon: Mail, href: 'mailto:contact@aswinlocal.in', label: 'Email' },
+                { icon: Mail, href: 'mailto:contact@aswincloud.com', label: 'Email' },
               ].map((social, index) => (
                 <motion.a
                   key={social.label}

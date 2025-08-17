@@ -31,7 +31,7 @@ The contact form uses a simple Express server to send emails via Nodemailer.
 ## How it works
 
 - Frontend sends form data to `http://localhost:3001/api/contact` (dev) or `/api/contact` (prod)
-- Backend validates the data and sends an email to `contact@aswinlocal.in`
+- Backend validates the data and sends an email to `contact@aswincloud.com`
 - Form shows success/error messages based on the response
 
 ## Production Deployment

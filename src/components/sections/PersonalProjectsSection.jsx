@@ -46,8 +46,8 @@ const PersonalProjectsSection = () => {
       icon: <Monitor size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'plex.aswinlocal.in',
-      link: 'https://plex.aswinlocal.in',
+      domain: 'plex.aswincloud.com',
+      link: 'https://plex.aswincloud.com',
     },
     {
       title: 'TrueNAS Storage Server',
@@ -64,8 +64,8 @@ const PersonalProjectsSection = () => {
       icon: <Database size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'truenas.aswinlocal.in',
-      link: 'https://truenas.aswinlocal.in',
+      domain: 'truenas.aswincloud.com',
+      link: 'https://truenas.aswincloud.com',
     },
     {
       title: 'Jellyfin Media Server',
@@ -82,8 +82,8 @@ const PersonalProjectsSection = () => {
       icon: <Server size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'watch.aswinlocal.in',
-      link: 'https://watch.aswinlocal.in',
+      domain: 'watch.aswincloud.com',
+      link: 'https://watch.aswincloud.com',
     },
     {
       title: 'Cloud Storage Server',
@@ -100,8 +100,8 @@ const PersonalProjectsSection = () => {
       icon: <Cloud size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'cloud.aswinlocal.in',
-      link: 'https://cloud.aswinlocal.in',
+      domain: 'cloud.aswincloud.com',
+      link: 'https://cloud.aswincloud.com',
     },
     {
       title: 'Ubuntu VPS Server',
@@ -118,8 +118,8 @@ const PersonalProjectsSection = () => {
       icon: <Cpu size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'ubuntu.aswinlocal.in',
-      link: 'https://ubuntu.aswinlocal.in',
+      domain: 'ubuntu.aswincloud.com',
+      link: 'https://ubuntu.aswincloud.com',
     },
     {
       title: 'qBittorrent Download Server',
@@ -136,8 +136,8 @@ const PersonalProjectsSection = () => {
       icon: <Zap size={48} />,
       status: 'Active',
       access: 'Private (requires credentials)',
-      domain: 'torrent.aswinlocal.in',
-      link: 'https://torrent.aswinlocal.in',
+      domain: 'torrent.aswincloud.com',
+      link: 'https://torrent.aswincloud.com',
     },
   ];
 

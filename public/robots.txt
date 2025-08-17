@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.aswinlocal.in/sitemap.xml
+Sitemap: https://www.aswincloud.com/sitemap.xml
 
 # Disallow admin and API endpoints
 Disallow: /api/
