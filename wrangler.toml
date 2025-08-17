@@ -6,12 +6,12 @@ compatibility_date = "2024-01-01"
 NODE_ENV = "production"
 
 [[routes]]
-pattern = "aswincloud.com/*"
-zone_name = "aswincloud.com"
+pattern = "aswinlocal.in/*"
+zone_name = "aswinlocal.in"
 
 [[routes]]
-pattern = "www.aswincloud.com/*"
-zone_name = "aswincloud.com"
+pattern = "www.aswinlocal.in/*"
+zone_name = "aswinlocal.in"
 
 [assets]
 directory = "./build"

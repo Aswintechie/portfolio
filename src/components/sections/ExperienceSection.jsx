@@ -23,7 +23,7 @@ const ExperienceSection = () => {
   return (
     <section id='experience' className='section-padding relative overflow-hidden'>
       {/* Enhanced Background Effects */}
-      <div className='absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/60 to-indigo-50/70 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900'></div>
+      <div className='absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/60 to-indigo-50/70'></div>
       <div className='absolute top-0 left-0 w-full h-full'>
         <div className='absolute top-32 left-16 w-72 h-72 bg-gradient-to-br from-blue-400/15 to-indigo-400/15 rounded-full blur-3xl'></div>
         <div className='absolute bottom-32 right-16 w-80 h-80 bg-gradient-to-br from-indigo-400/12 to-blue-400/12 rounded-full blur-3xl'></div>
@@ -66,12 +66,12 @@ const ExperienceSection = () => {
             </span>
           </motion.div>
 
-          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900 dark:text-white'>
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
             <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent'>
               Experience
             </span>
           </h2>
-          <p className='text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed'>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
             Building innovative solutions and driving technological excellence across diverse
             industries
           </p>

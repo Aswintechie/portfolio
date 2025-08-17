@@ -47,7 +47,7 @@ html {
   }
 
   body {
-    @apply font-sans text-gray-900 antialiased bg-white dark:bg-slate-950 dark:text-slate-100;
+    @apply font-sans text-gray-900 antialiased;
     overflow-x: hidden;
     min-height: 100vh;
     width: 100vw;
@@ -149,11 +149,11 @@ html {
   }
 
   .card {
-    @apply bg-white dark:bg-slate-900 rounded-xl shadow-elev-1 hover:shadow-elev-3 transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-white/5;
+    @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
   }
 
   .navbar-glass {
-    @apply bg-white/75 dark:bg-slate-900/60 backdrop-blur-lg border-b border-gray-200/40 dark:border-white/10;
+    @apply bg-white/95 backdrop-blur-lg border-b border-gray-200/50;
   }
 }
 

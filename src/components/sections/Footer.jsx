@@ -13,7 +13,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className='bg-gray-900 dark:bg-slate-950 text-white py-12 border-t border-white/10'>
+    <footer className='bg-gray-900 text-white py-12'>
       <div className='container-custom'>
         <div className='flex flex-col md:flex-row justify-between items-center'>
           <div className='mb-4 md:mb-0'>
@@ -21,7 +21,7 @@ const Footer = () => {
             <div className='mt-2 flex space-x-4 text-sm'>
               <a
                 href='/privacy'
-                className='text-gray-500 hover:text-secondary-400 transition-colors duration-200'
+                className='text-gray-500 hover:text-secondary-600 transition-colors duration-200'
               >
                 Privacy Policy
               </a>
@@ -29,7 +29,7 @@ const Footer = () => {
                 href='https://github.com/Aswintechie/portfolio'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-gray-500 hover:text-secondary-400 transition-colors duration-200'
+                className='text-gray-500 hover:text-secondary-600 transition-colors duration-200'
               >
                 Source Code
               </a>
@@ -37,10 +37,10 @@ const Footer = () => {
           </div>
           <div className='flex space-x-4'>
             <a
-              href='mailto:contact@aswincloud.com'
+              href='mailto:contact@aswinlocal.in'
               className='w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-secondary-600 transition-colors duration-200'
               title='Email'
-              aria-label='Send email to contact@aswincloud.com'
+              aria-label='Send email to contact@aswinlocal.in'
             >
               <Mail size={20} />
             </a>

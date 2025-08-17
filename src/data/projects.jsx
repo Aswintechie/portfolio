@@ -4,7 +4,7 @@ export const featuredProjects = [
   {
     id: 'pr-reviewer',
     title: 'PR Reviewer',
-    domain: 'pr-reviewer.aswincloud.com',
+    domain: 'pr-reviewer.aswinlocal.in',
     description:
       'ML-trained application that intelligently analyzes pull requests to determine the minimum person approval required for merging. Features prediction algorithms to identify reviewers who will approve faster, optimizing development workflows.',
     technologies: ['Machine Learning', 'Python', 'React', 'Node.js', 'Cloud'],
@@ -16,7 +16,7 @@ export const featuredProjects = [
       'Real-time PR insights',
     ],
     icon: <Brain size={48} />,
-    link: 'https://pr-reviewer.aswincloud.com',
+    link: 'https://pr-reviewer.aswinlocal.in',
     status: 'Live',
   },
 ];

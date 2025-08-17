@@ -64,7 +64,7 @@ const TechnologiesSection = () => {
   return (
     <section id='technologies' className='section-padding relative overflow-hidden'>
       {/* Modern Background */}
-      <div className='absolute inset-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900'></div>
+      <div className='absolute inset-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-indigo-50'></div>
       <div className='absolute top-0 left-0 w-full h-full'>
         <div className='absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full blur-2xl'></div>
         <div className='absolute bottom-20 right-20 w-48 h-48 bg-gradient-to-br from-purple-400/10 to-indigo-400/10 rounded-full blur-2xl'></div>
@@ -90,12 +90,12 @@ const TechnologiesSection = () => {
             </span>
           </motion.div>
 
-          <h2 className='text-4xl md:text-5xl font-black mb-6 text-gray-900 dark:text-white'>
+          <h2 className='text-4xl md:text-5xl font-black mb-6 text-gray-900'>
             <span className='bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent'>
               Technologies & Platforms
             </span>
           </h2>
-          <p className='text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed'>
+          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
             Comprehensive experience across cloud platforms, operating systems, networking, and
             infrastructure technologies.
           </p>
@@ -115,7 +115,7 @@ const TechnologiesSection = () => {
                 onMouseLeave={() => setHoveredCategory(null)}
               >
                 {/* Glassmorphism Card */}
-                <div className='relative bg-white/90 dark:bg-slate-900/80 backdrop-blur-sm rounded-3xl p-8 border border-white/20 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden'>
+                <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden'>
                   {/* Animated Background Gradient */}
                   <div className='absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
 
@@ -134,7 +134,7 @@ const TechnologiesSection = () => {
                         <IconComponent className='w-6 h-6' />
                         <div className='absolute inset-0 bg-white/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
                       </div>
-                      <h3 className='text-2xl font-bold text-gray-900 dark:text-white group-hover:text-gray-200 transition-colors duration-200'>
+                      <h3 className='text-2xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors duration-200'>
                         {category.category}
                       </h3>
                     </motion.div>
@@ -151,16 +151,14 @@ const TechnologiesSection = () => {
                           duration: 0.4,
                           delay: categoryIndex * 0.1 + itemIndex * 0.05,
                         }}
-                        className='flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-white/80 to-gray-50/80 dark:from-slate-900/60 dark:to-slate-800/60 border border-gray-100/50 dark:border-white/10 hover:shadow-md transition-all duration-200 backdrop-blur-sm'
+                        className='flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-white/80 to-gray-50/80 border border-gray-100/50 hover:shadow-md transition-all duration-200 backdrop-blur-sm'
                       >
                         <div className='flex-shrink-0 w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center border border-indigo-200/50'>
                           <IconComponent className='w-5 h-5 text-indigo-600' />
                         </div>
                         <div className='flex-1'>
-                          <h4 className='font-bold text-gray-900 dark:text-white mb-1'>
-                            {item.name}
-                          </h4>
-                          <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed'>
+                          <h4 className='font-bold text-gray-900 mb-1'>{item.name}</h4>
+                          <p className='text-sm text-gray-600 leading-relaxed'>
                             {item.description}
                           </p>
                         </div>

@@ -336,11 +336,11 @@ User Agent: ${navigator.userAgent}
                 <motion.a
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  href='mailto:contact@aswincloud.com'
+                  href='mailto:contact@aswinlocal.in'
                   className='inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 font-medium'
                 >
                   <ExternalLink size={16} />
-                  <span>contact@aswincloud.com</span>
+                  <span>contact@aswinlocal.in</span>
                 </motion.a>
               </div>
             </div>

@@ -6,7 +6,7 @@ Currently, your contact form is working but emails are not being sent. Here are 
 
 ### Step 1: Set up MailChannels DNS
 1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Select your domain (`aswincloud.com`)
+2. Select your domain (`aswinlocal.in`)
 3. Go to **DNS** settings
 4. Add these DNS records:
 
@@ -37,7 +37,7 @@ async function sendEmail(to, subject, html, text) {
         },
       ],
       from: {
-        email: 'noreply@aswincloud.com',
+        email: 'noreply@aswinlocal.in',
         name: 'Aswin Portfolio',
       },
       subject,
@@ -77,7 +77,7 @@ async function sendEmail(to, subject, html, text) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'Portfolio <noreply@aswincloud.com>',
+      from: 'Portfolio <noreply@aswinlocal.in>',
       to: [to],
       subject: subject,
       html: html,
@@ -116,7 +116,7 @@ async function sendEmail(to, subject, html, text) {
         },
       ],
       from: {
-        email: 'noreply@aswincloud.com',
+        email: 'noreply@aswinlocal.in',
         name: 'Aswin Portfolio',
       },
       subject: subject,

@@ -13,7 +13,7 @@ A modern, responsive portfolio website built with React, Vite, and Tailwind CSS.
 - **Security Headers**: Content Security Policy and security headers
 - **Privacy Policy**: Dedicated privacy policy page at `/privacy`
 - **Fast Loading**: Deployed on Cloudflare Workers edge network
-- **Custom Domain**: Live at [www.aswincloud.com](https://www.aswincloud.com)
+- **Custom Domain**: Live at [www.aswinlocal.in](https://www.aswinlocal.in)
 - **Accessibility**: ARIA labels, keyboard navigation, and screen reader support
 - **Search Functionality**: Global search with keyboard shortcuts (Cmd/Ctrl + K)
 - **Error Handling**: React Error Boundary for graceful error handling
@@ -111,23 +111,23 @@ wrangler deploy --compatibility-date=2024-01-01
 
 The contact form uses MailChannels for sending emails:
 
-- **Notifications**: Sent to `contact@aswincloud.com`
+- **Notifications**: Sent to `contact@aswinlocal.in`
 - **Auto-replies**: Sent to form submitters
 - **No SMTP setup required**: Uses Resend API
 
 ## 🌐 Live Website
 
-Visit the live portfolio: **[www.aswincloud.com](https://www.aswincloud.com)**
+Visit the live portfolio: **[www.aswinlocal.in](https://www.aswinlocal.in)**
 
 ## 📱 Contact
 
-- **Email**: contact@aswincloud.com
+- **Email**: contact@aswinlocal.in
 - **GitHub**: [github.com/Aswin-coder](https://github.com/Aswin-coder)
 - **LinkedIn**: [linkedin.com/in/aswin4122001](https://www.linkedin.com/in/aswin4122001/)
 
 ## 🎯 Project Highlights
 
-- **PR Reviewer**: ML-trained app for PR approval predictions - [pr-reviewer.aswincloud.com](https://pr-reviewer.aswincloud.com)
+- **PR Reviewer**: ML-trained app for PR approval predictions - [pr-reviewer.aswinlocal.in](https://pr-reviewer.aswinlocal.in)
 - **Portfolio**: Modern React-based portfolio with Cloudflare Workers backend
 - **Cloud Infrastructure**: Expertise in deployment strategies and network management
 

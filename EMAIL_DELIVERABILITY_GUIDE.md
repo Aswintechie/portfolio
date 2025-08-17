@@ -29,10 +29,10 @@ This guide helps prevent your portfolio contact form emails from going to junk/s
 ### 1. **Improved From Address**
 ```javascript
 // Before
-from: 'Portfolio Contact <noreply@aswincloud.com>'
+from: 'Portfolio Contact <noreply@aswinlocal.in>'
 
 // After  
-from: 'Aswin Portfolio <contact@aswincloud.com>'
+from: 'Aswin Portfolio <contact@aswinlocal.in>'
 ```
 
 ### 2. **Clean Subject Lines**
@@ -73,7 +73,7 @@ replyTo: process.env.CONTACT_EMAIL
 ## 🔧 Additional Steps to Take
 
 ### 1. **Domain Authentication**
-Set up these DNS records for `aswincloud.com`:
+Set up these DNS records for `aswinlocal.in`:
 
 #### SPF Record
 ```
@@ -85,12 +85,12 @@ Resend will provide this when you verify your domain.
 
 #### DMARC Record
 ```
-TXT _dmarc "v=DMARC1; p=quarantine; rua=mailto:dmarc@aswincloud.com"
+TXT _dmarc "v=DMARC1; p=quarantine; rua=mailto:dmarc@aswinlocal.in"
 ```
 
 ### 2. **Verify Your Domain in Resend**
 1. Go to [Resend Dashboard](https://resend.com/domains)
-2. Add `aswincloud.com` as a domain
+2. Add `aswinlocal.in` as a domain
 3. Follow the DNS setup instructions
 4. Wait for verification (can take 24-48 hours)
 

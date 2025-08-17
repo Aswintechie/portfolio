@@ -142,11 +142,11 @@ const NotFound = () => {
           >
             <p className='text-gray-500 mb-2'>Still can't find what you're looking for?</p>
             <a
-              href='mailto:contact@aswincloud.com'
+              href='mailto:contact@aswinlocal.in'
               className='text-secondary-600 hover:text-secondary-700 font-medium transition-colors duration-200'
-              aria-label='Send email to contact@aswincloud.com'
+              aria-label='Send email to contact@aswinlocal.in'
             >
-              contact@aswincloud.com
+              contact@aswinlocal.in
             </a>
           </motion.div>
         </motion.div>

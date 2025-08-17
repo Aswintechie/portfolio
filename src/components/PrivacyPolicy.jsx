@@ -39,8 +39,8 @@ const PrivacyPolicy = () => (
       <h2 className='text-xl font-semibold mt-6 mb-2 text-gray-800'>Contact</h2>
       <p className='mb-4 text-gray-700'>
         If you have any questions about this Privacy Policy, please contact me at{' '}
-        <a href='mailto:contact@aswincloud.com' className='text-secondary-600 underline'>
-          contact@aswincloud.com
+        <a href='mailto:contact@aswinlocal.in' className='text-secondary-600 underline'>
+          contact@aswinlocal.in
         </a>
         .
       </p>
