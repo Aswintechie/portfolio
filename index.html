@@ -188,8 +188,7 @@
   <body>
     <div id="root"></div>
 
-    <!-- Old chat widget using chat.aswincloud.com - COMMENTED OUT -->
-    <!--
+    <!-- Dynamic Floating Chat Button -->
     <button
       id="openChat"
       title="Chat with us"
@@ -250,6 +249,7 @@
       >
     </button>
 
+    <!-- Chat Modal Overlay -->
     <div
       id="chatModalOverlay"
       style="
@@ -264,6 +264,7 @@
       "
     ></div>
 
+    <!-- Chat Modal -->
     <div
       id="chatModal"
       style="
@@ -283,6 +284,7 @@
         max-height: calc(100vh - 120px);
       "
     >
+      <!-- Close Button -->
       <button
         id="closeChatBtn"
         style="
@@ -312,7 +314,7 @@
         ×
       </button>
       <iframe
-        src="https://chat.aswincloud.com/"
+        src="https://support.aswincloud.com/"
         style="width: 100%; height: 100%; border: none"
       ></iframe>
     </div>
@@ -577,23 +579,6 @@
         }
       });
     </script>
-    -->
-
-    <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-      var Tawk_API = Tawk_API || {},
-        Tawk_LoadStart = new Date();
-      (function () {
-        var s1 = document.createElement('script'),
-          s0 = document.getElementsByTagName('script')[0];
-        s1.async = true;
-        s1.src = 'https://embed.tawk.to/68b578ecd258c126a9008bc9/1j42e0ngr';
-        s1.charset = 'UTF-8';
-        s1.setAttribute('crossorigin', '*');
-        s0.parentNode.insertBefore(s1, s0);
-      })();
-    </script>
-    <!--End of Tawk.to Script-->
 
     <script type="module" src="/src/main.jsx"></script>
 
@@ -610,5 +595,8 @@
         page_location: window.location.href,
       });
     </script>
+
+    <!-- Support Chat Widget -->
+    <script src="https://support.aswincloud.com/index.html"></script>
   </body>
 </html>
