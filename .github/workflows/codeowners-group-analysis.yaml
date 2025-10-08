@@ -637,7 +637,7 @@ jobs:
 
   post-comment:
     needs: [find-pr, analyze-codeowners, get-reviews, parse-comment]
-    if: always() && needs.find-pr.outputs.pr-exists == 'true' && needs.parse-comment.outputs.is-direct-ping != 'true'
+    if: always() && needs.find-pr.outputs.pr-exists == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Generate comment data
