@@ -1871,14 +1871,15 @@ jobs:
             echo "================================"
 
             # Send message to Slack
-            # Create payload using heredoc to avoid jq escaping issues
-            SLACK_PAYLOAD=$(cat <<EOF
-{
-  "channel": "$SLACK_CHANNEL",
-  "text": $(echo "$SLACK_MESSAGE" | jq -R .)
-}
-EOF
-)
+            # Use a temp file to avoid jq escaping issues
+            echo "$SLACK_MESSAGE" > /tmp/slack_message.txt
+            SLACK_PAYLOAD=$(jq -n \
+              --arg channel "$SLACK_CHANNEL" \
+              --rawfile text /tmp/slack_message.txt \
+              '{
+                channel: $channel,
+                text: $text
+              }')
 
             echo "🔍 Final JSON payload:"
             echo "$SLACK_PAYLOAD"
@@ -1898,6 +1899,9 @@ EOF
               echo "❌ Failed to send Slack notification: $SLACK_ERROR"
               echo "Response: $SLACK_RESPONSE"
             fi
+
+            # Clean up temp file
+            rm -f /tmp/slack_message.txt
 
           elif [ "$SEND_SLACK" = "true" ] && [ -z "$SELECTED_OWNERS" ] && [ -z "$SELECTED_SLACK_GROUPS" ]; then
             echo "Slack notification enabled but no pending owners or groups to notify"
