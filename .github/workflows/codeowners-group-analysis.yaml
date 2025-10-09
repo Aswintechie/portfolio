@@ -1154,7 +1154,10 @@ jobs:
           if [ -n "$AUTHOR_NOTES" ]; then
             # Process GitHub usernames in author notes (same logic as before)
             PROCESSED_NOTES="$AUTHOR_NOTES"
-            GITHUB_USERNAMES=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+' | sort | uniq)
+            
+            # Find all GitHub usernames in author notes (pattern: @username, but NOT @org/team)
+            # This regex matches @username but excludes @org/team-name patterns
+            GITHUB_USERNAMES=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+' | grep -v '@.*/' | sort | uniq)
 
             if [ -n "$GITHUB_USERNAMES" ]; then
               echo "Found GitHub usernames in author notes: $GITHUB_USERNAMES"
@@ -1162,6 +1165,12 @@ jobs:
               for github_mention in $GITHUB_USERNAMES; do
                 if [ -n "$github_mention" ]; then
                   clean_username=$(echo "$github_mention" | sed 's/^@//')
+
+                  # Skip if this looks like an organization name (common org names)
+                  if [ "$clean_username" = "tenstorrent" ] || [ "$clean_username" = "github" ] || [ "$clean_username" = "microsoft" ]; then
+                    echo "Skipping organization name: $github_mention"
+                    continue
+                  fi
 
                   USER_API="https://api.github.com/users/$clean_username"
                   USER_DATA=$(curl -s -H "Authorization: Bearer ${{ secrets.ORG_READ_GITHUB_TOKEN }}" \
@@ -1189,6 +1198,26 @@ jobs:
               done
 
               AUTHOR_NOTES="$PROCESSED_NOTES"
+            fi
+
+            # Find GitHub team mentions and optionally convert to Slack groups
+            GITHUB_TEAMS=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+' | sort | uniq)
+            if [ -n "$GITHUB_TEAMS" ]; then
+              echo "Found GitHub team mentions: $GITHUB_TEAMS"
+              for team_mention in $GITHUB_TEAMS; do
+                # Check if this team has a corresponding Slack group
+                SLACK_GROUP_ID=$(get_slack_group_id "$team_mention")
+                if [ -n "$SLACK_GROUP_ID" ]; then
+                  # Replace with Slack group mention
+                  TEAM_REPLACEMENT="<!subteam^$SLACK_GROUP_ID>"
+                  echo "✅ Converting team $team_mention to Slack group: $SLACK_GROUP_ID"
+                  ESCAPED_TEAM=$(echo "$team_mention" | sed 's/[[\.*^$()+?{|]/\\&/g')
+                  ESCAPED_TEAM_REPLACEMENT=$(echo "$TEAM_REPLACEMENT" | sed 's/[[\.*^$()+?{|\\]/\\&/g')
+                  AUTHOR_NOTES=$(echo "$AUTHOR_NOTES" | sed "s/$ESCAPED_TEAM/$ESCAPED_TEAM_REPLACEMENT/g")
+                else
+                  echo "⚠️  No Slack group found for team: $team_mention"
+                fi
+              done
             fi
 
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"💬 *Author Notes:* $AUTHOR_NOTES"
@@ -1701,6 +1730,12 @@ jobs:
                   if [ ${#word} -ge 3 ]; then
                     echo "  Checking word: '$word'" >&2
                     
+                    # Skip very common words that might cause false matches
+                    if [ "$word" = "Tenstorrent" ] || [ "$word" = "Inc" ] || [ "$word" = "LLC" ] || [ "$word" = "ULC" ] || [ "$word" = "Corp" ] || [ "$word" = "Ltd" ]; then
+                      echo "  '$word' is too common, skipping" >&2
+                      continue
+                    fi
+                    
                     # Find all users that match this word
                     WORD_MATCHES=$(echo "$ALL_USERS" | jq -r --arg word "$word" '.[] | select((.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or (.profile.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or (.profile.display_name // "" | ascii_downcase | contains($word | ascii_downcase))) | .id + "|" + (.real_name // .profile.real_name // .name)')
                     
@@ -1813,8 +1848,9 @@ jobs:
               # Process author notes to convert @username to full names or Slack mentions
               PROCESSED_NOTES="$AUTHOR_NOTES"
 
-              # Find all GitHub usernames in author notes (pattern: @username)
-              GITHUB_USERNAMES=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+' | sort | uniq)
+              # Find all GitHub usernames in author notes (pattern: @username, but NOT @org/team)
+              # This regex matches @username but excludes @org/team-name patterns
+              GITHUB_USERNAMES=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+' | grep -v '@.*/' | sort | uniq)
 
               if [ -n "$GITHUB_USERNAMES" ]; then
                 echo "Found GitHub usernames in author notes: $GITHUB_USERNAMES"
@@ -1824,6 +1860,12 @@ jobs:
                   if [ -n "$github_mention" ]; then
                     # Remove @ prefix to get clean username
                     clean_username=$(echo "$github_mention" | sed 's/^@//')
+
+                    # Skip if this looks like an organization name (common org names)
+                    if [ "$clean_username" = "tenstorrent" ] || [ "$clean_username" = "github" ] || [ "$clean_username" = "microsoft" ]; then
+                      echo "Skipping organization name: $github_mention"
+                      continue
+                    fi
 
                     # Get full name from GitHub API
                     USER_API="https://api.github.com/users/$clean_username"
@@ -1857,6 +1899,26 @@ jobs:
 
                 echo "Final processed author notes: $PROCESSED_NOTES"
                 AUTHOR_NOTES="$PROCESSED_NOTES"
+              fi
+
+              # Find GitHub team mentions and optionally convert to Slack groups
+              GITHUB_TEAMS=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+' | sort | uniq)
+              if [ -n "$GITHUB_TEAMS" ]; then
+                echo "Found GitHub team mentions: $GITHUB_TEAMS"
+                for team_mention in $GITHUB_TEAMS; do
+                  # Check if this team has a corresponding Slack group
+                  SLACK_GROUP_ID=$(get_slack_group_id "$team_mention")
+                  if [ -n "$SLACK_GROUP_ID" ]; then
+                    # Replace with Slack group mention
+                    TEAM_REPLACEMENT="<!subteam^$SLACK_GROUP_ID>"
+                    echo "✅ Converting team $team_mention to Slack group: $SLACK_GROUP_ID"
+                    ESCAPED_TEAM=$(echo "$team_mention" | sed 's/[[\.*^$()+?{|]/\\&/g')
+                    ESCAPED_TEAM_REPLACEMENT=$(echo "$TEAM_REPLACEMENT" | sed 's/[[\.*^$()+?{|\\]/\\&/g')
+                    AUTHOR_NOTES=$(echo "$AUTHOR_NOTES" | sed "s/$ESCAPED_TEAM/$ESCAPED_TEAM_REPLACEMENT/g")
+                  else
+                    echo "⚠️  No Slack group found for team: $team_mention"
+                  fi
+                done
               fi
 
               SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"💬 *Author Notes:* $AUTHOR_NOTES"
