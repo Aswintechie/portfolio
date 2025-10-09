@@ -1318,6 +1318,25 @@ jobs:
             esac
           }
 
+          # Get Slack group handle (for debugging/fallback)
+          get_slack_group_handle() {
+            local github_team="$1"
+            case "$github_team" in
+              "@tenstorrent/metalium-developers-infra")
+                echo "metalium-developers-infra"
+                ;;
+              "@tenstorrent/metalium-developers-ttnn-core")
+                echo "metalium-developers-ttnn-core"
+                ;;
+              "@tenstorrent/metalium-developers-convolutions")
+                echo "metalium-developers-convolutions"
+                ;;
+              *)
+                echo ""
+                ;;
+            esac
+          }
+
           # Collect owners/groups for notification (both individual users and Slack groups)
           TEMP_SELECTED_OWNERS=""
           SELECTED_SLACK_GROUPS=""
@@ -1726,7 +1745,7 @@ jobs:
               for group_id in "${SLACK_GROUPS_ARRAY[@]}"; do
                 if [ -n "$group_id" ]; then
                   SLACK_MESSAGE="$SLACK_MESSAGE <!subteam^$group_id>"
-                  echo "✅ Added Slack group mention: $group_id"
+                  echo "✅ Added Slack group mention: <!subteam^$group_id>"
                 fi
               done
             fi
@@ -1845,14 +1864,24 @@ jobs:
 
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"Please review when you have a moment. Thank you! 🚀"
 
+            # Debug: Show the final message being sent
+            echo "🔍 Final Slack message:"
+            echo "================================"
+            echo "$SLACK_MESSAGE"
+            echo "================================"
+
             # Send message to Slack
-            SLACK_PAYLOAD=$(jq -n \
-              --arg channel "$SLACK_CHANNEL" \
-              --arg text "$SLACK_MESSAGE" \
-              '{
-                channel: $channel,
-                text: $text
-              }')
+            # Create payload using heredoc to avoid jq escaping issues
+            SLACK_PAYLOAD=$(cat <<EOF
+{
+  "channel": "$SLACK_CHANNEL",
+  "text": $(echo "$SLACK_MESSAGE" | jq -R .)
+}
+EOF
+)
+
+            echo "🔍 Final JSON payload:"
+            echo "$SLACK_PAYLOAD"
 
             echo "Attempting to send message to Slack..."
             SLACK_RESPONSE=$(curl -s -X POST \
