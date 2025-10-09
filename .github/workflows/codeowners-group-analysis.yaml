@@ -952,6 +952,25 @@ jobs:
           # Use #tt-metal-pr-review-requests Slack channel
           SLACK_CHANNEL="C09HT5VSXRB"
 
+          # GitHub team to Slack group mapping (needed for author notes processing)
+          get_slack_group_id() {
+            local github_team="$1"
+            case "$github_team" in
+              "@tenstorrent/metalium-developers-infra")
+                echo "S0985AN7TC5"
+                ;;
+              "@tenstorrent/metalium-developers-ttnn-core")
+                echo "S0988UJEW8K"
+                ;;
+              "@tenstorrent/metalium-developers-convolutions")
+                echo "S09DNR6NAG4"
+                ;;
+              *)
+                echo ""  # No Slack group available
+                ;;
+            esac
+          }
+
           echo "Processing direct ping for users: $DIRECT_PING_USERS"
 
           # Get PR information with error handling
@@ -985,7 +1004,7 @@ jobs:
           # Validate critical fields
           if [ -z "$PR_TITLE" ] || [ "$PR_TITLE" = "null" ] || [ -z "$PR_AUTHOR_LOGIN" ] || [ "$PR_AUTHOR_LOGIN" = "null" ]; then
             echo "❌ ERROR: Invalid PR data - missing title or author"
-            echo "PR Title: $PR_TITLE"
+            echo "PR Title: \"$PR_TITLE\""
             echo "PR Author: $PR_AUTHOR_LOGIN"
             exit 1
           fi
@@ -1055,13 +1074,15 @@ jobs:
 
             # Smart word-by-word fuzzy matching if still not found
             if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
-              echo "Trying word-by-word fuzzy matching for: $full_name" >&2
               IFS=' ' read -ra NAME_WORDS <<< "$full_name"
 
               # Try each word individually - use the first word that has exactly one match
               for word in "${NAME_WORDS[@]}"; do
                 if [ ${#word} -ge 3 ]; then
-                  echo "  Checking word: '$word'" >&2
+                  # Skip very common words that might cause false matches
+                  if [ "$word" = "Tenstorrent" ] || [ "$word" = "Inc" ] || [ "$word" = "LLC" ] || [ "$word" = "ULC" ] || [ "$word" = "Corp" ] || [ "$word" = "Ltd" ]; then
+                    continue
+                  fi
 
                   # Find all users that match this word
                   WORD_MATCHES=$(echo "$ALL_USERS" | jq -r --arg word "$word" '.[] | select((.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or (.profile.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or (.profile.display_name // "" | ascii_downcase | contains($word | ascii_downcase))) | .id + "|" + (.real_name // .profile.real_name // .name)')
@@ -1073,22 +1094,11 @@ jobs:
                     if [ "$MATCH_COUNT" -eq 1 ]; then
                       # Exactly one match - use it!
                       USER_ID=$(echo "$WORD_MATCHES" | cut -d'|' -f1)
-                      MATCHED_NAME=$(echo "$WORD_MATCHES" | cut -d'|' -f2)
-                      echo "✅ Found unique match for '$word': $full_name -> $MATCHED_NAME ($USER_ID)" >&2
                       break  # Stop here, we found our match
-                    else
-                      echo "  '$word' matches $MATCH_COUNT users, skipping" >&2
                     fi
-                  else
-                    echo "  '$word' matches 0 users, skipping" >&2
                   fi
                 fi
               done
-
-              # If no unique word match found, report it
-              if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
-                echo "⚠️  No unique word matches found for: $full_name" >&2
-              fi
             fi
 
             if [ -n "$USER_ID" ] && [ "$USER_ID" != "null" ]; then
@@ -1099,15 +1109,12 @@ jobs:
           }
 
           # Find Slack user ID for PR author
-          echo "Looking up PR author in Slack: $PR_AUTHOR_FULL_NAME"
           PR_AUTHOR_SLACK_ID=$(find_slack_user_id "$PR_AUTHOR_FULL_NAME" "$PR_AUTHOR_LOGIN")
 
           if [ -n "$PR_AUTHOR_SLACK_ID" ]; then
             PR_AUTHOR_MENTION="<@$PR_AUTHOR_SLACK_ID>"
-            echo "✅ Found PR author in Slack: $PR_AUTHOR_FULL_NAME -> $PR_AUTHOR_SLACK_ID"
           else
             PR_AUTHOR_MENTION="$PR_AUTHOR_FULL_NAME (@$PR_AUTHOR_LOGIN)"
-            echo "⚠️  PR author not found in Slack: $PR_AUTHOR_FULL_NAME (@$PR_AUTHOR_LOGIN), using fallback"
           fi
 
           # Process each user to ping
@@ -1134,10 +1141,8 @@ jobs:
 
                 if [ -n "$SLACK_USER_ID" ]; then
                   SLACK_USER_MENTIONS="$SLACK_USER_MENTIONS <@$SLACK_USER_ID>"
-                  echo "✅ Found Slack user: $USER_NAME -> $SLACK_USER_ID"
                 else
                   SLACK_USER_MENTIONS="$SLACK_USER_MENTIONS $USER_NAME"
-                  echo "⚠️  Slack user not found for: $USER_NAME (@$clean_username), using full name fallback"
                 fi
               fi
             done
@@ -1154,7 +1159,7 @@ jobs:
           if [ -n "$AUTHOR_NOTES" ]; then
             # Process GitHub usernames in author notes (same logic as before)
             PROCESSED_NOTES="$AUTHOR_NOTES"
-            
+
             # Find all GitHub usernames in author notes (pattern: @username, but NOT @org/team)
             # This regex matches @username but excludes @org/team-name patterns
             GITHUB_USERNAMES=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+' | grep -v '@.*/' | sort | uniq)
@@ -1293,9 +1298,6 @@ jobs:
 
           # Output for next steps
           {
-            echo "pr-title<<EOF"
-            echo "$PR_TITLE"
-            echo "EOF"
             echo "pr-author-login<<EOF"
             echo "$PR_AUTHOR_LOGIN"
             echo "EOF"
@@ -1377,13 +1379,13 @@ jobs:
               if [ "$team" = "@tenstorrent/metalium-codeowners-large-changes" ]; then
                 continue
               fi
-              
+
               # Check if this team has a Slack group
               SLACK_GROUP_ID=$(get_slack_group_id "$team")
-              
+
               if [ -n "$SLACK_GROUP_ID" ]; then
                 echo "Team $team has Slack group: $SLACK_GROUP_ID"
-                
+
                 # Check if team needs approval (same logic as before)
                 if [ -n "$TEAM_MEMBERS" ]; then
                   team_members_entry=$(echo "$TEAM_MEMBERS" | tr '|' '\n' | grep "^$team:" | head -1)
@@ -1533,7 +1535,7 @@ jobs:
           # Remove trailing comma and prepare outputs
           TEMP_SELECTED_OWNERS=$(echo "$TEMP_SELECTED_OWNERS" | sed 's/,$//')
           SELECTED_SLACK_GROUPS=$(echo "$SELECTED_SLACK_GROUPS" | sed 's/,$//')
-          
+
           if [ -n "$TEMP_SELECTED_OWNERS" ]; then
             # Sort and deduplicate individual owners
             SELECTED_OWNERS=$(echo "$TEMP_SELECTED_OWNERS" | tr ',' '\n' | sort | uniq | tr '\n' ',' | sed 's/,$//')
@@ -1550,11 +1552,17 @@ jobs:
           PING_OWNERS="${{ steps.generate-comment.outputs.ping-owners }}"
           SEND_SLACK="${{ steps.generate-comment.outputs.send-slack }}"
           SELECTED_OWNERS="${{ steps.select-owners.outputs.selected-owners }}"
-          PR_TITLE="${{ steps.setup-notifications.outputs.pr-title }}"
           PR_AUTHOR_LOGIN="${{ steps.setup-notifications.outputs.pr-author-login }}"
           PR_AUTHOR_NAME="${{ steps.setup-notifications.outputs.pr-author-name }}"
           AUTHOR_NOTES="${{ steps.generate-comment.outputs.author-notes }}"
           PR_NUMBER="${{ steps.generate-comment.outputs.pr-number }}"
+
+          # Fetch PR title safely to avoid shell injection
+          PR_API="https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER"
+          PR_DATA=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                         -H "Accept: application/vnd.github.v3+json" \
+                         "$PR_API")
+          PR_TITLE=$(echo "$PR_DATA" | jq -r '.title')
 
           # Use #tt-metal-pr-review-requests Slack channel
           SLACK_CHANNEL="C09HT5VSXRB"
@@ -1604,7 +1612,7 @@ jobs:
               fi
             fi
 
-            PING_MESSAGE="$PING_MESSAGE, this PR **[$PR_TITLE](${{ github.server_url }}/${{ github.repository }}/pull/$PR_NUMBER)** by $PR_AUTHOR_FULL_NAME [@$PR_AUTHOR_LOGIN] needs your approval/review to merge this."
+            PING_MESSAGE="$PING_MESSAGE, this PR **[""$PR_TITLE""](${{ github.server_url }}/${{ github.repository }}/pull/$PR_NUMBER)** by $PR_AUTHOR_FULL_NAME [@$PR_AUTHOR_LOGIN] needs your approval/review to merge this."
 
             if [ "$PING_OWNERS" = "true" ]; then
               # Create new ping comment
@@ -1654,14 +1662,39 @@ jobs:
           SEND_SLACK="${{ steps.generate-comment.outputs.send-slack }}"
           SELECTED_OWNERS="${{ steps.select-owners.outputs.selected-owners }}"
           SELECTED_SLACK_GROUPS="${{ steps.select-owners.outputs.selected-slack-groups }}"
-          PR_TITLE="${{ steps.setup-notifications.outputs.pr-title }}"
           PR_AUTHOR_LOGIN="${{ steps.setup-notifications.outputs.pr-author-login }}"
           PR_AUTHOR_NAME="${{ steps.setup-notifications.outputs.pr-author-name }}"
           AUTHOR_NOTES="${{ steps.generate-comment.outputs.author-notes }}"
           PR_NUMBER="${{ steps.generate-comment.outputs.pr-number }}"
 
+          # Fetch PR title safely to avoid shell injection
+          PR_API="https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER"
+          PR_DATA=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                         -H "Accept: application/vnd.github.v3+json" \
+                         "$PR_API")
+          PR_TITLE=$(echo "$PR_DATA" | jq -r '.title')
+
           # Use #tt-metal-pr-review-requests Slack channel
           SLACK_CHANNEL="C09HT5VSXRB"
+
+          # GitHub team to Slack group mapping (needed for author notes processing)
+          get_slack_group_id() {
+            local github_team="$1"
+            case "$github_team" in
+              "@tenstorrent/metalium-developers-infra")
+                echo "S0985AN7TC5"
+                ;;
+              "@tenstorrent/metalium-developers-ttnn-core")
+                echo "S0988UJEW8K"
+                ;;
+              "@tenstorrent/metalium-developers-convolutions")
+                echo "S09DNR6NAG4"
+                ;;
+              *)
+                echo ""  # No Slack group available
+                ;;
+            esac
+          }
 
           # Send Slack notification if enabled
           if [ "$SEND_SLACK" = "true" ] && ([ -n "$SELECTED_OWNERS" ] || [ -n "$SELECTED_SLACK_GROUPS" ]); then
@@ -1724,25 +1757,25 @@ jobs:
               if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
                 echo "Trying word-by-word fuzzy matching for: $full_name" >&2
                 IFS=' ' read -ra NAME_WORDS <<< "$full_name"
-                
+
                 # Try each word individually - use the first word that has exactly one match
                 for word in "${NAME_WORDS[@]}"; do
                   if [ ${#word} -ge 3 ]; then
                     echo "  Checking word: '$word'" >&2
-                    
+
                     # Skip very common words that might cause false matches
                     if [ "$word" = "Tenstorrent" ] || [ "$word" = "Inc" ] || [ "$word" = "LLC" ] || [ "$word" = "ULC" ] || [ "$word" = "Corp" ] || [ "$word" = "Ltd" ]; then
                       echo "  '$word' is too common, skipping" >&2
                       continue
                     fi
-                    
+
                     # Find all users that match this word
                     WORD_MATCHES=$(echo "$ALL_USERS" | jq -r --arg word "$word" '.[] | select((.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or (.profile.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or (.profile.display_name // "" | ascii_downcase | contains($word | ascii_downcase))) | .id + "|" + (.real_name // .profile.real_name // .name)')
-                    
+
                     if [ -n "$WORD_MATCHES" ]; then
                       # Count unique matches for this word
                       MATCH_COUNT=$(echo "$WORD_MATCHES" | wc -l)
-                      
+
                       if [ "$MATCH_COUNT" -eq 1 ]; then
                         # Exactly one match - use it!
                         USER_ID=$(echo "$WORD_MATCHES" | cut -d'|' -f1)
@@ -1757,7 +1790,7 @@ jobs:
                     fi
                   fi
                 done
-                
+
                 # If no unique word match found, report it
                 if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
                   echo "⚠️  No unique word matches found for: $full_name" >&2
@@ -1773,7 +1806,7 @@ jobs:
 
             # Build Slack message with user mentions and group mentions
             SLACK_MESSAGE="🔔 *CodeOwners Review Request*"$'\n\n'"Hi"
-            
+
             # Add Slack group mentions first
             if [ -n "$SELECTED_SLACK_GROUPS" ]; then
               IFS=',' read -ra SLACK_GROUPS_ARRAY <<< "$SELECTED_SLACK_GROUPS"
@@ -1784,7 +1817,7 @@ jobs:
                 fi
               done
             fi
-            
+
             # Add individual user mentions
             SLACK_USER_MENTIONS=""
             if [ -n "$SELECTED_OWNERS" ]; then
@@ -1814,9 +1847,9 @@ jobs:
                 fi
               done
             fi
-            
+
             SLACK_MESSAGE="$SLACK_MESSAGE$SLACK_USER_MENTIONS!"
-            
+
             # Get PR author Slack ID
             PR_AUTHOR_FULL_NAME="$PR_AUTHOR_NAME"
             if [ "$PR_AUTHOR_FULL_NAME" = "$PR_AUTHOR_LOGIN" ] || [ -z "$PR_AUTHOR_FULL_NAME" ] || [ "$PR_AUTHOR_FULL_NAME" = "null" ]; then
@@ -1836,7 +1869,7 @@ jobs:
             else
               PR_AUTHOR_MENTION="$PR_AUTHOR_FULL_NAME (@$PR_AUTHOR_LOGIN)"
             fi
-            
+
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"📋 *PR:* <${{ github.server_url }}/${{ github.repository }}/pull/$PR_NUMBER|$PR_TITLE>"
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"👤 *Author:* $PR_AUTHOR_MENTION"
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔍 *Action Required:* This PR needs your code review/approval to proceed with merging."
@@ -1853,8 +1886,6 @@ jobs:
               GITHUB_USERNAMES=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+' | grep -v '@.*/' | sort | uniq)
 
               if [ -n "$GITHUB_USERNAMES" ]; then
-                echo "Found GitHub usernames in author notes: $GITHUB_USERNAMES"
-
                 # Process each username
                 for github_mention in $GITHUB_USERNAMES; do
                   if [ -n "$github_mention" ]; then
@@ -1863,7 +1894,6 @@ jobs:
 
                     # Skip if this looks like an organization name (common org names)
                     if [ "$clean_username" = "tenstorrent" ] || [ "$clean_username" = "github" ] || [ "$clean_username" = "microsoft" ]; then
-                      echo "Skipping organization name: $github_mention"
                       continue
                     fi
 
@@ -1883,11 +1913,9 @@ jobs:
                     if [ -n "$SLACK_USER_ID" ]; then
                       # Use Slack mention for direct ping
                       REPLACEMENT="<@$SLACK_USER_ID>"
-                      echo "✅ Converting $github_mention to Slack mention: $USER_NAME -> $SLACK_USER_ID"
                     else
                       # Use full name as fallback
                       REPLACEMENT="@$USER_NAME"
-                      echo "⚠️  Converting $github_mention to full name: $USER_NAME"
                     fi
 
                     # Replace in notes (escape special characters for sed)
@@ -1897,26 +1925,21 @@ jobs:
                   fi
                 done
 
-                echo "Final processed author notes: $PROCESSED_NOTES"
                 AUTHOR_NOTES="$PROCESSED_NOTES"
               fi
 
               # Find GitHub team mentions and optionally convert to Slack groups
               GITHUB_TEAMS=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+' | sort | uniq)
               if [ -n "$GITHUB_TEAMS" ]; then
-                echo "Found GitHub team mentions: $GITHUB_TEAMS"
                 for team_mention in $GITHUB_TEAMS; do
                   # Check if this team has a corresponding Slack group
                   SLACK_GROUP_ID=$(get_slack_group_id "$team_mention")
                   if [ -n "$SLACK_GROUP_ID" ]; then
                     # Replace with Slack group mention
                     TEAM_REPLACEMENT="<!subteam^$SLACK_GROUP_ID>"
-                    echo "✅ Converting team $team_mention to Slack group: $SLACK_GROUP_ID"
                     ESCAPED_TEAM=$(echo "$team_mention" | sed 's/[[\.*^$()+?{|]/\\&/g')
                     ESCAPED_TEAM_REPLACEMENT=$(echo "$TEAM_REPLACEMENT" | sed 's/[[\.*^$()+?{|\\]/\\&/g')
                     AUTHOR_NOTES=$(echo "$AUTHOR_NOTES" | sed "s/$ESCAPED_TEAM/$ESCAPED_TEAM_REPLACEMENT/g")
-                  else
-                    echo "⚠️  No Slack group found for team: $team_mention"
                   fi
                 done
               fi
