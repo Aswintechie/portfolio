@@ -1325,6 +1325,17 @@ jobs:
           SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"Hi$SLACK_USER_MENTIONS!"
           SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"📋 *PR:* <${{ github.server_url }}/${{ github.repository }}/pull/$PR_NUMBER|$PR_TITLE>"
           SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"👤 *Author:* $PR_AUTHOR_MENTION"
+
+          # Add requested by information if different from author
+          if [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
+            SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔄 *Requested by:* $REQUESTER_NAME (@$REQUESTER_LOGIN)"
+          fi
+
+          # Add changes count if available
+          if [ "$TOTAL_ADDITIONS" -gt 0 ] || [ "$TOTAL_DELETIONS" -gt 0 ]; then
+            SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
+          fi
+
           SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔍 *Action Required:* This PR needs your code review/approval to proceed with merging."
 
           # Add author notes if provided
@@ -2065,6 +2076,15 @@ jobs:
 
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"📋 *PR:* <${{ github.server_url }}/${{ github.repository }}/pull/$PR_NUMBER|$PR_TITLE>"
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"👤 *Author:* $PR_AUTHOR_MENTION"
+
+            # Add requested by information if different from author (for general notifications)
+            # Note: REQUESTER_LOGIN and REQUESTER_NAME may not be available in general notifications context
+
+            # Add changes count if available
+            if [ "$TOTAL_ADDITIONS" -gt 0 ] || [ "$TOTAL_DELETIONS" -gt 0 ]; then
+              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
+            fi
+
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔍 *Action Required:* This PR needs your code review/approval to proceed with merging."
 
             # Add author notes if provided
