@@ -1092,12 +1092,13 @@ jobs:
           PR_NUMBER="${{ needs.find-pr.outputs.pr-number }}"
           DIRECT_PING_USERS="${{ needs.parse-comment.outputs.direct-ping-users }}"
           AUTHOR_NOTES="${{ needs.parse-comment.outputs.author-notes }}"
-          TOTAL_ADDITIONS="${{ needs.analyze-codeowners.outputs.total-additions || 0 }}"
-          TOTAL_DELETIONS="${{ needs.analyze-codeowners.outputs.total-deletions || 0 }}"
-          REQUESTER_LOGIN="${{ needs.parse-comment.outputs.comment-author || '' }}"
+          TOTAL_ADDITIONS="${{ needs.analyze-codeowners.outputs.total-additions }}"
+          TOTAL_DELETIONS="${{ needs.analyze-codeowners.outputs.total-deletions }}"
+          REQUESTER_LOGIN="${{ needs.parse-comment.outputs.comment-author }}"
           REQUESTER_NAME="$REQUESTER_LOGIN"
 
           # Get full name for requester if available
+          REQUESTER_LOGIN="${REQUESTER_LOGIN:-}"
           if [ -n "$REQUESTER_LOGIN" ] && [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
             REQUESTER_USER_API="https://api.github.com/users/$REQUESTER_LOGIN"
             REQUESTER_USER_DATA=$(curl -s -H "Authorization: Bearer ${{ secrets.ORG_READ_GITHUB_TOKEN }}" \
@@ -1343,11 +1344,13 @@ jobs:
           SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"👤 *Author:* $PR_AUTHOR_MENTION"
 
           # Add requested by information if different from author
-          if [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
+          if [ -n "$REQUESTER_LOGIN" ] && [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔄 *Requested by:* $REQUESTER_NAME (@$REQUESTER_LOGIN)"
           fi
 
           # Add changes count if available
+          TOTAL_ADDITIONS="${TOTAL_ADDITIONS:-0}"
+          TOTAL_DELETIONS="${TOTAL_DELETIONS:-0}"
           if [ "$TOTAL_ADDITIONS" -gt 0 ] || [ "$TOTAL_DELETIONS" -gt 0 ]; then
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
           fi
@@ -2097,6 +2100,8 @@ jobs:
             # Note: REQUESTER_LOGIN and REQUESTER_NAME may not be available in general notifications context
 
             # Add changes count if available
+            TOTAL_ADDITIONS="${TOTAL_ADDITIONS:-0}"
+            TOTAL_DELETIONS="${TOTAL_DELETIONS:-0}"
             if [ "$TOTAL_ADDITIONS" -gt 0 ] || [ "$TOTAL_DELETIONS" -gt 0 ]; then
               SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
             fi
