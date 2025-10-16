@@ -1020,7 +1020,7 @@ jobs:
             {
               echo "comment<<EOF"
               cat << 'EOF_EOF'
-"$COMMENT"
+$COMMENT
 EOF_EOF
               echo "EOF"
             } >> $GITHUB_OUTPUT
