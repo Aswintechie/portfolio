@@ -338,7 +338,7 @@ jobs:
 
   analyze-codeowners:
     needs: [find-pr, get-reviews]
-    if: always() && needs.find-pr.outputs.pr-exists == 'true' && needs.parse-comment.outputs.is-direct-ping != 'true'
+    if: always() && needs.find-pr.outputs.pr-exists == 'true'
     runs-on: ubuntu-latest
     outputs:
       codeowners-groups: ${{ steps.analyze.outputs.codeowners-groups }}
@@ -1088,10 +1088,27 @@ jobs:
 
       - name: Direct Ping Notification
         if: needs.parse-comment.outputs.is-direct-ping == 'true'
+        needs: [parse-comment, find-pr, analyze-codeowners]
         run: |
           PR_NUMBER="${{ needs.find-pr.outputs.pr-number }}"
           DIRECT_PING_USERS="${{ needs.parse-comment.outputs.direct-ping-users }}"
           AUTHOR_NOTES="${{ needs.parse-comment.outputs.author-notes }}"
+          TOTAL_ADDITIONS="${{ needs.analyze-codeowners.outputs.total-additions || 0 }}"
+          TOTAL_DELETIONS="${{ needs.analyze-codeowners.outputs.total-deletions || 0 }}"
+          REQUESTER_LOGIN="${{ needs.parse-comment.outputs.comment-author || '' }}"
+          REQUESTER_NAME="$REQUESTER_LOGIN"
+
+          # Get full name for requester if available
+          if [ -n "$REQUESTER_LOGIN" ] && [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
+            REQUESTER_USER_API="https://api.github.com/users/$REQUESTER_LOGIN"
+            REQUESTER_USER_DATA=$(curl -s -H "Authorization: Bearer ${{ secrets.ORG_READ_GITHUB_TOKEN }}" \
+                                   -H "Accept: application/vnd.github.v3+json" \
+                                   "$REQUESTER_USER_API" 2>/dev/null)
+            REQUESTER_FULL_NAME=$(echo "$REQUESTER_USER_DATA" | jq -r '.name // empty' 2>/dev/null)
+            if [ -n "$REQUESTER_FULL_NAME" ] && [ "$REQUESTER_FULL_NAME" != "null" ]; then
+              REQUESTER_NAME="$REQUESTER_FULL_NAME"
+            fi
+          fi
 
           # Use #tt-metal-pr-review-requests Slack channel
           SLACK_CHANNEL="C09HT5VSXRB"
