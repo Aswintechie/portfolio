@@ -1088,7 +1088,6 @@ jobs:
 
       - name: Direct Ping Notification
         if: needs.parse-comment.outputs.is-direct-ping == 'true'
-        needs: [parse-comment, find-pr, analyze-codeowners]
         run: |
           PR_NUMBER="${{ needs.find-pr.outputs.pr-number }}"
           DIRECT_PING_USERS="${{ needs.parse-comment.outputs.direct-ping-users }}"
