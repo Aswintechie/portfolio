@@ -1019,9 +1019,7 @@ jobs:
             # Output comment for next step
             {
               echo "comment<<EOF"
-              cat << 'EOF_EOF'
-$COMMENT
-EOF_EOF
+              printf '%s\n' "$COMMENT"
               echo "EOF"
             } >> $GITHUB_OUTPUT
 
