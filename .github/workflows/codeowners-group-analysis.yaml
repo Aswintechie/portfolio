@@ -1012,7 +1012,7 @@ jobs:
           fi
 
           # Add note if only PR author is available as codeowner
-          if [ -n "$TEAMS" ] || [ -n "$INDIVIDUALS" ]; then
+          if [ "$NO_OWNERS_AVAILABLE" = "true" ]; then
             COMMENT="$COMMENT\n\n**Note:** Only the PR author is available as a codeowner for this PR. No external review notifications will be sent."
           fi
 
