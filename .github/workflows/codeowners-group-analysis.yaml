@@ -1029,7 +1029,7 @@ jobs:
 
           # Add helpful tip if triggered via comment and ping was not used
           if [ "${{ github.event_name }}" = "issue_comment" ] && [ "$PING_OWNERS" = "false" ] && [ "$SEND_SLACK" = "false" ]; then
-            COMMENT="$COMMENT\n\n---\n💡 **Tip:** Use \`/codeowners ping\` to notify pending owners via Slack, or \`/ping @username\` to ping specific users."
+            COMMENT="$COMMENT\n\n---\n💡 **Tip:** Use \\\`/codeowners ping\\\` to notify pending owners via Slack, or \\\`/ping @username\\\` to ping specific users."
           fi
 
             # Output comment for next step
