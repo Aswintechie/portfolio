@@ -2121,12 +2121,23 @@ jobs:
               if [ -n "$REQUESTER_FULL_NAME" ] && [ "$REQUESTER_FULL_NAME" != "null" ]; then
                 REQUESTER_NAME="$REQUESTER_FULL_NAME"
               fi
-              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔄 *Requested by:* $REQUESTER_NAME (@$REQUESTER_LOGIN)"
+              
+              # Find Slack user ID for requester and create mention
+              REQUESTER_SLACK_ID=$(find_slack_user_id "$REQUESTER_NAME" "$REQUESTER_LOGIN")
+              if [ -n "$REQUESTER_SLACK_ID" ]; then
+                REQUESTER_MENTION="<@$REQUESTER_SLACK_ID>"
+                echo "✅ Found Slack user for requester: $REQUESTER_NAME -> $REQUESTER_SLACK_ID"
+              else
+                REQUESTER_MENTION="$REQUESTER_NAME (@$REQUESTER_LOGIN)"
+                echo "⚠️  Slack user not found for requester: $REQUESTER_NAME (@$REQUESTER_LOGIN), using fallback"
+              fi
+              
+              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔄 *Requested by:* $REQUESTER_MENTION"
             fi
 
             # Add changes count if available
             if ([ -n "$TOTAL_ADDITIONS" ] && [ "$TOTAL_ADDITIONS" -gt 0 ]) || ([ -n "$TOTAL_DELETIONS" ] && [ "$TOTAL_DELETIONS" -gt 0 ]); then
-              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
+              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* +$TOTAL_ADDITIONS -$TOTAL_DELETIONS"
             fi
 
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔍 *Action Required:* This PR needs your code review/approval to proceed with merging."
