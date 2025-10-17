@@ -2167,8 +2167,8 @@ jobs:
               echo "Converted markdown links to Slack format"
 
               # Also detect plain URLs (http:// or https://) and convert them to clickable Slack links
-              # Pattern matches http(s)://... followed by space or end of string
-              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed -E 's|(https?://[^ <>]+)|<\1>|g')
+              # Use negative lookbehind to avoid matching URLs already in Slack format (<url|text> or <url>)
+              PROCESSED_NOTES=$(python3 -c "import sys, re; text=sys.stdin.read(); print(re.sub(r'(?<![<])(\bhttps?://[^\s<>]+)(?![|>])', r'<\1>', text))" <<< "$PROCESSED_NOTES")
               echo "Converted plain URLs to Slack links"
 
               # Find all GitHub usernames in author notes (pattern: @username, but NOT @org/team)
