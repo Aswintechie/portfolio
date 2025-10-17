@@ -2163,7 +2163,7 @@ jobs:
 
               # First, convert markdown links [text](url) to Slack format <url|text>
               # This regex matches [text](url) and converts to Slack format
-              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed 's/\[\([^]]*\)\](\([^)]*\))/<\2|\1>/g')
+              PROCESSED_NOTES=$(printf "%s" "$PROCESSED_NOTES" | sed 's/\[\([^]]*\)](\([^)]*\))/<\2|\1>/g')
               echo "Converted markdown links to Slack format"
 
               # Also detect plain URLs (http:// or https://) and convert them to clickable Slack links
