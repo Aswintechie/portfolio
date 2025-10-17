@@ -9,7 +9,7 @@
 /public/ @Aswin-coder @Aswinmcw
 *.html @Aswin-coder @Aswinmcw
 *.css @Aswin-coder @Aswinmcw
-*.js @Aswin-coder @Aswinmcw
+*.js @Aswin-coder
 *.jsx @Aswin-coder @Aswinmcw
 
 # Backend/Server files
