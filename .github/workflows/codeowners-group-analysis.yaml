@@ -2224,7 +2224,7 @@ jobs:
               fi
 
               # Find GitHub team mentions and optionally convert to Slack groups
-              GITHUB_TEAMS=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+' | sort | uniq)
+              GITHUB_TEAMS=$(echo "$PROCESSED_NOTES" | grep -oE '@[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+' | sort | uniq)
               if [ -n "$GITHUB_TEAMS" ]; then
                 echo "Found GitHub team mentions: $GITHUB_TEAMS"
                 for team_mention in $GITHUB_TEAMS; do
@@ -2236,12 +2236,15 @@ jobs:
                     echo "✅ Converting team $team_mention to Slack group: $SLACK_GROUP_ID"
                     ESCAPED_TEAM=$(echo "$team_mention" | sed 's/[[\.*^$()+?{|]/\\&/g')
                     ESCAPED_TEAM_REPLACEMENT=$(echo "$TEAM_REPLACEMENT" | sed 's/[[\.*^$()+?{|\\]/\\&/g')
-                    AUTHOR_NOTES=$(echo "$AUTHOR_NOTES" | sed "s/$ESCAPED_TEAM/$ESCAPED_TEAM_REPLACEMENT/g")
+                    PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed "s/$ESCAPED_TEAM/$ESCAPED_TEAM_REPLACEMENT/g")
                   else
                     echo "⚠️  No Slack group found for team: $team_mention"
                   fi
                 done
               fi
+
+              # Update AUTHOR_NOTES with final processed version for use in Slack message
+              AUTHOR_NOTES="$PROCESSED_NOTES"
 
               SLACK_MESSAGE="$SLACK_MESSAGE"$'\n\n'"💬 *Author Notes:* $AUTHOR_NOTES"
             fi
