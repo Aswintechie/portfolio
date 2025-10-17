@@ -1898,6 +1898,11 @@ jobs:
           PR_AUTHOR_NAME="${{ steps.setup-notifications.outputs.pr-author-name }}"
           AUTHOR_NOTES="${{ steps.generate-comment.outputs.author-notes }}"
           PR_NUMBER="${{ steps.generate-comment.outputs.pr-number }}"
+          # ... existing code ...
+          TOTAL_ADDITIONS="${{ needs.analyze-codeowners.outputs.total-additions || 0 }}"
+          TOTAL_DELETIONS="${{ needs.analyze-codeowners.outputs.total-deletions || 0 }}"
+          REQUESTER_LOGIN="${{ needs.parse-comment.outputs.comment-author || '' }}"
+          REQUESTER_NAME="$REQUESTER_LOGIN"
 
           # Fetch PR title safely to avoid shell injection
           PR_API="https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER"
@@ -2106,10 +2111,21 @@ jobs:
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"👤 *Author:* $PR_AUTHOR_MENTION"
 
             # Add requested by information if different from author (for general notifications)
-            # Note: REQUESTER_LOGIN and REQUESTER_NAME may not be available in general notifications context
+            if [ -n "$REQUESTER_LOGIN" ] && [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
+              # Get full name for requester if available
+              REQUESTER_USER_API="https://api.github.com/users/$REQUESTER_LOGIN"
+              REQUESTER_USER_DATA=$(curl -s -H "Authorization: Bearer ${{ secrets.ORG_READ_GITHUB_TOKEN }}" \
+                                     -H "Accept: application/vnd.github.v3+json" \
+                                     "$REQUESTER_USER_API" 2>/dev/null)
+              REQUESTER_FULL_NAME=$(echo "$REQUESTER_USER_DATA" | jq -r '.name // empty' 2>/dev/null)
+              if [ -n "$REQUESTER_FULL_NAME" ] && [ "$REQUESTER_FULL_NAME" != "null" ]; then
+                REQUESTER_NAME="$REQUESTER_FULL_NAME"
+              fi
+              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔄 *Requested by:* $REQUESTER_NAME (@$REQUESTER_LOGIN)"
+            fi
 
             # Add changes count if available
-            if [ -n "$TOTAL_ADDITIONS" ] && [ "$TOTAL_ADDITIONS" -gt 0 ] || [ -n "$TOTAL_DELETIONS" ] && [ "$TOTAL_DELETIONS" -gt 0 ]; then
+            if ([ -n "$TOTAL_ADDITIONS" ] && [ "$TOTAL_ADDITIONS" -gt 0 ]) || ([ -n "$TOTAL_DELETIONS" ] && [ "$TOTAL_DELETIONS" -gt 0 ]); then
               SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
             fi
 
