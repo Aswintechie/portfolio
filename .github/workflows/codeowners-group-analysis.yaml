@@ -150,15 +150,24 @@ jobs:
                 echo "Command: update existing comment"
               fi
 
-              # Extract author notes from /codeowners ping command if provided (format: "quoted text" after command)
+              # Extract author notes from /codeowners ping command if provided
               if [ -z "$AUTHOR_NOTES" ]; then
-                # Look for quoted text after /codeowners ping
+                # Look for author notes after /codeowners ping
                 if echo "$COMMENT_BODY" | grep -E "^/codeowners?\s+ping\s+" > /dev/null; then
-                  # Extract text between quotes after the command
+                  # First, try to extract text between quotes (format: /codeowners ping "text here")
                   QUOTED_TEXT=$(echo "$COMMENT_BODY" | sed -n 's/^\/codeowners\?\s\+ping\s\+.*"\([^"]*\)".*/\1/p')
+                  
                   if [ -n "$QUOTED_TEXT" ]; then
                     AUTHOR_NOTES="$QUOTED_TEXT"
-                    echo "Found author notes: $AUTHOR_NOTES"
+                    echo "Found quoted author notes: $AUTHOR_NOTES"
+                  else
+                    # If no quotes, extract everything after /codeowners ping as plain text
+                    # This captures text without requiring quotes
+                    PLAIN_TEXT=$(echo "$COMMENT_BODY" | sed -n 's/^\/codeowners\?\s\+ping\s\+\(.*\)$/\1/p')
+                    if [ -n "$PLAIN_TEXT" ]; then
+                      AUTHOR_NOTES="$PLAIN_TEXT"
+                      echo "Found plain text author notes: $AUTHOR_NOTES"
+                    fi
                   fi
                 fi
               fi
@@ -2152,6 +2161,16 @@ jobs:
               # Process author notes to convert @username to full names or Slack mentions
               PROCESSED_NOTES="$AUTHOR_NOTES"
 
+              # First, convert markdown links [text](url) to Slack format <url|text>
+              # This regex matches [text](url) and converts to Slack format
+              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed -E 's|\[([^\]]+)\]\(([^)]+)\)|<\2|\1>|g')
+              echo "Converted markdown links to Slack format"
+
+              # Also detect plain URLs (http:// or https://) and convert them to clickable Slack links
+              # Pattern matches http(s)://... followed by space or end of string
+              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed -E 's|(https?://[^ <>]+)|<\1>|g')
+              echo "Converted plain URLs to Slack links"
+
               # Find all GitHub usernames in author notes (pattern: @username, but NOT @org/team)
               # This regex matches @username but excludes @org/team-name patterns
               GITHUB_USERNAMES=$(echo "$AUTHOR_NOTES" | grep -oE '@[a-zA-Z0-9_-]+' | grep -v '@.*/' | sort | uniq)
@@ -2159,7 +2178,6 @@ jobs:
               if [ -n "$GITHUB_USERNAMES" ]; then
                 echo "Found GitHub usernames in author notes: $GITHUB_USERNAMES"
 
-                # Process each username
                 for github_mention in $GITHUB_USERNAMES; do
                   if [ -n "$github_mention" ]; then
                     # Remove @ prefix to get clean username
