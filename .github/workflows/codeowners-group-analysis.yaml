@@ -347,6 +347,7 @@ jobs:
       changed-files: ${{ steps.analyze.outputs.changed-files }}
       total-additions: ${{ steps.get-files.outputs.total-additions }}
       total-deletions: ${{ steps.get-files.outputs.total-deletions }}
+      changed-files-count: ${{ steps.get-files.outputs.changed-files-count }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -424,6 +425,7 @@ jobs:
             echo "EOF"
             echo "total-additions=$TOTAL_ADDITIONS"
             echo "total-deletions=$TOTAL_DELETIONS"
+            echo "changed-files-count=$FILE_COUNT"
           } >> $GITHUB_OUTPUT
 
       - name: Install codeowners package and analyze
@@ -1901,6 +1903,7 @@ jobs:
           # ... existing code ...
           TOTAL_ADDITIONS="${{ needs.analyze-codeowners.outputs.total-additions || 0 }}"
           TOTAL_DELETIONS="${{ needs.analyze-codeowners.outputs.total-deletions || 0 }}"
+          CHANGED_FILES_COUNT="${{ needs.analyze-codeowners.outputs.changed-files-count || 0 }}"
           REQUESTER_LOGIN="${{ needs.parse-comment.outputs.comment-author || '' }}"
           REQUESTER_NAME="$REQUESTER_LOGIN"
 
@@ -2137,7 +2140,7 @@ jobs:
 
             # Add changes count if available
             if ([ -n "$TOTAL_ADDITIONS" ] && [ "$TOTAL_ADDITIONS" -gt 0 ]) || ([ -n "$TOTAL_DELETIONS" ] && [ "$TOTAL_DELETIONS" -gt 0 ]); then
-              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* +$TOTAL_ADDITIONS -$TOTAL_DELETIONS"
+              SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* ($CHANGED_FILES_COUNT files) +$TOTAL_ADDITIONS -$TOTAL_DELETIONS"
             fi
 
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔍 *Action Required:* This PR needs your code review/approval to proceed with merging."
