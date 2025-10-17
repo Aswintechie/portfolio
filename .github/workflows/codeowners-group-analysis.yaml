@@ -2163,12 +2163,12 @@ jobs:
 
               # First, convert markdown links [text](url) to Slack format <url|text>
               # This regex matches [text](url) and converts to Slack format
-              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed 's/\[\([^]]*\)\](\([^)]*\))/\2|\1/g')
+              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed 's/\[\([^]]*\)\](\([^)]*\))/<\2|\1>/g')
               echo "Converted markdown links to Slack format"
 
               # Also detect plain URLs (http:// or https://) and convert them to clickable Slack links
               # Pattern matches http(s)://... followed by space or end of string
-              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed -E 's|(https?://[^ <>]+)|\1|g')
+              PROCESSED_NOTES=$(echo "$PROCESSED_NOTES" | sed -E 's|(https?://[^ <>]+)|<\1>|g')
               echo "Converted plain URLs to Slack links"
 
               # Find all GitHub usernames in author notes (pattern: @username, but NOT @org/team)
