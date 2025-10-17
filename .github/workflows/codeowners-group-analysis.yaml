@@ -1098,7 +1098,6 @@ jobs:
           REQUESTER_NAME="$REQUESTER_LOGIN"
 
           # Get full name for requester if available
-          REQUESTER_LOGIN="${REQUESTER_LOGIN:-}"
           if [ -n "$REQUESTER_LOGIN" ] && [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
             REQUESTER_USER_API="https://api.github.com/users/$REQUESTER_LOGIN"
             REQUESTER_USER_DATA=$(curl -s -H "Authorization: Bearer ${{ secrets.ORG_READ_GITHUB_TOKEN }}" \
@@ -1349,9 +1348,7 @@ jobs:
           fi
 
           # Add changes count if available
-          TOTAL_ADDITIONS="${TOTAL_ADDITIONS:-0}"
-          TOTAL_DELETIONS="${TOTAL_DELETIONS:-0}"
-          if [ "$TOTAL_ADDITIONS" -gt 0 ] || [ "$TOTAL_DELETIONS" -gt 0 ]; then
+          if [ -n "$TOTAL_ADDITIONS" ] && [ "$TOTAL_ADDITIONS" -gt 0 ] || [ -n "$TOTAL_DELETIONS" ] && [ "$TOTAL_DELETIONS" -gt 0 ]; then
             SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
           fi
 
@@ -2100,9 +2097,7 @@ jobs:
             # Note: REQUESTER_LOGIN and REQUESTER_NAME may not be available in general notifications context
 
             # Add changes count if available
-            TOTAL_ADDITIONS="${TOTAL_ADDITIONS:-0}"
-            TOTAL_DELETIONS="${TOTAL_DELETIONS:-0}"
-            if [ "$TOTAL_ADDITIONS" -gt 0 ] || [ "$TOTAL_DELETIONS" -gt 0 ]; then
+            if [ -n "$TOTAL_ADDITIONS" ] && [ "$TOTAL_ADDITIONS" -gt 0 ] || [ -n "$TOTAL_DELETIONS" ] && [ "$TOTAL_DELETIONS" -gt 0 ]; then
               SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"📊 *Changes:* -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
             fi
 
