@@ -2,33 +2,33 @@
 # This file defines who owns which parts of the codebase
 
 # Global ownership - Aswin owns everything by default
-* @Aswin-coder @Aswinmcw @admins
+* @Aswin-coder @Aswinmcw @Aswintechie/admins
 
 # Frontend specific files
-/src/ @Aswin-coder @Aswinmcw @admins
-/public/ @Aswin-coder @Aswinmcw @admins
-*.html @Aswin-coder @Aswinmcw @admins
-*.css @Aswin-coder @Aswinmcw @admins
-*.js @Aswin-coder @admins
-*.jsx @Aswin-coder @Aswinmcw @admins
+/src/ @Aswin-coder @Aswinmcw @Aswintechie/admins
+/public/ @Aswin-coder @Aswinmcw @Aswintechie/admins
+*.html @Aswin-coder @Aswinmcw @Aswintechie/admins
+*.css @Aswin-coder @Aswinmcw @Aswintechie/admins
+*.js @Aswin-coder @Aswintechie/admins
+*.jsx @Aswin-coder @Aswinmcw @Aswintechie/admins
 
 # Backend/Server files
-/server/ @Aswin-coder @Aswinmcw @admins
-/scripts/ @Aswin-coder @Aswinmcw @admins
+/server/ @Aswin-coder @Aswinmcw @Aswintechie/admins
+/scripts/ @Aswin-coder @Aswinmcw @Aswintechie/admins
 
 # Configuration files
-*.json @Aswin-coder @Aswinmcw @admins
-*.config.js @Aswin-coder @Aswinmcw @admins
-*.config.ts @Aswin-coder @Aswinmcw @admins
-.env* @Aswin-coder @Aswinmcw @admins
-wrangler.toml @Aswin-coder @Aswinmcw @admins
+*.json @Aswin-coder @Aswinmcw @Aswintechie/admins
+*.config.js @Aswin-coder @Aswinmcw @Aswintechie/admins
+*.config.ts @Aswin-coder @Aswinmcw @Aswintechie/admins
+.env* @Aswin-coder @Aswinmcw @Aswintechie/admins
+wrangler.toml @Aswin-coder @Aswinmcw @Aswintechie/admins
 
 # GitHub Actions and CI/CD
-/.github/ @Aswin-coder @Aswinmcw @admins
+/.github/ @Aswin-coder @Aswinmcw @Aswintechie/admins
 
 # Documentation
-*.md @Aswin-coder @Aswinmcw @admins
-/docs/ @Aswin-coder @Aswinmcw @admins
+*.md @Aswin-coder @Aswinmcw @Aswintechie/admins
+/docs/ @Aswin-coder @Aswinmcw @Aswintechie/admins
 
 # Build and deployment
 /dist/ @Aswin-coder @Aswinmcw
