@@ -156,7 +156,7 @@ jobs:
                 if echo "$COMMENT_BODY" | grep -E "^/codeowners?\s+ping\s+" > /dev/null; then
                   # First, try to extract text between quotes (format: /codeowners ping "text here")
                   QUOTED_TEXT=$(echo "$COMMENT_BODY" | sed -n 's/^\/codeowners\?\s\+ping\s\+.*"\([^"]*\)".*/\1/p')
-                  
+
                   if [ -n "$QUOTED_TEXT" ]; then
                     AUTHOR_NOTES="$QUOTED_TEXT"
                     echo "Found quoted author notes: $AUTHOR_NOTES"
@@ -593,9 +593,10 @@ jobs:
                   for pattern in team_patterns.get(team, []):
                       team_files.update(pattern_files.get(pattern, []))
                   team_files_str = ",".join(sorted(team_files))
+                  # Keep the @ prefix in team name for consistency
                   teams_list.append(f"{team}:{team_files_str}")
 
-              teams_list = ",".join(teams_list)
+              teams_list = "|||".join(teams_list)
 
               # For individuals, we need to group them by their patterns
               # Each pattern becomes a "group" that requires approval from any of its members
@@ -614,11 +615,11 @@ jobs:
 
                       pattern_groups_list.append(f"{pattern}:{owners_str}:{files_str}")
 
-              individuals_list = "@@@".join(pattern_groups_list) if pattern_groups_list else ""
+              individuals_list = "|||".join(pattern_groups_list) if pattern_groups_list else ""
 
-              # Combine all groups
+              # Combine all groups - now using ||| as delimiter for both teams and individuals
               if teams_list and individuals_list:
-                  all_groups = teams_list + "," + individuals_list
+                  all_groups = teams_list + "|||" + individuals_list
               elif teams_list:
                   all_groups = teams_list
               else:
@@ -732,10 +733,17 @@ jobs:
           # Get team members for teams that need approval
           TEAM_MEMBERS=""
           if [ -n "$TEAMS" ]; then
-            IFS=',' read -ra TEAM_ARRAY <<< "$TEAMS"
-            for team in "${TEAM_ARRAY[@]}"; do
+            echo "DEBUG get-team-members: TEAMS='$TEAMS'"
+            IFS='|||' read -ra TEAM_ARRAY <<< "$TEAMS"
+            echo "DEBUG get-team-members: Split into ${#TEAM_ARRAY[@]} entries"
+            for team_entry in "${TEAM_ARRAY[@]}"; do
+              echo "DEBUG get-team-members: Processing team_entry='$team_entry'"
+              # Extract team name from team:files format
+              team=$(echo "$team_entry" | cut -d':' -f1)
+              echo "DEBUG get-team-members: Extracted team='$team'"
               # Remove @org/ prefix for API call
               clean_team=$(echo "$team" | sed 's/^@[^\/]*\///')
+              echo "DEBUG get-team-members: clean_team='$clean_team' (for API call)"
 
               # Get team members using GitHub API (using ORG_READ_GITHUB_TOKEN for org access)
               MEMBERS_API="https://api.github.com/orgs/tenstorrent/teams/$clean_team/members"
@@ -752,8 +760,10 @@ jobs:
                 # Extract member logins successfully
                 TEAM_MEMBER_LOGINS=$(echo "$MEMBERS_DATA" | jq -r '.[].login' 2>/dev/null | tr '\n' ',' | sed 's/,$//')
                 if [ -n "$TEAM_MEMBER_LOGINS" ]; then
+                  echo "DEBUG get-team-members: Successfully got members for $team: $TEAM_MEMBER_LOGINS"
                   TEAM_MEMBERS="$TEAM_MEMBERS$team:$TEAM_MEMBER_LOGINS|"
                 else
+                  echo "DEBUG get-team-members: Team $team has no members"
                   TEAM_MEMBERS="$TEAM_MEMBERS$team:no-members|"
                 fi
               elif [ "$MEMBERS_HTTP_CODE" = "404" ]; then
@@ -776,6 +786,8 @@ jobs:
             done
           fi
 
+          echo "DEBUG generate-comment: Final TEAM_MEMBERS='$TEAM_MEMBERS'"
+
           # Collect pending and approved groups separately
           PENDING_GROUPS=""
           APPROVED_GROUPS=""
@@ -784,33 +796,37 @@ jobs:
 
           # Display teams with member information and approval status
           if [ -n "$TEAMS" ]; then
-            # Teams are now in format: "@team:files@@@team2:files2,..."
-            # Need to parse this properly
-            TEAMS_WITH_FILES=""
-            while IFS=':' read -r team files || [ -n "$team" ]; do
-              if [ -n "$team" ]; then
-                # Remove @ prefix for processing
-                clean_team=$(echo "$team" | sed 's/^@//')
-                TEAMS_WITH_FILES="$TEAMS_WITH_FILES$team:$files,"
-              fi
-            done <<< "$TEAMS"
-
-            # Remove trailing comma
-            TEAMS_WITH_FILES=$(echo "$TEAMS_WITH_FILES" | sed 's/,$//')
-
-            IFS=',' read -ra TEAM_ARRAY <<< "$TEAMS_WITH_FILES"
+            # Teams are now in format: "@team1:files1|||team2:files2"
+            echo "DEBUG generate-comment: TEAMS='$TEAMS'"
+            IFS='|||' read -ra TEAM_ARRAY <<< "$TEAMS"
+            echo "DEBUG generate-comment: Split into ${#TEAM_ARRAY[@]} team entries"
             for team_entry in "${TEAM_ARRAY[@]}"; do
+              echo "DEBUG generate-comment: Processing team_entry='$team_entry'"
+              # Skip empty entries
+              [ -z "$team_entry" ] && continue
+
               # Extract team and files from team:files format
               team=$(echo "$team_entry" | cut -d':' -f1)
-              team_files=$(echo "$team_entry" | cut -d':' -f2)
+              echo "DEBUG generate-comment: Extracted team='$team'"
+
+              # Skip if team name is empty
+              if [ -z "$team" ]; then
+                echo "DEBUG generate-comment: Skipping empty team name"
+                continue
+              fi
+
+              # Get everything after first colon as files (in case there are colons in file paths)
+              team_files=$(echo "$team_entry" | cut -d':' -f2-)
 
               # Skip the large-changes team as requested
               if [ "$team" = "@tenstorrent/metalium-codeowners-large-changes" ]; then
+                echo "DEBUG generate-comment: Skipping large-changes team"
                 continue
               fi
 
               # Remove @ prefix for display
               clean_team=$(echo "$team" | sed 's/^@//')
+              echo "DEBUG generate-comment: clean_team='$clean_team'"
 
               # Get team members
               team_members_info=""
@@ -818,12 +834,15 @@ jobs:
 
               # Check team members against approved reviewers
               if [ -n "$TEAM_MEMBERS" ]; then
+                echo "DEBUG generate-comment: TEAM_MEMBERS data available, looking for $team"
                 # Find this team's members (extract just this team's entry)
                 team_members_entry=$(echo "$TEAM_MEMBERS" | tr '|' '\n' | grep "^$team:" | head -1)
+                echo "DEBUG generate-comment: Found team_members_entry='$team_members_entry'"
                 if [ -n "$team_members_entry" ]; then
                   team_owners=$(echo "$team_members_entry" | cut -d':' -f2)
+                  echo "DEBUG generate-comment: team_owners='$team_owners'"
 
-                    if [ "$team_owners" = "insufficient-permissions" ]; then
+                  if [ "$team_owners" = "insufficient-permissions" ]; then
                       # Token doesn't have permission to read team members
                       team_members_info="Members: (insufficient token permissions)"
                     elif [ "$team_owners" = "team-not-found" ]; then
@@ -879,7 +898,15 @@ jobs:
                         fi
                       done
                     fi
+                  else
+                    # No team_members_entry found - team data wasn't fetched
+                    echo "DEBUG generate-comment: Setting team not found message"
+                    team_members_info="Members: (team not found)"
                   fi
+                else
+                  # TEAM_MEMBERS variable is empty
+                  echo "DEBUG generate-comment: TEAM_MEMBERS variable is empty"
+                  team_members_info="Members: (no team data)"
                 fi
 
                 # Create collapsible file list for this team
@@ -912,16 +939,18 @@ jobs:
 
             # Add pattern groups with member information and approval status
             if [ -n "$INDIVIDUALS" ]; then
-              # Individuals are now grouped by pattern: "pattern:username1|full_name1,username2|full_name2:file1,file2,file3@@@pattern2:..."
-              IFS='@@@' read -ra PATTERN_GROUPS <<< "$INDIVIDUALS"
+              # Individuals are now grouped by pattern: "pattern:username1|full_name1,username2|full_name2:file1,file2,file3|||pattern2:..."
+              IFS='|||' read -ra PATTERN_GROUPS <<< "$INDIVIDUALS"
               for pattern_group in "${PATTERN_GROUPS[@]}"; do
                 # Skip empty groups
                 [ -z "$pattern_group" ] && continue
 
-                # Split pattern:owners:files
-                pattern=$(echo "$pattern_group" | cut -d':' -f1)
-                owners=$(echo "$pattern_group" | cut -d':' -f2)
-                files=$(echo "$pattern_group" | cut -d':' -f3)
+                # Split pattern:owners:files - use robust parsing to handle colons in patterns
+                # Split on last colon to separate files, then split remaining on first colon to separate pattern from owners
+                files=$(echo "$pattern_group" | rev | cut -d':' -f1 | rev)
+                pattern_and_owners=$(echo "$pattern_group" | rev | cut -d':' -f2- | rev)
+                pattern=$(echo "$pattern_and_owners" | cut -d':' -f1)
+                owners=$(echo "$pattern_and_owners" | cut -d':' -f2-)
 
                 # Parse owners - each is username|full_name
                 all_owners=""
@@ -1077,8 +1106,9 @@ jobs:
           # Get the most recent one by sorting by created_at descending
           EXISTING_COMMENT_ID=$(echo "$EXISTING_COMMENTS" | jq -r "[.[] | select(.body | startswith(\"## CodeOwners\") or contains(\"CodeOwners-Workflow-Bot\"))] | sort_by(.created_at) | reverse | .[0].id")
 
-          # Escape the comment for JSON and shell
-          ESCAPED_COMMENT=$(echo "$COMMENT" | sed 's/"/\\"/g' | sed "s/'/\\'/g")
+          # Use jq to properly escape the comment for JSON
+          TEMP_JSON_FILE=$(mktemp)
+          jq -n --arg body "$COMMENT" '{"body": $body}' > "$TEMP_JSON_FILE"
 
           if [ "$CREATE_NEW" = "true" ] || [ -z "$EXISTING_COMMENT_ID" ] || [ "$EXISTING_COMMENT_ID" = "null" ]; then
             # Create new comment
@@ -1087,7 +1117,7 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github.v3+json" \
               -H "Content-Type: application/json" \
-              -d "{\"body\": \"$ESCAPED_COMMENT\"}" \
+              --data-binary @"$TEMP_JSON_FILE" \
               "$COMMENTS_API"
           else
             # Edit existing comment
@@ -1096,10 +1126,11 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github.v3+json" \
               -H "Content-Type: application/json" \
-              -d "{\"body\": \"$ESCAPED_COMMENT\"}" \
+              --data-binary @"$TEMP_JSON_FILE" \
               "https://api.github.com/repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID"
           fi
 
+          rm -f "$TEMP_JSON_FILE"
           echo "Comment updated for PR #$PR_NUMBER"
 
       - name: Direct Ping Notification
@@ -1608,14 +1639,22 @@ jobs:
 
           # Process pending teams - check for Slack groups first, then individual selection
           if [ -n "$TEAMS" ]; then
-            IFS=',' read -ra TEAM_ARRAY <<< "$TEAMS"
-            for team in "${TEAM_ARRAY[@]}"; do
+            echo "DEBUG: Processing TEAMS='$TEAMS'"
+            IFS='|||' read -ra TEAM_ARRAY <<< "$TEAMS"
+            echo "DEBUG: Split into ${#TEAM_ARRAY[@]} team entries"
+            for team_entry in "${TEAM_ARRAY[@]}"; do
+              echo "DEBUG: Processing team_entry='$team_entry'"
+              # Extract team name from team:files format
+              team=$(echo "$team_entry" | cut -d':' -f1)
+              echo "DEBUG: Extracted team='$team'"
               if [ "$team" = "@tenstorrent/metalium-codeowners-large-changes" ]; then
+                echo "DEBUG: Skipping large-changes team"
                 continue
               fi
 
               # Check if this team has a Slack group
               SLACK_GROUP_ID=$(get_slack_group_id "$team")
+              echo "DEBUG: Slack group ID for $team = '$SLACK_GROUP_ID'"
 
               if [ -n "$SLACK_GROUP_ID" ]; then
                 echo "Team $team has Slack group: $SLACK_GROUP_ID"
@@ -1713,11 +1752,15 @@ jobs:
 
           # Process pending individual patterns - select up to 2 owners from each pending pattern
           if [ -n "$INDIVIDUALS" ]; then
-            IFS='@@@' read -ra PATTERN_GROUPS <<< "$INDIVIDUALS"
+            IFS='|||' read -ra PATTERN_GROUPS <<< "$INDIVIDUALS"
             for pattern_group in "${PATTERN_GROUPS[@]}"; do
               [ -z "$pattern_group" ] && continue
-              pattern=$(echo "$pattern_group" | cut -d':' -f1)
-              owners=$(echo "$pattern_group" | cut -d':' -f2)
+              # Parse pattern:owners:files format - extract owners (second to second-last colon section)
+              # Split on last colon to separate files, then split remaining on first colon to separate pattern from owners
+              files_part=$(echo "$pattern_group" | rev | cut -d':' -f1 | rev)
+              pattern_and_owners=$(echo "$pattern_group" | rev | cut -d':' -f2- | rev)
+              pattern=$(echo "$pattern_and_owners" | cut -d':' -f1)
+              owners=$(echo "$pattern_and_owners" | cut -d':' -f2-)
               IFS=',' read -ra OWNERS_ARRAY <<< "$owners"
 
               # Check if any owner in this pattern has approved
@@ -1776,6 +1819,9 @@ jobs:
           TEMP_SELECTED_OWNERS=$(echo "$TEMP_SELECTED_OWNERS" | sed 's/,$//')
           SELECTED_SLACK_GROUPS=$(echo "$SELECTED_SLACK_GROUPS" | sed 's/,$//')
 
+          echo "DEBUG: TEMP_SELECTED_OWNERS='$TEMP_SELECTED_OWNERS'"
+          echo "DEBUG: SELECTED_SLACK_GROUPS='$SELECTED_SLACK_GROUPS'"
+
           if [ -n "$TEMP_SELECTED_OWNERS" ]; then
             # Sort and deduplicate individual owners
             SELECTED_OWNERS=$(echo "$TEMP_SELECTED_OWNERS" | tr ',' '\n' | sort | uniq | tr '\n' ',' | sed 's/,$//')
@@ -1788,6 +1834,10 @@ jobs:
           if [ -z "$SELECTED_OWNERS" ] && [ -z "$SELECTED_SLACK_GROUPS" ]; then
             NO_OWNERS_AVAILABLE="true"
           fi
+
+          echo "DEBUG: Final SELECTED_OWNERS='$SELECTED_OWNERS'"
+          echo "DEBUG: Final SELECTED_SLACK_GROUPS='$SELECTED_SLACK_GROUPS'"
+          echo "DEBUG: NO_OWNERS_AVAILABLE='$NO_OWNERS_AVAILABLE'"
 
           echo "selected-owners=$SELECTED_OWNERS" >> $GITHUB_OUTPUT
           echo "selected-slack-groups=$SELECTED_SLACK_GROUPS" >> $GITHUB_OUTPUT
@@ -1920,6 +1970,11 @@ jobs:
           CHANGED_FILES_COUNT="${{ needs.analyze-codeowners.outputs.changed-files-count || 0 }}"
           REQUESTER_LOGIN="${{ needs.parse-comment.outputs.comment-author || '' }}"
           REQUESTER_NAME="$REQUESTER_LOGIN"
+
+          echo "DEBUG Slack: SEND_SLACK='$SEND_SLACK'"
+          echo "DEBUG Slack: SELECTED_OWNERS='$SELECTED_OWNERS'"
+          echo "DEBUG Slack: SELECTED_SLACK_GROUPS='$SELECTED_SLACK_GROUPS'"
+          echo "DEBUG Slack: NO_OWNERS_AVAILABLE='$NO_OWNERS_AVAILABLE'"
 
           # Fetch PR title safely to avoid shell injection
           PR_API="https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER"
@@ -2138,7 +2193,7 @@ jobs:
               if [ -n "$REQUESTER_FULL_NAME" ] && [ "$REQUESTER_FULL_NAME" != "null" ]; then
                 REQUESTER_NAME="$REQUESTER_FULL_NAME"
               fi
-              
+
               # Find Slack user ID for requester and create mention
               REQUESTER_SLACK_ID=$(find_slack_user_id "$REQUESTER_NAME" "$REQUESTER_LOGIN")
               if [ -n "$REQUESTER_SLACK_ID" ]; then
@@ -2148,7 +2203,7 @@ jobs:
                 REQUESTER_MENTION="$REQUESTER_NAME (@$REQUESTER_LOGIN)"
                 echo "⚠️  Slack user not found for requester: $REQUESTER_NAME (@$REQUESTER_LOGIN), using fallback"
               fi
-              
+
               SLACK_MESSAGE="$SLACK_MESSAGE"$'\n'"🔄 *Requested by:* $REQUESTER_MENTION"
             fi
 
