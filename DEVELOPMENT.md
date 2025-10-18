@@ -1,6 +1,6 @@
 # Development Guide
 
-This document explains the development workflow, tools, and best practices for the Aswin Portfolio project.
+This document explains the development workflow, tools, and best practices for the Aswin's Portfolio project.
 
 ## 🛠️ Development Environment Setup
 
