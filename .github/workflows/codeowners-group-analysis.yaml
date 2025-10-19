@@ -913,25 +913,34 @@ jobs:
                 team_file_list_html=""
                 if [ -n "$team_files" ] && [ "$team_files" != "null" ]; then
                   # Create expandable details section with file list (using HTML entity for backticks to avoid shell issues)
-                  team_file_list_html="\n<details><summary>&#128193; Files owned by this team</summary>\n\n"
+                  # Indent with 2 spaces to be part of the list item
+                  team_file_list_html="\n  <details><summary>&#128193; Files owned by this team</summary>\n\n"
                   IFS=',' read -ra TEAM_FILES_ARRAY <<< "$team_files"
                   for file in "${TEAM_FILES_ARRAY[@]}"; do
                     if [ -n "$file" ]; then
                       # Escape special characters for HTML and use HTML entity for backticks
                       escaped_file=$(echo "$file" | sed 's/\*/\\*/g' | sed 's/_/\\_/g' | sed 's/`/&#96;/g')
-                      team_file_list_html="$team_file_list_html- &#96;$escaped_file&#96;\n"
+                      team_file_list_html="$team_file_list_html  - &#96;$escaped_file&#96;\n"
                     fi
                   done
-                  team_file_list_html="$team_file_list_html\n</details>"
+                  team_file_list_html="$team_file_list_html\n  </details>"
                 fi
 
                 if [ -n "$approved_members" ]; then
                   # Remove trailing comma and space
                   approved_members=$(echo "$approved_members" | sed 's/, $//')
-                  APPROVED_GROUPS="$APPROVED_GROUPS\n- ✅ **$clean_team** (Team) - $team_members_info | **Approved by:** $approved_members$team_file_list_html"
+                  if [ -n "$APPROVED_GROUPS" ]; then
+                    APPROVED_GROUPS="$APPROVED_GROUPS\n- ✅ **$clean_team** (Team) - $team_members_info | **Approved by:** $approved_members$team_file_list_html\n"
+                  else
+                    APPROVED_GROUPS="- ✅ **$clean_team** (Team) - $team_members_info | **Approved by:** $approved_members$team_file_list_html\n"
+                  fi
                   APPROVED_COUNT=$((APPROVED_COUNT + 1))
                 else
-                  PENDING_GROUPS="$PENDING_GROUPS\n- ⏳ **$clean_team** (Team) - $team_members_info | **Pending approval**$team_file_list_html"
+                  if [ -n "$PENDING_GROUPS" ]; then
+                    PENDING_GROUPS="$PENDING_GROUPS\n- ⏳ **$clean_team** (Team) - $team_members_info | **Pending approval**$team_file_list_html\n"
+                  else
+                    PENDING_GROUPS="- ⏳ **$clean_team** (Team) - $team_members_info | **Pending approval**$team_file_list_html\n"
+                  fi
                   PENDING_COUNT=$((PENDING_COUNT + 1))
                 fi
               done
@@ -985,25 +994,34 @@ jobs:
                 file_list_html=""
                 if [ -n "$files" ] && [ "$files" != "null" ]; then
                   # Create expandable details section with file list (using HTML entity for backticks to avoid shell issues)
-                  file_list_html="\n<details><summary>&#128193; Files owned by this group</summary>\n\n"
+                  # Indent with 2 spaces to be part of the list item
+                  file_list_html="\n  <details><summary>&#128193; Files owned by this group</summary>\n\n"
                   IFS=',' read -ra FILES_ARRAY <<< "$files"
                   for file in "${FILES_ARRAY[@]}"; do
                     if [ -n "$file" ]; then
                       # Escape special characters for HTML and use HTML entity for backticks
                       escaped_file=$(echo "$file" | sed 's/\*/\\*/g' | sed 's/_/\\_/g' | sed 's/`/&#96;/g')
-                      file_list_html="$file_list_html- &#96;$escaped_file&#96;\n"
+                      file_list_html="$file_list_html  - &#96;$escaped_file&#96;\n"
                     fi
                   done
-                  file_list_html="$file_list_html\n</details>"
+                  file_list_html="$file_list_html\n  </details>"
                 fi
 
                 if [ -n "$approved_owners" ]; then
                   # Remove trailing comma and space
                   approved_owners=$(echo "$approved_owners" | sed 's/, $//')
-                  APPROVED_GROUPS="$APPROVED_GROUPS\n- ✅ **$pattern** (Group) - Members: $all_owners | **Approved by:** $approved_owners$file_list_html"
+                  if [ -n "$APPROVED_GROUPS" ]; then
+                    APPROVED_GROUPS="$APPROVED_GROUPS\n- ✅ **$pattern** (Group) - Members: $all_owners | **Approved by:** $approved_owners$file_list_html\n"
+                  else
+                    APPROVED_GROUPS="- ✅ **$pattern** (Group) - Members: $all_owners | **Approved by:** $approved_owners$file_list_html\n"
+                  fi
                   APPROVED_COUNT=$((APPROVED_COUNT + 1))
                 else
-                  PENDING_GROUPS="$PENDING_GROUPS\n- ⏳ **$pattern** (Group) - Members: $all_owners | **Pending approval**$file_list_html"
+                  if [ -n "$PENDING_GROUPS" ]; then
+                    PENDING_GROUPS="$PENDING_GROUPS\n- ⏳ **$pattern** (Group) - Members: $all_owners | **Pending approval**$file_list_html\n"
+                  else
+                    PENDING_GROUPS="- ⏳ **$pattern** (Group) - Members: $all_owners | **Pending approval**$file_list_html\n"
+                  fi
                   PENDING_COUNT=$((PENDING_COUNT + 1))
                 fi
               done
@@ -1034,22 +1052,26 @@ jobs:
           fi
 
           # Combine pending groups first, then approved groups
+            echo "DEBUG: PENDING_GROUPS first 200 chars: ${PENDING_GROUPS:0:200}"
+            echo "DEBUG: APPROVED_GROUPS first 200 chars: ${APPROVED_GROUPS:0:200}"
+
             if [ -z "$TEAMS" ] && [ -z "$INDIVIDUALS" ]; then
               COMMENT="<!-- CodeOwners-Workflow-Bot -->\n## CodeOwners Analysis\n\nNo specific codeowners found for the changed files in this PR.\n\n**Required Approvals:** At least one maintainer approval is required."
             else
-              COMMENT="<!-- CodeOwners-Workflow-Bot -->\n## CodeOwners Group Analysis\n\nThis PR requires approval from **one member of each** of the following groups:\n\n**Summary:** $PENDING_COUNT pending groups, $APPROVED_COUNT approved groups\n\n### Group Information:$PENDING_GROUPS$APPROVED_GROUPS\n\n**Note:** At least one approval from each group is sufficient."
+              # Add separator between pending and approved groups if both exist
+              ALL_GROUPS="$PENDING_GROUPS"
+              if [ -n "$PENDING_GROUPS" ] && [ -n "$APPROVED_GROUPS" ]; then
+                ALL_GROUPS="$ALL_GROUPS\n$APPROVED_GROUPS"
+              elif [ -n "$APPROVED_GROUPS" ]; then
+                ALL_GROUPS="$APPROVED_GROUPS"
+              fi
+              echo "DEBUG: ALL_GROUPS first 200 chars: ${ALL_GROUPS:0:200}"
+              COMMENT="<!-- CodeOwners-Workflow-Bot -->\n## CodeOwners Group Analysis\n\nThis PR requires approval from **one member of each** of the following groups:\n\n**Summary:** $PENDING_COUNT pending groups, $APPROVED_COUNT approved groups\n\n### Group Information:\n\n$ALL_GROUPS\n\n**Note:** At least one approval from each group is sufficient."
             fi
 
-          # Add "Requested by" line if requester is different from PR author
-          if [ -n "$REQUESTER_LOGIN" ] && [ "$REQUESTER_LOGIN" != "$PR_AUTHOR_LOGIN" ]; then
-            COMMENT="$COMMENT\n\n**Requested by:** $REQUESTER_NAME (@$REQUESTER_LOGIN)"
-          fi
-
-          # Add changes count if available
-          if [ "$TOTAL_ADDITIONS" -gt 0 ] || [ "$TOTAL_DELETIONS" -gt 0 ]; then
-            CHANGES_COUNT="**Changes:** -$TOTAL_DELETIONS +$TOTAL_ADDITIONS"
-            COMMENT="$COMMENT\n\n$CHANGES_COUNT"
-          fi
+          # Note: "Requested by" and "Changes" info removed from GitHub comment as they're
+          # already visible in the PR UI. These details are included in Slack notifications
+          # where they provide important context.
 
           # Add note if only PR author is available as codeowner
           if [ "$NO_OWNERS_AVAILABLE" = "true" ]; then
