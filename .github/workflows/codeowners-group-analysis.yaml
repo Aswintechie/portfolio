@@ -1199,7 +1199,7 @@ jobs:
           TEMP_JSON_FILE=$(mktemp)
           jq -n --arg body "$COMMENT" '{"body": $body}' > "$TEMP_JSON_FILE"
 
-          if [ "$CREATE_NEW" = "true" ] || [ -z "$EXISTING_COMMENT_ID" ] || [ "$EXISTING_COMMENT_ID" = "null" ]; then
+          if [ "$CREATE_NEW" = "true" ]; then
             # Create new comment
             echo "Creating new comment..."
             curl -s -X POST \
@@ -1208,6 +1208,30 @@ jobs:
               -H "Content-Type: application/json" \
               --data-binary @"$TEMP_JSON_FILE" \
               "$COMMENTS_API"
+          elif [ -z "$EXISTING_COMMENT_ID" ] || [ "$EXISTING_COMMENT_ID" = "null" ]; then
+            # No existing comment found - only create new for explicit "new" command
+            # For ping commands, inform user to run analysis first
+            if [ "$PING_OWNERS" = "true" ] || [ "$SEND_SLACK" = "true" ]; then
+              echo "No existing CodeOwners analysis found. Creating informational comment..."
+              INFO_COMMENT="## ℹ️ CodeOwners Ping Requested
+
+No CodeOwners analysis comment found for this PR. Please run \`/codeowners\` first to analyze the code ownership, then use \`/codeowners ping\` to notify pending owners."
+
+              INFO_JSON_FILE=$(mktemp)
+              jq -n --arg body "$INFO_COMMENT" '{"body": $body}' > "$INFO_JSON_FILE"
+
+              curl -s -X POST \
+                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Content-Type: application/json" \
+                --data-binary @"$INFO_JSON_FILE" \
+                "$COMMENTS_API"
+
+              rm -f "$INFO_JSON_FILE"
+              echo "Posted informational comment about missing CodeOwners analysis"
+            else
+              echo "No existing comment found and CREATE_NEW=false - skipping comment creation"
+            fi
           else
             # Edit existing comment
             echo "Updating existing comment (ID: $EXISTING_COMMENT_ID)..."
