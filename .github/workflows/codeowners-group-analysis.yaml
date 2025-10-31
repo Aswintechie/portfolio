@@ -1234,7 +1234,7 @@ jobs:
 
 ✅ **CodeOwners summary updated** [here]($COMMENT_URL)
 
-💡 **Tip:** Use \\\`/codeowners new\\\` to post a fresh summary comment instead of updating the existing one."
+💡 **Tip:** Use \`/codeowners new\` to post a fresh summary comment instead of updating the existing one."
 
             # Create JSON payload for acknowledgment comment
             ACK_JSON_FILE=$(mktemp)
