@@ -1209,28 +1209,19 @@ jobs:
               --data-binary @"$TEMP_JSON_FILE" \
               "$COMMENTS_API"
           elif [ -z "$EXISTING_COMMENT_ID" ] || [ "$EXISTING_COMMENT_ID" = "null" ]; then
-            # No existing comment found - only create new for explicit "new" command
-            # For ping commands, inform user to run analysis first
-            if [ "$PING_OWNERS" = "true" ] || [ "$SEND_SLACK" = "true" ]; then
-              echo "No existing CodeOwners analysis found. Creating informational comment..."
-              INFO_COMMENT="## ℹ️ CodeOwners Ping Requested
-
-No CodeOwners analysis comment found for this PR. Please run \`/codeowners\` first to analyze the code ownership, then use \`/codeowners ping\` to notify pending owners."
-
-              INFO_JSON_FILE=$(mktemp)
-              jq -n --arg body "$INFO_COMMENT" '{"body": $body}' > "$INFO_JSON_FILE"
-
+            # No existing comment found - create new for all commands except explicit "new"
+            if [ "$CREATE_NEW" = "false" ]; then
+              echo "No existing CodeOwners analysis found. Creating new summary comment..."
+              # Create new comment for bare commands and ping commands
               curl -s -X POST \
                 -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                 -H "Accept: application/vnd.github.v3+json" \
                 -H "Content-Type: application/json" \
-                --data-binary @"$INFO_JSON_FILE" \
+                --data-binary @"$TEMP_JSON_FILE" \
                 "$COMMENTS_API"
-
-              rm -f "$INFO_JSON_FILE"
-              echo "Posted informational comment about missing CodeOwners analysis"
+              echo "Created new CodeOwners summary comment"
             else
-              echo "No existing comment found and CREATE_NEW=false - skipping comment creation"
+              echo "No existing comment found and CREATE_NEW=true - this shouldn't happen"
             fi
           else
             # Edit existing comment
