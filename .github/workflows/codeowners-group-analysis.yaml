@@ -1230,13 +1230,11 @@ jobs:
             COMMENT_URL="https://github.com/${{ github.repository }}/pull/$PR_NUMBER#issuecomment-$EXISTING_COMMENT_ID"
 
             # Create acknowledgment message
-            read -r -d '' ACK_COMMENT << 'EOF'
-## 🔄 CodeOwners Summary Updated
+            ACK_COMMENT="## 🔄 CodeOwners Summary Updated
 
 ✅ **CodeOwners summary updated** [here]($COMMENT_URL)
 
-💡 **Tip:** Use `/codeowners new` to post a fresh summary comment instead of updating the existing one.
-EOF
+💡 **Tip:** Use \\\`/codeowners new\\\` to post a fresh summary comment instead of updating the existing one."
 
             # Create JSON payload for acknowledgment comment
             ACK_JSON_FILE=$(mktemp)
