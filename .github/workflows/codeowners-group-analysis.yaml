@@ -1191,9 +1191,9 @@ jobs:
                                 -H "Accept: application/vnd.github.v3+json" \
                                 "$COMMENTS_API")
 
-          # Find existing comment from this workflow (starts with CodeOwners Analysis or contains our marker)
+          # Find existing comment from this workflow (contains our marker)
           # Get the most recent one by sorting by created_at descending
-          EXISTING_COMMENT_ID=$(echo "$EXISTING_COMMENTS" | jq -r "[.[] | select(.body | startswith(\"## CodeOwners\") or contains(\"CodeOwners-Workflow-Bot\"))] | sort_by(.created_at) | reverse | .[0].id")
+          EXISTING_COMMENT_ID=$(echo "$EXISTING_COMMENTS" | jq -r "[.[] | select(.body | contains(\"CodeOwners-Workflow-Bot\"))] | sort_by(.created_at) | reverse | .[0].id")
 
           # Use jq to properly escape the comment for JSON
           TEMP_JSON_FILE=$(mktemp)
