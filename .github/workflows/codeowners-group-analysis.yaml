@@ -1191,15 +1191,15 @@ jobs:
                                 -H "Accept: application/vnd.github.v3+json" \
                                 "$COMMENTS_API")
 
-          # Find existing comment from this workflow (starts with CodeOwners Analysis or contains our marker)
+          # Find existing comment from this workflow (contains our marker)
           # Get the most recent one by sorting by created_at descending
-          EXISTING_COMMENT_ID=$(echo "$EXISTING_COMMENTS" | jq -r "[.[] | select(.body | startswith(\"## CodeOwners\") or contains(\"CodeOwners-Workflow-Bot\"))] | sort_by(.created_at) | reverse | .[0].id")
+          EXISTING_COMMENT_ID=$(echo "$EXISTING_COMMENTS" | jq -r "[.[] | select(.body | contains(\"CodeOwners-Workflow-Bot\"))] | sort_by(.created_at) | reverse | .[0].id")
 
           # Use jq to properly escape the comment for JSON
           TEMP_JSON_FILE=$(mktemp)
           jq -n --arg body "$COMMENT" '{"body": $body}' > "$TEMP_JSON_FILE"
 
-          if [ "$CREATE_NEW" = "true" ] || [ -z "$EXISTING_COMMENT_ID" ] || [ "$EXISTING_COMMENT_ID" = "null" ]; then
+          if [ "$CREATE_NEW" = "true" ]; then
             # Create new comment
             echo "Creating new comment..."
             curl -s -X POST \
@@ -1208,6 +1208,21 @@ jobs:
               -H "Content-Type: application/json" \
               --data-binary @"$TEMP_JSON_FILE" \
               "$COMMENTS_API"
+          elif [ -z "$EXISTING_COMMENT_ID" ] || [ "$EXISTING_COMMENT_ID" = "null" ]; then
+            # No existing comment found - create new for all commands except explicit "new"
+            if [ "$CREATE_NEW" = "false" ]; then
+              echo "No existing CodeOwners analysis found. Creating new summary comment..."
+              # Create new comment for bare commands and ping commands
+              curl -s -X POST \
+                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Content-Type: application/json" \
+                --data-binary @"$TEMP_JSON_FILE" \
+                "$COMMENTS_API"
+              echo "Created new CodeOwners summary comment"
+            else
+              echo "No existing comment found and CREATE_NEW=true - this shouldn't happen"
+            fi
           else
             # Edit existing comment
             echo "Updating existing comment (ID: $EXISTING_COMMENT_ID)..."
