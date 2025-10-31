@@ -1227,7 +1227,8 @@ jobs:
             echo "Posting acknowledgment comment for updated summary..."
 
             # Create URL to the updated comment
-            COMMENT_URL="https://github.com/${{ github.repository }}/pull/$PR_NUMBER#issuecomment-$EXISTING_COMMENT_ID"
+            REPO_NAME="${{ github.repository }}"
+            COMMENT_URL="https://github.com/$REPO_NAME/pull/$PR_NUMBER#issuecomment-$EXISTING_COMMENT_ID"
 
             # Create acknowledgment message
             ACK_COMMENT="## 🔄 CodeOwners Summary Updated
