@@ -2,7 +2,7 @@ name: PR Ready for Review Checks
 
 on:
   pull_request:
-    types: [ready_for_review]
+    types: [opened, ready_for_review]
 
 permissions:
   contents: read
@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   pr-review-checks:
+    if: !github.event.pull_request.draft
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -36,27 +37,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check PR title and add skip ci if needed
-        if: steps.changed-files.outputs.only_github_changes == 'true'
-        run: |
-          PR_TITLE=$(gh pr view ${{ github.event.pull_request.number }} --json title --jq '.title')
-          echo "Current PR title: $PR_TITLE"
-
-          # Check if title already contains "skip ci"
-          if [[ "$PR_TITLE" =~ [Ss][Kk][Ii][Pp][[:space:]]*[Cc][Ii] ]]; then
-            echo "PR title already contains 'skip ci'"
-          else
-            # Add "skip ci" to the title
-            NEW_TITLE="[skip ci] $PR_TITLE"
-            echo "Updating PR title to: $NEW_TITLE"
-            gh pr edit ${{ github.event.pull_request.number }} --title "$NEW_TITLE"
-
-            # Add comment about the title change
-            gh pr comment ${{ github.event.pull_request.number }} --body "🤖 Title changed to add '[skip ci]' since changes are only in the .github directory. If this is not needed, please remove it."
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Check if PR title matches branch name
         run: |
           PR_TITLE=$(gh pr view ${{ github.event.pull_request.number }} --json title --jq '.title')
@@ -80,3 +60,25 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check PR title and add skip ci if needed
+        if: steps.changed-files.outputs.only_github_changes == 'true'
+        run: |
+          PR_TITLE=$(gh pr view ${{ github.event.pull_request.number }} --json title --jq '.title')
+          echo "Current PR title: $PR_TITLE"
+
+          # Check if title already contains "skip ci"
+          if [[ "$PR_TITLE" =~ [Ss][Kk][Ii][Pp][[:space:]]*[Cc][Ii] ]]; then
+            echo "PR title already contains 'skip ci'"
+          else
+            # Add "skip ci" to the title
+            NEW_TITLE="[skip ci] $PR_TITLE"
+            echo "Updating PR title to: $NEW_TITLE"
+            gh pr edit ${{ github.event.pull_request.number }} --title "$NEW_TITLE"
+
+            # Add comment about the title change
+            gh pr comment ${{ github.event.pull_request.number }} --body "🤖 Title changed to add '[skip ci]' since changes are only in the .github directory. If this is not needed, please remove it."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
