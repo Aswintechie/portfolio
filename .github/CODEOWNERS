@@ -6,7 +6,7 @@
 
 # Frontend specific files
 /src/ @Aswin-coder @Aswinmcw @Aswintechie/admins
-/public/ @Aswin-coder @Aswinmcw @Aswintechie/admins
+/public/ @Aswin-coder @Aswinmcw
 *.html @Aswin-coder @Aswinmcw @Aswintechie/admins
 *.css @Aswin-coder @Aswinmcw @Aswintechie/admins
 *.js @Aswin-coder @Aswintechie/admins
