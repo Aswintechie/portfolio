@@ -19,3 +19,4 @@ export {
   useStaggeredAnimations,
   usePageLoading,
 } from './usePageTransitions.js';
+export { useRipple } from './useRipple.jsx';
