@@ -1397,7 +1397,7 @@ jobs:
           fi
 
           # Use #tt-metal-pr-review-requests Slack channel
-          SLACK_CHANNEL="C09HT5VSXRB"
+          SLACK_CHANNEL="C07G47JMQHM"
 
           # GitHub team to Slack group mapping (needed for author notes processing)
           get_slack_group_id() {
