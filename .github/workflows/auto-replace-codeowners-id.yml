@@ -1,0 +1,43 @@
+name: Auto replace CODEOWNERS group ID
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  replace-id:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # needed to diff last commit
+
+      - name: Check if target file changed
+        id: file_check
+        run: |
+          if git diff --name-only HEAD~1 HEAD | grep -q ".github/workflows/codeowners-group-analysis.yaml"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Replace ID if present
+        if: steps.file_check.outputs.changed == 'true'
+        run: |
+          FILE=".github/workflows/codeowners-group-analysis.yaml"
+
+          if grep -q "C07G47JMQHM" "$FILE"; then
+            sed -i 's/C07G47JMQHM/C09HT5VSXRB/g' "$FILE"
+
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            git add "$FILE"
+            git commit -m "Auto-replace deprecated CODEOWNERS group ID"
+            git push origin main
+          else
+            echo "Old ID not found, nothing to replace."
+          fi
