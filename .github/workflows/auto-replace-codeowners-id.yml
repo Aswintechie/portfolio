@@ -10,41 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository using PAT
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          token: ${{ secrets.MY_PAT_TOKEN }}
+          fetch-depth: 0
 
       - name: Check if target file changed
         id: check
         run: |
-          if git diff --name-only HEAD~1 HEAD | grep -q ".github/workflows/codeowners-group-analysis.yaml"; then
+          if git diff --name-only HEAD~1..HEAD | grep -q "^.github/workflows/codeowners-group-analysis.yaml$"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Replace ID
+      - name: Replace deprecated ID
+        id: replace
         if: steps.check.outputs.changed == 'true'
         run: |
           FILE=".github/workflows/codeowners-group-analysis.yaml"
 
           if grep -q "C07G47JMQHM" "$FILE"; then
             sed -i 's/C07G47JMQHM/C09HT5VSXRB/g' "$FILE"
+            echo "replaced=true" >> $GITHUB_OUTPUT
           else
-            echo "Nothing to replace"
-            exit 0
+            echo "replaced=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create Pull Request
-        if: steps.check.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Auto-replace deprecated CODEOWNERS group ID"
-          title: "Auto-replace deprecated CODEOWNERS group ID"
-          body: |
-            This PR was automatically generated to replace
-            deprecated CODEOWNERS group ID.
-          branch: auto/fix-codeowners-id
-          base: main
+      - name: Commit and FORCE push to main
+        if: steps.replace.outputs.replaced == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .github/workflows/codeowners-group-analysis.yaml
+          git commit -m "Auto-replace deprecated CODEOWNERS group ID"
+
+          # Force push is intentional and REQUIRED
+          git push origin main --force
