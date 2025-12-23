@@ -17,36 +17,27 @@ jobs:
           token: ${{ secrets.MY_PAT_TOKEN }}
           fetch-depth: 0
 
-      - name: Check if target file changed
-        id: check
-        run: |
-          if git diff --name-only HEAD~1..HEAD | grep -q "^.github/workflows/codeowners-group-analysis.yaml$"; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Replace deprecated ID
-        id: replace
-        if: steps.check.outputs.changed == 'true'
+      - name: Replace deprecated ID if present
         run: |
           FILE=".github/workflows/codeowners-group-analysis.yaml"
 
-          if grep -q "C07G47JMQHM" "$FILE"; then
-            sed -i 's/C07G47JMQHM/C09HT5VSXRB/g' "$FILE"
-            echo "replaced=true" >> $GITHUB_OUTPUT
-          else
-            echo "replaced=false" >> $GITHUB_OUTPUT
+          if ! [ -f "$FILE" ]; then
+            echo "Target file not found, exiting."
+            exit 0
           fi
 
-      - name: Commit and FORCE push to main
-        if: steps.replace.outputs.replaced == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if grep -q "C07G47JMQHM" "$FILE"; then
+            echo "Deprecated ID found. Replacing..."
+            sed -i 's/C07G47JMQHM/C09HT5VSXRB/g' "$FILE"
 
-          git add .github/workflows/codeowners-group-analysis.yaml
-          git commit -m "Auto-replace deprecated CODEOWNERS group ID"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Force push is intentional and REQUIRED
-          git push origin main --force
+            git add "$FILE"
+            git commit -m "Auto-replace deprecated CODEOWNERS group ID"
+
+            # Force-with-lease prevents overwriting newer commits
+            git push origin main --force-with-lease
+          else
+            echo "No deprecated ID found. Nothing to do."
+          fi
