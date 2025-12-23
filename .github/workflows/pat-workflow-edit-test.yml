@@ -1,0 +1,28 @@
+name: PAT workflow edit test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-cron:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository using PAT
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.MY_PAT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Modify workflow file
+        run: |
+          echo "# modified by pat test" >> .github/workflows/target-workflow.yaml
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .github/workflows/target-workflow.yaml
+          git commit -m "Test: modify workflow file using PAT"
+          git push origin main
