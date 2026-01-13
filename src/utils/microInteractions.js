@@ -2,7 +2,7 @@
  * @file microInteractions.js
  * @author Aswin
  * @copyright © 2025 Aswin. All rights reserved.
- * @description Utility functions for micro-interactions and subtle animations
+ * @description Utility functions for micro-interactions and subtle animations for webpage
  */
 
 // Ripple effect for buttons
