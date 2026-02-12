@@ -30,6 +30,10 @@ import {
 } from './components/ErrorBoundary/';
 import { PageLoader } from './components/PageTransitions';
 import { usePageLoading } from './hooks';
+import ScrollProgress from './components/ScrollProgress.jsx';
+import CursorTrail from './components/CursorTrail.jsx';
+import ThemeToggle from './components/ThemeToggle.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 
 // Home Page Component (Main Portfolio)
 const HomePage = () => {
@@ -79,7 +83,16 @@ const HomePage = () => {
 // Layout Component (Wraps all pages with navigation)
 const Layout = ({ children }) => {
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300'>
+      {/* Cursor Trail Effect */}
+      <CursorTrail />
+
+      {/* Scroll Progress Indicator */}
+      <ScrollProgress />
+
+      {/* Theme Toggle */}
+      <ThemeToggle />
+
       {/* Navigation */}
       <ErrorBoundary level='component' fallbackComponent='Navigation'>
         <Navigation />
@@ -131,51 +144,53 @@ const App = () => {
   }, [completeLoading, isInitialLoad]);
 
   return (
-    <GlobalErrorHandler>
-      <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
-        <Router>
-          {/* Beautiful Page Loader - Only on initial load */}
-          {shouldShowLoading && (
-            <PageLoader
-              isLoading={shouldShowLoading}
-              progress={loadingProgress}
-              stage={loadingStage}
-              onComplete={() => {}}
-            />
-          )}
+    <ThemeProvider>
+      <GlobalErrorHandler>
+        <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
+          <Router>
+            {/* Beautiful Page Loader - Only on initial load */}
+            {shouldShowLoading && (
+              <PageLoader
+                isLoading={shouldShowLoading}
+                progress={loadingProgress}
+                stage={loadingStage}
+                onComplete={() => {}}
+              />
+            )}
 
-          {/* Main App Content with Routing */}
-          {!shouldShowLoading && (
-            <Layout>
-              <Routes>
-                {/* Main Portfolio Page */}
-                <Route path='/' element={<HomePage />} />
+            {/* Main App Content with Routing */}
+            {!shouldShowLoading && (
+              <Layout>
+                <Routes>
+                  {/* Main Portfolio Page */}
+                  <Route path='/' element={<HomePage />} />
 
-                {/* Privacy Policy Page */}
-                <Route
-                  path='/privacy'
-                  element={
-                    <ErrorBoundary level='page' fallbackComponent='Privacy Policy'>
-                      <PrivacyPolicy />
-                    </ErrorBoundary>
-                  }
-                />
+                  {/* Privacy Policy Page */}
+                  <Route
+                    path='/privacy'
+                    element={
+                      <ErrorBoundary level='page' fallbackComponent='Privacy Policy'>
+                        <PrivacyPolicy />
+                      </ErrorBoundary>
+                    }
+                  />
 
-                {/* 404 Not Found Page */}
-                <Route
-                  path='*'
-                  element={
-                    <ErrorBoundary level='page' fallbackComponent='404 Page'>
-                      <NotFound />
-                    </ErrorBoundary>
-                  }
-                />
-              </Routes>
-            </Layout>
-          )}
-        </Router>
-      </ErrorBoundary>
-    </GlobalErrorHandler>
+                  {/* 404 Not Found Page */}
+                  <Route
+                    path='*'
+                    element={
+                      <ErrorBoundary level='page' fallbackComponent='404 Page'>
+                        <NotFound />
+                      </ErrorBoundary>
+                    }
+                  />
+                </Routes>
+              </Layout>
+            )}
+          </Router>
+        </ErrorBoundary>
+      </GlobalErrorHandler>
+    </ThemeProvider>
   );
 };
 

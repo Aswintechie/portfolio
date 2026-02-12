@@ -46,7 +46,10 @@ const SkillsSection = () => {
   ];
 
   return (
-    <section id='skills' className='section-padding bg-white relative overflow-hidden'>
+    <section
+      id='skills'
+      className='section-padding bg-white dark:bg-gray-900 relative overflow-hidden transition-colors duration-300'
+    >
       {/* Enhanced Background Effects */}
       <div className='absolute inset-0 bg-gradient-to-br from-white via-purple-50/50 to-pink-50/50'></div>
       <div className='absolute top-0 left-0 w-full h-full'>
@@ -91,12 +94,12 @@ const SkillsSection = () => {
             </span>
           </motion.div>
 
-          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900'>
-            <span className='bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent'>
+          <h2 className='text-4xl lg:text-5xl font-black mb-6 text-gray-900 dark:text-white'>
+            <span className='bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 dark:from-purple-400 dark:via-pink-400 dark:to-purple-400 bg-clip-text text-transparent'>
               What I Do Best
             </span>
           </h2>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
+          <p className='text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed'>
             Passionate about technologies that drive innovation and create meaningful impact
           </p>
         </motion.div>
@@ -108,7 +111,7 @@ const SkillsSection = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className='group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-100 overflow-hidden'
+              className='group relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden'
             >
               {/* Simplified background gradient overlay */}
               <div
@@ -128,10 +131,10 @@ const SkillsSection = () => {
 
               {/* Content */}
               <div className='relative z-10'>
-                <h3 className='text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-300'>
+                <h3 className='text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors duration-300'>
                   {skill.title}
                 </h3>
-                <p className='text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300'>
+                <p className='text-gray-600 dark:text-gray-300 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300'>
                   {skill.description}
                 </p>
               </div>

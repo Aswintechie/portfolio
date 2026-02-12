@@ -11,6 +11,7 @@ import { useInView } from 'react-intersection-observer';
 import { Mail, MapPin, Briefcase } from 'lucide-react';
 import { useMicroInteractions } from '../../utils/microInteractions';
 import { use3DTilt, tiltPresets } from '../../hooks/use3DTilt.jsx';
+import { useRipple } from '../../hooks';
 
 // Contact Section Component
 const ContactSection = () => {
@@ -23,9 +24,16 @@ const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', null
   const { variants } = useMicroInteractions();
+  const { createRipple } = useRipple();
+  const submitButtonRef = React.useRef(null);
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    // Add ripple effect on submit
+    if (submitButtonRef.current) {
+      createRipple(e, submitButtonRef.current);
+    }
 
     if (!formData.name || !formData.email || !formData.message) {
       setSubmitStatus('error');
@@ -346,12 +354,14 @@ const ContactSection = () => {
                   ></textarea>
                 </div>
                 <motion.button
+                  ref={submitButtonRef}
                   type='submit'
                   disabled={isSubmitting}
                   aria-label='Send contact message'
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className='w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2'
+                  className='relative w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2 overflow-hidden'
+                  style={{ position: 'relative' }}
                 >
                   {isSubmitting ? (
                     <div className='flex items-center justify-center'>

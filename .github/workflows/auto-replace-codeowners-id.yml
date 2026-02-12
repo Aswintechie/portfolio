@@ -1,0 +1,43 @@
+name: Auto replace CODEOWNERS group ID
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  auto-fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository using PAT
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.MY_PAT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Replace deprecated ID if present
+        run: |
+          FILE=".github/workflows/codeowners-group-analysis.yaml"
+
+          if ! [ -f "$FILE" ]; then
+            echo "Target file not found, exiting."
+            exit 0
+          fi
+
+          if grep -q "C07G47JMQHM" "$FILE"; then
+            echo "Deprecated ID found. Replacing..."
+            sed -i 's/C07G47JMQHM/C09HT5VSXRB/g' "$FILE"
+
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            git add "$FILE"
+            git commit -m "Auto-replace deprecated CODEOWNERS group ID"
+
+            # Force-with-lease prevents overwriting newer commits
+            git push origin main --force-with-lease
+          else
+            echo "No deprecated ID found. Nothing to do."
+          fi

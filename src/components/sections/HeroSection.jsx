@@ -8,15 +8,16 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Sparkles, Star } from 'lucide-react';
-import { useExperienceCalculator, useThrottledScroll } from '../../hooks';
-import { AnimatedParticles, FloatingElements } from '../background';
+import { useExperienceCalculator, useThrottledScroll, useRipple } from '../../hooks';
+import { AnimatedParticles, FloatingElements, AnimatedMeshGradient } from '../background';
 import { useMicroInteractions } from '../../utils/microInteractions';
 
 // Modern Hero Section Component
 const HeroSection = React.memo(function HeroSection() {
   const experience = useExperienceCalculator();
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
-  const { createRipple, variants } = useMicroInteractions();
+  const { variants } = useMicroInteractions();
+  const { createRipple } = useRipple();
   const contactButtonRef = useRef(null);
   const workButtonRef = useRef(null);
 
@@ -30,15 +31,11 @@ const HeroSection = React.memo(function HeroSection() {
 
   // Handle button clicks with ripple effect
   const handleContactClick = e => {
-    if (contactButtonRef.current) {
-      createRipple(e, contactButtonRef.current);
-    }
+    createRipple(e, contactButtonRef.current);
   };
 
   const handleWorkClick = e => {
-    if (workButtonRef.current) {
-      createRipple(e, workButtonRef.current);
-    }
+    createRipple(e, workButtonRef.current);
   };
 
   return (
@@ -46,11 +43,8 @@ const HeroSection = React.memo(function HeroSection() {
       id='home'
       className='min-h-screen flex items-center justify-center relative overflow-hidden pt-16 md:pt-0'
     >
-      {/* Optimized Gradient Background - Extended to prevent white bars */}
-      <div className='absolute inset-0'>
-        <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'></div>
-        <div className='absolute inset-0 bg-gradient-to-tr from-blue-900/40 via-transparent to-pink-900/40'></div>
-      </div>
+      {/* Advanced Animated Mesh Gradient Background */}
+      <AnimatedMeshGradient />
 
       {/* Additional background extension to prevent white bars */}
       <div className='absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none'></div>
@@ -60,15 +54,6 @@ const HeroSection = React.memo(function HeroSection() {
 
       {/* Floating Elements */}
       <FloatingElements />
-
-      {/* Enhanced Mesh Gradient Overlay */}
-      <div className='absolute inset-0 opacity-25'>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(236,72,153,0.25)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(14,165,233,0.25)_0%,transparent_50%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_60%_80%,rgba(168,85,247,0.2)_0%,transparent_40%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_10%_10%,rgba(34,197,94,0.15)_0%,transparent_35%)]'></div>
-        <div className='absolute inset-0 bg-[radial-gradient(circle_at_90%_90%,rgba(251,146,60,0.18)_0%,transparent_45%)]'></div>
-      </div>
 
       {/* Content */}
       <div className='container-custom relative z-10'>
