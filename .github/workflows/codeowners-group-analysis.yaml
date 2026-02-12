@@ -892,7 +892,7 @@ jobs:
           fi
 
           # Use #tt-metal-pr-review-requests Slack channel
-          SLACK_CHANNEL="C09HT5VSXRB"
+          SLACK_CHANNEL="C07G47JMQHM"
 
           echo "Using parameters: CREATE_NEW=$CREATE_NEW, PING_OWNERS=$PING_OWNERS, SEND_SLACK=$SEND_SLACK, SLACK_CHANNEL=$SLACK_CHANNEL"
 
@@ -1399,7 +1399,7 @@ jobs:
           fi
 
           # Use #tt-metal-pr-review-requests Slack channel
-          SLACK_CHANNEL="C09HT5VSXRB"
+          SLACK_CHANNEL="C07G47JMQHM"
 
           # GitHub team to Slack group mapping (needed for author notes processing)
           get_slack_group_id() {
@@ -1453,8 +1453,8 @@ jobs:
           fi
 
           PR_TITLE=$(echo "$PR_DATA" | jq -r '.title')
-          # Escape special characters for Slack link format (< > |)
-          PR_TITLE_SLACK=$(echo "$PR_TITLE" | sed 's/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
+          # Escape special characters for Slack link format (& < > |)
+          PR_TITLE_SLACK=$(printf '%s' "$PR_TITLE" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
           PR_AUTHOR_LOGIN=$(echo "$PR_DATA" | jq -r '.user.login')
           PR_AUTHOR_NAME=$(echo "$PR_DATA" | jq -r '.user.name // .user.login')
 
@@ -1806,8 +1806,8 @@ jobs:
                          -H "Accept: application/vnd.github.v3+json" \
                          "$PR_API")
           PR_TITLE=$(echo "$PR_DATA" | jq -r '.title')
-          # Escape special characters for Slack link format (< > |)
-          PR_TITLE_SLACK=$(echo "$PR_TITLE" | sed 's/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
+          # Escape special characters for Slack link format (& < > |)
+          PR_TITLE_SLACK=$(printf '%s' "$PR_TITLE" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
           PR_AUTHOR_LOGIN=$(echo "$PR_DATA" | jq -r '.user.login')
           PR_AUTHOR_NAME=$(echo "$PR_DATA" | jq -r '.user.name // .user.login')
 
@@ -2341,11 +2341,11 @@ jobs:
                          -H "Accept: application/vnd.github.v3+json" \
                          "$PR_API")
           PR_TITLE=$(echo "$PR_DATA" | jq -r '.title')
-          # Escape special characters for Slack link format (< > |)
-          PR_TITLE_SLACK=$(echo "$PR_TITLE" | sed 's/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
+          # Escape special characters for Slack link format (& < > |)
+          PR_TITLE_SLACK=$(printf '%s' "$PR_TITLE" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
 
           # Use #tt-metal-pr-review-requests Slack channel
-          SLACK_CHANNEL="C09HT5VSXRB"
+          SLACK_CHANNEL="C07G47JMQHM"
 
           # Define API endpoint
           COMMENTS_API="https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
@@ -2476,11 +2476,11 @@ jobs:
                          -H "Accept: application/vnd.github.v3+json" \
                          "$PR_API")
           PR_TITLE=$(echo "$PR_DATA" | jq -r '.title')
-          # Escape special characters for Slack link format (< > |)
-          PR_TITLE_SLACK=$(echo "$PR_TITLE" | sed 's/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
+          # Escape special characters for Slack link format (& < > |)
+          PR_TITLE_SLACK=$(printf '%s' "$PR_TITLE" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/|/\&#124;/g')
 
           # Use #tt-metal-pr-review-requests Slack channel
-          SLACK_CHANNEL="C09HT5VSXRB"
+          SLACK_CHANNEL="C07G47JMQHM"
 
           # GitHub team to Slack group mapping (needed for author notes processing)
           get_slack_group_id() {
