@@ -5,7 +5,7 @@
  * @description Scroll progress indicator component
  */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 
 const ScrollProgress = () => {
