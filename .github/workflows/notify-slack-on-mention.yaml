@@ -180,12 +180,7 @@ jobs:
           SENDER_FULL_NAME=$(echo "$SENDER_DATA" | jq -r '.name // empty' 2>/dev/null)
           [ -z "$SENDER_FULL_NAME" ] || [ "$SENDER_FULL_NAME" = "null" ] && SENDER_FULL_NAME="$SENDER"
 
-          SENDER_SLACK_ID=$(find_slack_user_id "$SENDER_FULL_NAME" "$SENDER" "$SLACK_USERS_FILE")
-          if [ -n "$SENDER_SLACK_ID" ]; then
-            AUTHOR_DISPLAY="<@$SENDER_SLACK_ID> ($SENDER_FULL_NAME / @$SENDER)"
-          else
-            AUTHOR_DISPLAY="$SENDER_FULL_NAME (@$SENDER)"
-          fi
+          AUTHOR_DISPLAY="$SENDER_FULL_NAME [$SENDER]"
 
           NL=$'\n'
 
