@@ -58,19 +58,24 @@ jobs:
               -H "Content-Type: application/json" \
               "$API_URL")
 
-            if [ "$(echo "$USER_SEARCH_RESPONSE" | jq -r '.ok')" = "true" ]; then
-              USERS_PAGE=$(echo "$USER_SEARCH_RESPONSE" | jq -r '.members')
-              EXISTING=$(cat "$TEMP_USERS_FILE")
-              echo "$EXISTING" | jq --argjson new "$USERS_PAGE" '. + $new' > "$TEMP_USERS_FILE"
+            RESPONSE_FILE=$(mktemp)
+            echo "$USER_SEARCH_RESPONSE" > "$RESPONSE_FILE"
+
+            if [ "$(jq -r '.ok' "$RESPONSE_FILE")" = "true" ]; then
+              MERGE_FILE=$(mktemp)
+              jq -s '.[0] + .[1]' "$TEMP_USERS_FILE" <(jq '.members' "$RESPONSE_FILE") > "$MERGE_FILE"
+              mv "$MERGE_FILE" "$TEMP_USERS_FILE"
               PAGE_COUNT=$((PAGE_COUNT + 1))
 
-              CURSOR=$(echo "$USER_SEARCH_RESPONSE" | jq -r '.response_metadata.next_cursor // ""')
+              CURSOR=$(jq -r '.response_metadata.next_cursor // ""' "$RESPONSE_FILE")
+              rm -f "$RESPONSE_FILE"
               if [ -z "$CURSOR" ] || [ "$CURSOR" = "null" ]; then
                 break
               fi
             else
-              ERROR_MSG=$(echo "$USER_SEARCH_RESPONSE" | jq -r '.error // "Unknown error"')
+              ERROR_MSG=$(jq -r '.error // "Unknown error"' "$RESPONSE_FILE")
               echo "Error: Failed to fetch Slack users: $ERROR_MSG"
+              rm -f "$RESPONSE_FILE"
               break
             fi
           done
@@ -90,13 +95,12 @@ jobs:
           SENDER="${{ github.event.sender.login }}"
           REPO="${{ github.repository }}"
           MENTIONED_CSV="${{ steps.check-mention.outputs.mentioned }}"
-
-          ALL_SLACK_USERS=$(cat "${RUNNER_TEMP}/slack_users.json")
+          SLACK_USERS_FILE="${RUNNER_TEMP}/slack_users.json"
 
           find_slack_user_id() {
             local full_name="$1"
             local github_username="$2"
-            local ALL_USERS="$3"
+            local USERS_FILE="$3"
 
             case "$github_username" in
               "mradosavljevicTT") echo "U0837MYG788"; return 0 ;;
@@ -105,29 +109,29 @@ jobs:
               "jvegaTT") echo "U07M7QZ0BQA"; return 0 ;;
             esac
 
-            USER_ID=$(echo "$ALL_USERS" | jq -r --arg name "$full_name" \
-              '.[] | select(.real_name == $name or .profile.real_name == $name) | .id' | head -n1)
+            USER_ID=$(jq -r --arg name "$full_name" \
+              '.[] | select(.real_name == $name or .profile.real_name == $name) | .id' "$USERS_FILE" | head -n1)
 
             if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
-              USER_ID=$(echo "$ALL_USERS" | jq -r --arg name "$full_name" \
-                '.[] | select(.profile.display_name == $name) | .id' | head -n1)
+              USER_ID=$(jq -r --arg name "$full_name" \
+                '.[] | select(.profile.display_name == $name) | .id' "$USERS_FILE" | head -n1)
             fi
 
             if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
-              USER_ID=$(echo "$ALL_USERS" | jq -r --arg username "$github_username" \
-                '.[] | select(.name == $username or .profile.display_name == $username) | .id' | head -n1)
+              USER_ID=$(jq -r --arg username "$github_username" \
+                '.[] | select(.name == $username or .profile.display_name == $username) | .id' "$USERS_FILE" | head -n1)
             fi
 
             if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
               IFS=' ' read -ra NAME_WORDS <<< "$full_name"
               for word in "${NAME_WORDS[@]}"; do
                 if [ ${#word} -ge 3 ]; then
-                  WORD_MATCHES=$(echo "$ALL_USERS" | jq -r --arg word "$word" \
+                  WORD_MATCHES=$(jq -r --arg word "$word" \
                     '.[] | select(
                       (.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or
                       (.profile.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or
                       (.profile.display_name // "" | ascii_downcase | contains($word | ascii_downcase))
-                    ) | .id + "|" + (.real_name // .profile.real_name // .name)')
+                    ) | .id + "|" + (.real_name // .profile.real_name // .name)' "$USERS_FILE")
 
                   if [ -n "$WORD_MATCHES" ]; then
                     MATCH_COUNT=$(echo "$WORD_MATCHES" | wc -l)
@@ -147,7 +151,6 @@ jobs:
             fi
           }
 
-          # Resolve each @mentioned GitHub username to a Slack mention
           SLACK_MENTIONS=""
           IFS=',' read -ra MENTIONED_ARRAY <<< "$MENTIONED_CSV"
           for gh_user in "${MENTIONED_ARRAY[@]}"; do
@@ -159,7 +162,7 @@ jobs:
             USER_NAME=$(echo "$USER_DATA" | jq -r '.name // empty' 2>/dev/null)
             [ -z "$USER_NAME" ] || [ "$USER_NAME" = "null" ] && USER_NAME="$gh_user"
 
-            SLACK_ID=$(find_slack_user_id "$USER_NAME" "$gh_user" "$ALL_SLACK_USERS")
+            SLACK_ID=$(find_slack_user_id "$USER_NAME" "$gh_user" "$SLACK_USERS_FILE")
 
             if [ -n "$SLACK_ID" ]; then
               SLACK_MENTIONS="$SLACK_MENTIONS <@$SLACK_ID>"
