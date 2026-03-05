@@ -174,6 +174,19 @@ jobs:
           done
           SLACK_MENTIONS=$(echo "$SLACK_MENTIONS" | xargs)
 
+          # Resolve author: fetch full name and Slack ID
+          SENDER_DATA=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/users/$SENDER" 2>/dev/null || echo "{}")
+          SENDER_FULL_NAME=$(echo "$SENDER_DATA" | jq -r '.name // empty' 2>/dev/null)
+          [ -z "$SENDER_FULL_NAME" ] || [ "$SENDER_FULL_NAME" = "null" ] && SENDER_FULL_NAME="$SENDER"
+
+          SENDER_SLACK_ID=$(find_slack_user_id "$SENDER_FULL_NAME" "$SENDER" "$SLACK_USERS_FILE")
+          if [ -n "$SENDER_SLACK_ID" ]; then
+            AUTHOR_DISPLAY="<@$SENDER_SLACK_ID> ($SENDER_FULL_NAME / @$SENDER)"
+          else
+            AUTHOR_DISPLAY="$SENDER_FULL_NAME (@$SENDER)"
+          fi
+
           NL=$'\n'
 
           if [ "$EVENT_NAME" = "issue_comment" ]; then
@@ -247,7 +260,7 @@ jobs:
           fi
 
           # Build the full message with real newlines
-          TEXT="${HEADER}${NL}*Author:* ${SENDER}${NL}*Tagged:* ${SLACK_MENTIONS}${NL}${NL}${BODY_TEXT}"
+          TEXT="${HEADER}${NL}*Author:* ${AUTHOR_DISPLAY}${NL}*Tagged:* ${SLACK_MENTIONS}${NL}${NL}${BODY_TEXT}"
 
           # Write payload to a temp file to avoid ARG_MAX issues with curl -d
           PAYLOAD_FILE=$(mktemp)
