@@ -19,7 +19,25 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     steps:
+      - name: Check for @ mentions
+        id: check-mention
+        run: |
+          BODY=$(cat <<'EOF'
+          ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
+          EOF
+          )
+
+          # Match @username patterns (GitHub usernames: alphanumeric + hyphens)
+          if echo "$BODY" | grep -qP '@[a-zA-Z0-9][-a-zA-Z0-9]*'; then
+            echo "has_mention=true" >> "$GITHUB_OUTPUT"
+            MENTIONED=$(echo "$BODY" | grep -oP '@[a-zA-Z0-9][-a-zA-Z0-9]*' | sort -u | paste -sd ', ')
+            echo "mentioned=$MENTIONED" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_mention=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Send notification to Slack
+        if: steps.check-mention.outputs.has_mention == 'true'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.CODEOWNERS_PING_BOT }}
           SLACK_CHANNEL_ID: "C09HT5VSXRB"
@@ -27,6 +45,7 @@ jobs:
           EVENT_NAME="${{ github.event_name }}"
           SENDER="${{ github.event.sender.login }}"
           REPO="${{ github.repository }}"
+          MENTIONED="${{ steps.check-mention.outputs.mentioned }}"
 
           if [ "$EVENT_NAME" = "issue_comment" ]; then
             COMMENT_BODY=$(cat <<'EOF'
@@ -43,7 +62,7 @@ jobs:
               CONTEXT_TYPE="Issue"
             fi
 
-            TEXT="💬 *New comment* on ${CONTEXT_TYPE} <${COMMENT_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n\n${COMMENT_BODY}"
+            TEXT="💬 *New mention* on ${CONTEXT_TYPE} <${COMMENT_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${COMMENT_BODY}"
 
           elif [ "$EVENT_NAME" = "issues" ]; then
             ACTION="${{ github.event.action }}"
@@ -56,9 +75,9 @@ jobs:
           )
 
             if [ "$ACTION" = "opened" ]; then
-              TEXT="📝 *New issue* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n\n${ISSUE_BODY}"
+              TEXT="📝 *New issue with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${ISSUE_BODY}"
             else
-              TEXT="✏️ *Issue edited* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n\n${ISSUE_BODY}"
+              TEXT="✏️ *Issue edited with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${ISSUE_BODY}"
             fi
 
           elif [ "$EVENT_NAME" = "pull_request_target" ]; then
@@ -72,9 +91,9 @@ jobs:
           )
 
             if [ "$ACTION" = "opened" ]; then
-              TEXT="🔀 *New PR* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n\n${PR_BODY}"
+              TEXT="🔀 *New PR with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${PR_BODY}"
             else
-              TEXT="✏️ *PR edited* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n\n${PR_BODY}"
+              TEXT="✏️ *PR edited with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${PR_BODY}"
             fi
 
           elif [ "$EVENT_NAME" = "pull_request_review_comment" ]; then
@@ -86,7 +105,7 @@ jobs:
             PR_NUMBER="${{ github.event.pull_request.number }}"
             COMMENT_URL="${{ github.event.comment.html_url }}"
 
-            TEXT="💬 *New review comment* on PR <${COMMENT_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n\n${COMMENT_BODY}"
+            TEXT="💬 *New review comment with mention* on PR <${COMMENT_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${COMMENT_BODY}"
           fi
 
           # Truncate if too long for Slack (max ~3000 chars for text field)
