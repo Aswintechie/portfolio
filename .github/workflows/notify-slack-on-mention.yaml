@@ -27,25 +27,149 @@ jobs:
           EOF
           )
 
-          # Match @username patterns (GitHub usernames: alphanumeric + hyphens)
           if echo "$BODY" | grep -qP '@[a-zA-Z0-9][-a-zA-Z0-9]*'; then
             echo "has_mention=true" >> "$GITHUB_OUTPUT"
-            MENTIONED=$(echo "$BODY" | grep -oP '@[a-zA-Z0-9][-a-zA-Z0-9]*' | sort -u | paste -sd ', ')
+            MENTIONED=$(echo "$BODY" | grep -oP '@[a-zA-Z0-9][-a-zA-Z0-9]*' | sed 's/^@//' | sort -u | paste -sd ',' )
             echo "mentioned=$MENTIONED" >> "$GITHUB_OUTPUT"
           else
             echo "has_mention=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Fetch Slack users
+        if: steps.check-mention.outputs.has_mention == 'true'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.CODEOWNERS_PING_BOT }}
+        run: |
+          echo "Fetching all Slack users..."
+          TEMP_USERS_FILE=$(mktemp)
+          echo "[]" > "$TEMP_USERS_FILE"
+          CURSOR=""
+          PAGE_COUNT=0
+
+          while true; do
+            if [ -n "$CURSOR" ]; then
+              API_URL="https://slack.com/api/users.list?limit=1000&cursor=$CURSOR"
+            else
+              API_URL="https://slack.com/api/users.list?limit=1000"
+            fi
+
+            USER_SEARCH_RESPONSE=$(curl -s -X GET \
+              -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" \
+              -H "Content-Type: application/json" \
+              "$API_URL")
+
+            if [ "$(echo "$USER_SEARCH_RESPONSE" | jq -r '.ok')" = "true" ]; then
+              USERS_PAGE=$(echo "$USER_SEARCH_RESPONSE" | jq -r '.members')
+              EXISTING=$(cat "$TEMP_USERS_FILE")
+              echo "$EXISTING" | jq --argjson new "$USERS_PAGE" '. + $new' > "$TEMP_USERS_FILE"
+              PAGE_COUNT=$((PAGE_COUNT + 1))
+
+              CURSOR=$(echo "$USER_SEARCH_RESPONSE" | jq -r '.response_metadata.next_cursor // ""')
+              if [ -z "$CURSOR" ] || [ "$CURSOR" = "null" ]; then
+                break
+              fi
+            else
+              ERROR_MSG=$(echo "$USER_SEARCH_RESPONSE" | jq -r '.error // "Unknown error"')
+              echo "Error: Failed to fetch Slack users: $ERROR_MSG"
+              break
+            fi
+          done
+
+          USER_COUNT=$(jq '. | length' "$TEMP_USERS_FILE")
+          echo "Fetched $USER_COUNT Slack users across $PAGE_COUNT pages"
+          mv "$TEMP_USERS_FILE" "${RUNNER_TEMP}/slack_users.json"
 
       - name: Send notification to Slack
         if: steps.check-mention.outputs.has_mention == 'true'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.CODEOWNERS_PING_BOT }}
           SLACK_CHANNEL_ID: "C09HT5VSXRB"
+          GH_TOKEN: ${{ github.token }}
         run: |
           EVENT_NAME="${{ github.event_name }}"
           SENDER="${{ github.event.sender.login }}"
           REPO="${{ github.repository }}"
-          MENTIONED="${{ steps.check-mention.outputs.mentioned }}"
+          MENTIONED_CSV="${{ steps.check-mention.outputs.mentioned }}"
+
+          ALL_SLACK_USERS=$(cat "${RUNNER_TEMP}/slack_users.json")
+
+          find_slack_user_id() {
+            local full_name="$1"
+            local github_username="$2"
+            local ALL_USERS="$3"
+
+            case "$github_username" in
+              "mradosavljevicTT") echo "U0837MYG788"; return 0 ;;
+              "nsextonTT") echo "U08TVGQGGAE"; return 0 ;;
+              "ncvetkovicTT") echo "U07AUABTEP6"; return 0 ;;
+              "jvegaTT") echo "U07M7QZ0BQA"; return 0 ;;
+            esac
+
+            USER_ID=$(echo "$ALL_USERS" | jq -r --arg name "$full_name" \
+              '.[] | select(.real_name == $name or .profile.real_name == $name) | .id' | head -n1)
+
+            if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
+              USER_ID=$(echo "$ALL_USERS" | jq -r --arg name "$full_name" \
+                '.[] | select(.profile.display_name == $name) | .id' | head -n1)
+            fi
+
+            if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
+              USER_ID=$(echo "$ALL_USERS" | jq -r --arg username "$github_username" \
+                '.[] | select(.name == $username or .profile.display_name == $username) | .id' | head -n1)
+            fi
+
+            if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
+              IFS=' ' read -ra NAME_WORDS <<< "$full_name"
+              for word in "${NAME_WORDS[@]}"; do
+                if [ ${#word} -ge 3 ]; then
+                  WORD_MATCHES=$(echo "$ALL_USERS" | jq -r --arg word "$word" \
+                    '.[] | select(
+                      (.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or
+                      (.profile.real_name // "" | ascii_downcase | contains($word | ascii_downcase)) or
+                      (.profile.display_name // "" | ascii_downcase | contains($word | ascii_downcase))
+                    ) | .id + "|" + (.real_name // .profile.real_name // .name)')
+
+                  if [ -n "$WORD_MATCHES" ]; then
+                    MATCH_COUNT=$(echo "$WORD_MATCHES" | wc -l)
+                    if [ "$MATCH_COUNT" -eq 1 ]; then
+                      USER_ID=$(echo "$WORD_MATCHES" | cut -d'|' -f1)
+                      break
+                    fi
+                  fi
+                fi
+              done
+            fi
+
+            if [ -n "$USER_ID" ] && [ "$USER_ID" != "null" ]; then
+              echo "$USER_ID"
+            else
+              echo ""
+            fi
+          }
+
+          # Resolve each @mentioned GitHub username to a Slack mention
+          SLACK_MENTIONS=""
+          IFS=',' read -ra MENTIONED_ARRAY <<< "$MENTIONED_CSV"
+          for gh_user in "${MENTIONED_ARRAY[@]}"; do
+            gh_user=$(echo "$gh_user" | xargs)
+            [ -z "$gh_user" ] && continue
+
+            USER_DATA=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/users/$gh_user" 2>/dev/null || echo "{}")
+            USER_NAME=$(echo "$USER_DATA" | jq -r '.name // empty' 2>/dev/null)
+            [ -z "$USER_NAME" ] || [ "$USER_NAME" = "null" ] && USER_NAME="$gh_user"
+
+            SLACK_ID=$(find_slack_user_id "$USER_NAME" "$gh_user" "$ALL_SLACK_USERS")
+
+            if [ -n "$SLACK_ID" ]; then
+              SLACK_MENTIONS="$SLACK_MENTIONS <@$SLACK_ID>"
+              echo "Resolved @$gh_user -> Slack <@$SLACK_ID>"
+            else
+              SLACK_MENTIONS="$SLACK_MENTIONS @$gh_user"
+              echo "Could not resolve @$gh_user to Slack, using GitHub username fallback"
+            fi
+          done
+          SLACK_MENTIONS=$(echo "$SLACK_MENTIONS" | xargs)
 
           if [ "$EVENT_NAME" = "issue_comment" ]; then
             COMMENT_BODY=$(cat <<'EOF'
@@ -62,7 +186,7 @@ jobs:
               CONTEXT_TYPE="Issue"
             fi
 
-            TEXT="💬 *New mention* on ${CONTEXT_TYPE} <${COMMENT_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${COMMENT_BODY}"
+            TEXT="💬 *New mention* on ${CONTEXT_TYPE} <${COMMENT_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${COMMENT_BODY}"
 
           elif [ "$EVENT_NAME" = "issues" ]; then
             ACTION="${{ github.event.action }}"
@@ -75,9 +199,9 @@ jobs:
           )
 
             if [ "$ACTION" = "opened" ]; then
-              TEXT="📝 *New issue with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${ISSUE_BODY}"
+              TEXT="📝 *New issue with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${ISSUE_BODY}"
             else
-              TEXT="✏️ *Issue edited with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${ISSUE_BODY}"
+              TEXT="✏️ *Issue edited with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${ISSUE_BODY}"
             fi
 
           elif [ "$EVENT_NAME" = "pull_request_target" ]; then
@@ -91,9 +215,9 @@ jobs:
           )
 
             if [ "$ACTION" = "opened" ]; then
-              TEXT="🔀 *New PR with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${PR_BODY}"
+              TEXT="🔀 *New PR with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${PR_BODY}"
             else
-              TEXT="✏️ *PR edited with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${PR_BODY}"
+              TEXT="✏️ *PR edited with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${PR_BODY}"
             fi
 
           elif [ "$EVENT_NAME" = "pull_request_review_comment" ]; then
@@ -105,10 +229,9 @@ jobs:
             PR_NUMBER="${{ github.event.pull_request.number }}"
             COMMENT_URL="${{ github.event.comment.html_url }}"
 
-            TEXT="💬 *New review comment with mention* on PR <${COMMENT_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${MENTIONED}\n\n${COMMENT_BODY}"
+            TEXT="💬 *New review comment with mention* on PR <${COMMENT_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${COMMENT_BODY}"
           fi
 
-          # Truncate if too long for Slack (max ~3000 chars for text field)
           if [ ${#TEXT} -gt 3000 ]; then
             TEXT="${TEXT:0:2990}... _(truncated)_"
           fi
