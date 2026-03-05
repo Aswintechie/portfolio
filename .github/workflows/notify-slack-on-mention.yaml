@@ -174,6 +174,8 @@ jobs:
           done
           SLACK_MENTIONS=$(echo "$SLACK_MENTIONS" | xargs)
 
+          NL=$'\n'
+
           if [ "$EVENT_NAME" = "issue_comment" ]; then
             COMMENT_BODY=$(cat <<'EOF'
           ${{ github.event.comment.body }}
@@ -189,7 +191,8 @@ jobs:
               CONTEXT_TYPE="Issue"
             fi
 
-            TEXT="💬 *New mention* on ${CONTEXT_TYPE} <${COMMENT_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${COMMENT_BODY}"
+            HEADER=":speech_balloon: *New mention on ${CONTEXT_TYPE}* <${COMMENT_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>"
+            BODY_TEXT="${COMMENT_BODY}"
 
           elif [ "$EVENT_NAME" = "issues" ]; then
             ACTION="${{ github.event.action }}"
@@ -202,10 +205,11 @@ jobs:
           )
 
             if [ "$ACTION" = "opened" ]; then
-              TEXT="📝 *New issue with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${ISSUE_BODY}"
+              HEADER=":memo: *New issue with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>"
             else
-              TEXT="✏️ *Issue edited with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${ISSUE_BODY}"
+              HEADER=":pencil2: *Issue edited with mention* <${ISSUE_URL}|#${ISSUE_NUMBER} - ${ISSUE_TITLE}>"
             fi
+            BODY_TEXT="${ISSUE_BODY}"
 
           elif [ "$EVENT_NAME" = "pull_request_target" ]; then
             ACTION="${{ github.event.action }}"
@@ -218,10 +222,11 @@ jobs:
           )
 
             if [ "$ACTION" = "opened" ]; then
-              TEXT="🔀 *New PR with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${PR_BODY}"
+              HEADER=":twisted_rightwards_arrows: *New PR with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>"
             else
-              TEXT="✏️ *PR edited with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${PR_BODY}"
+              HEADER=":pencil2: *PR edited with mention* <${PR_URL}|#${PR_NUMBER} - ${PR_TITLE}>"
             fi
+            BODY_TEXT="${PR_BODY}"
 
           elif [ "$EVENT_NAME" = "pull_request_review_comment" ]; then
             COMMENT_BODY=$(cat <<'EOF'
@@ -232,14 +237,21 @@ jobs:
             PR_NUMBER="${{ github.event.pull_request.number }}"
             COMMENT_URL="${{ github.event.comment.html_url }}"
 
-            TEXT="💬 *New review comment with mention* on PR <${COMMENT_URL}|#${PR_NUMBER} - ${PR_TITLE}>\n*Author:* ${SENDER}\n*Tagged:* ${SLACK_MENTIONS}\n\n${COMMENT_BODY}"
+            HEADER=":speech_balloon: *New review comment with mention* on PR <${COMMENT_URL}|#${PR_NUMBER} - ${PR_TITLE}>"
+            BODY_TEXT="${COMMENT_BODY}"
           fi
 
-          if [ ${#TEXT} -gt 3000 ]; then
-            TEXT="${TEXT:0:2990}... _(truncated)_"
+          # Trim body text if too long
+          if [ ${#BODY_TEXT} -gt 2000 ]; then
+            BODY_TEXT="${BODY_TEXT:0:1990}... _(truncated)_"
           fi
 
-          SLACK_PAYLOAD=$(jq -n \
+          # Build the full message with real newlines
+          TEXT="${HEADER}${NL}*Author:* ${SENDER}${NL}*Tagged:* ${SLACK_MENTIONS}${NL}${NL}${BODY_TEXT}"
+
+          # Write payload to a temp file to avoid ARG_MAX issues with curl -d
+          PAYLOAD_FILE=$(mktemp)
+          jq -n \
             --arg channel "$SLACK_CHANNEL_ID" \
             --arg text "$TEXT" \
             '{
@@ -247,13 +259,14 @@ jobs:
               text: $text,
               unfurl_links: false,
               unfurl_media: false
-            }')
+            }' > "$PAYLOAD_FILE"
 
           SLACK_RESPONSE=$(curl -s --max-time 30 -X POST \
             -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" \
             -H "Content-type: application/json" \
-            -d "$SLACK_PAYLOAD" \
+            -d @"$PAYLOAD_FILE" \
             "https://slack.com/api/chat.postMessage")
+          rm -f "$PAYLOAD_FILE"
 
           if [ "$(echo "$SLACK_RESPONSE" | jq -r '.ok')" = "true" ]; then
             echo "Slack notification sent successfully"
