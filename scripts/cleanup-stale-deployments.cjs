@@ -21,6 +21,10 @@ const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
 
+// Worker naming pattern for PR previews
+const PR_WORKER_PREFIX = 'aswin-portfolio-pr-';
+const PR_WORKER_PATTERN = /^aswin-portfolio-pr-(\d+)$/;
+
 // Validate required environment variables
 if (!CLOUDFLARE_API_TOKEN) {
   console.error('❌ Error: CLOUDFLARE_API_TOKEN environment variable is required');
@@ -146,7 +150,7 @@ async function cleanupStaleDeployments() {
     
     // Filter workers that match PR pattern
     const prWorkers = workers.filter(worker => 
-      worker.id && worker.id.match(/^aswin-portfolio-pr-\d+$/)
+      worker.id && PR_WORKER_PATTERN.test(worker.id)
     );
     
     console.log(`Found ${prWorkers.length} PR preview deployments`);
@@ -163,7 +167,7 @@ async function cleanupStaleDeployments() {
     
     for (const worker of prWorkers) {
       const workerName = worker.id;
-      const prMatch = workerName.match(/^aswin-portfolio-pr-(\d+)$/);
+      const prMatch = workerName.match(PR_WORKER_PATTERN);
       
       if (!prMatch) {
         console.log(`Skipping ${workerName} - doesn't match expected pattern`);
