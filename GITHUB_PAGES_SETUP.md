@@ -20,6 +20,11 @@ That's it! The workflow will automatically deploy your site when you push to the
 
 After the first deployment completes (check the Actions tab), your portfolio will be available at:
 ```
+https://<your-username>.github.io/<repo-name>/
+```
+
+For this repository specifically:
+```
 https://aswintechie.github.io/portfolio/
 ```
 
@@ -160,7 +165,8 @@ Both deployments work independently and don't interfere with each other. You can
 After enabling GitHub Pages:
 1. Push a commit to the `main` branch
 2. Go to the Actions tab and watch the deployment
-3. Once complete, visit your site at `https://aswintechie.github.io/portfolio/`
+3. Once complete, visit your site at `https://<your-username>.github.io/<repo-name>/`
+   - For this repository: `https://aswintechie.github.io/portfolio/`
 4. Share your portfolio URL!
 
 ## Need Help?
