@@ -27,6 +27,16 @@ You need to add the following secrets to your GitHub repository:
   6. Click **Continue to summary** and **Create Token**
   7. Copy the token and add it to GitHub secrets
 
+#### `CLOUDFLARE_ACCOUNT_ID`
+- **Description**: Your Cloudflare Account ID for cleanup of stale deployments
+- **How to get it**:
+  1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
+  2. Select **Workers & Pages** from the left sidebar
+  3. Your Account ID is displayed on the right side of the page
+  4. Copy the Account ID (format: `1234567890abcdef1234567890abcdef`)
+  5. Add it to GitHub secrets
+- **Note**: This is required for the stale deployment cleanup workflow
+
 #### `TELEGRAM_BOT_TOKEN`
 - **Description**: Your Telegram bot token
 - **How to get it**:
@@ -65,6 +75,12 @@ You need to add the following secrets to your GitHub repository:
 - Secrets are automatically set for the preview environment
 - Preview URL: `https://aswin-portfolio-pr-{PR_NUMBER}.aswin8681879422.workers.dev`
 - Preview is automatically deleted when PR is closed
+
+### Stale Deployment Cleanup
+- A scheduled workflow runs daily to clean up stale deployments
+- It checks all preview deployments and compares them with open PRs
+- If a preview deployment exists for a closed PR, it's automatically deleted
+- This ensures no orphaned deployments remain after PRs are merged or closed
 
 ### Production Deployments (Main Branch)
 - When code is pushed to main branch, the workflow deploys to production
