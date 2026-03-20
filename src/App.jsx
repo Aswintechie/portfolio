@@ -32,6 +32,13 @@ import { usePageLoading } from './hooks';
 import ScrollProgress from './components/ScrollProgress.jsx';
 import CursorTrail from './components/CursorTrail.jsx';
 
+// Get the base path for GitHub Pages support
+const getBasename = () => {
+  // In production GitHub Pages, use /portfolio/
+  // In local dev or other deployments, use /
+  return import.meta.env.BASE_URL || '/';
+};
+
 // Home Page Component (Main Portfolio)
 const HomePage = () => {
   return (
@@ -137,7 +144,7 @@ const App = () => {
     <>
       <GlobalErrorHandler>
         <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
-          <Router>
+          <Router basename={getBasename()}>
             {/* Beautiful Page Loader - Only on initial load */}
             {shouldShowLoading && (
               <PageLoader
