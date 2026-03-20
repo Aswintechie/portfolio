@@ -34,8 +34,9 @@ import CursorTrail from './components/CursorTrail.jsx';
 
 // Get the base path for GitHub Pages support
 const getBasename = () => {
-  // In production GitHub Pages, use /portfolio/
-  // In local dev or other deployments, use /
+  // Returns the base URL configured in vite.config.js
+  // In production GitHub Pages, this will be the repository path (e.g., /portfolio/)
+  // In local dev or other deployments, this will be /
   return import.meta.env.BASE_URL || '/';
 };
 

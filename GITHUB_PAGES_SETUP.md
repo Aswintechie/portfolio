@@ -11,8 +11,10 @@ The portfolio is configured to support both GitHub Pages deployment and other de
 ### 1. Vite Configuration
 
 The `vite.config.js` is configured to use a different base path depending on the deployment target:
-- **GitHub Pages**: `/portfolio/` (when `GITHUB_PAGES=true`)
+- **GitHub Pages**: `/<repo-name>/` (when `GITHUB_PAGES=true`, defaults to `/portfolio/`)
 - **Other deployments**: `/` (default)
+
+You can customize the repository name by setting the `REPO_NAME` environment variable.
 
 ### 2. React Router Configuration
 
@@ -49,8 +51,11 @@ You can also trigger a deployment manually:
 To test the GitHub Pages build locally:
 
 ```bash
-# Build with GitHub Pages configuration
+# Build with GitHub Pages configuration (using default 'portfolio' repo name)
 GITHUB_PAGES=true npm run build
+
+# Or specify a custom repository name
+GITHUB_PAGES=true REPO_NAME=my-repo npm run build
 
 # Preview the build
 npm run preview
