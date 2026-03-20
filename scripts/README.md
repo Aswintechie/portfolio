@@ -45,9 +45,12 @@ You can manually trigger the cleanup:
 ### Required Environment Variables
 
 - `CLOUDFLARE_API_TOKEN`: Cloudflare API token with Workers Scripts Edit permission
-- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
 - `GITHUB_TOKEN`: GitHub token with `pull-requests: read` permission
 - `GITHUB_REPOSITORY`: Repository in format `owner/repo`
+
+### Optional Environment Variables
+
+- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID (auto-detected from API token if not provided)
 
 ### Worker Naming Pattern
 
@@ -83,23 +86,17 @@ This simulates the cleanup process with mock data to verify correctness.
 
 ## Troubleshooting
 
-### Script exits with "CLOUDFLARE_ACCOUNT_ID not set"
-
-This is expected behavior when the secret is not configured. The script will skip cleanup gracefully.
-
-**Solution**: Add `CLOUDFLARE_ACCOUNT_ID` to your GitHub repository secrets.
-
 ### "Failed to list workers" error
 
 **Possible causes**:
 - Invalid or expired Cloudflare API token
 - Insufficient API token permissions
-- Incorrect Cloudflare Account ID
+- Failed to auto-detect Account ID
 
 **Solution**: 
 1. Verify your `CLOUDFLARE_API_TOKEN` in GitHub secrets
 2. Ensure the token has Workers Scripts Edit permission
-3. Verify your `CLOUDFLARE_ACCOUNT_ID` is correct
+3. If auto-detection fails, manually add `CLOUDFLARE_ACCOUNT_ID` to GitHub secrets
 
 ### "Failed to delete worker" error
 
@@ -119,7 +116,7 @@ This is expected behavior when the secret is not configured. The script will ski
 
 **Solution**:
 1. Check workflow logs for details
-2. Verify CLOUDFLARE_ACCOUNT_ID is set
+2. The script will auto-detect CLOUDFLARE_ACCOUNT_ID from your API token
 3. Confirm worker names match the expected pattern
 
 ## Maintenance

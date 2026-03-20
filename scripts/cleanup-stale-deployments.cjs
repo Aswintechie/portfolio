@@ -8,16 +8,18 @@
  * 
  * Environment Variables Required:
  * - CLOUDFLARE_API_TOKEN: Cloudflare API token with Workers Scripts Edit permission
- * - CLOUDFLARE_ACCOUNT_ID: Cloudflare account ID
  * - GITHUB_TOKEN: GitHub token for API access (provided by GitHub Actions)
  * - GITHUB_REPOSITORY: Repository in format 'owner/repo' (provided by GitHub Actions)
+ * 
+ * Environment Variables Optional:
+ * - CLOUDFLARE_ACCOUNT_ID: Cloudflare account ID (auto-detected if not provided)
  */
 
 const https = require('https');
 
 // Configuration
 const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
-const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+let CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
 
@@ -29,11 +31,6 @@ const PR_WORKER_PATTERN = /^aswin-portfolio-pr-(\d+)$/;
 if (!CLOUDFLARE_API_TOKEN) {
   console.error('❌ Error: CLOUDFLARE_API_TOKEN environment variable is required');
   process.exit(1);
-}
-
-if (!CLOUDFLARE_ACCOUNT_ID) {
-  console.log('⚠️  CLOUDFLARE_ACCOUNT_ID not set, skipping stale deployment cleanup');
-  process.exit(0);
 }
 
 if (!GITHUB_TOKEN) {
@@ -77,6 +74,34 @@ function makeRequest(options, data = null) {
     
     req.end();
   });
+}
+
+/**
+ * Get Cloudflare account ID from API token
+ */
+async function getCloudflareAccountId() {
+  const options = {
+    hostname: 'api.cloudflare.com',
+    path: '/client/v4/accounts',
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+  };
+  
+  const response = await makeRequest(options);
+  const accounts = response.result || [];
+  
+  if (accounts.length === 0) {
+    throw new Error('No Cloudflare accounts found for this API token');
+  }
+  
+  if (accounts.length > 1) {
+    console.log(`⚠️  Multiple accounts found (${accounts.length}), using first account: ${accounts[0].name}`);
+  }
+  
+  return accounts[0].id;
 }
 
 /**
@@ -144,6 +169,13 @@ async function isPROpen(prNumber) {
  */
 async function cleanupStaleDeployments() {
   try {
+    // Auto-detect account ID if not provided
+    if (!CLOUDFLARE_ACCOUNT_ID) {
+      console.log('🔍 CLOUDFLARE_ACCOUNT_ID not set, auto-detecting from API token...');
+      CLOUDFLARE_ACCOUNT_ID = await getCloudflareAccountId();
+      console.log(`✅ Detected Cloudflare Account ID: ${CLOUDFLARE_ACCOUNT_ID}`);
+    }
+    
     console.log('🔍 Fetching all workers from Cloudflare...');
     const workers = await listCloudflareWorkers();
     console.log(`Found ${workers.length} total workers`);

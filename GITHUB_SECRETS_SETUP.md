@@ -27,7 +27,7 @@ You need to add the following secrets to your GitHub repository:
   6. Click **Continue to summary** and **Create Token**
   7. Copy the token and add it to GitHub secrets
 
-#### `CLOUDFLARE_ACCOUNT_ID`
+#### `CLOUDFLARE_ACCOUNT_ID` (Optional)
 - **Description**: Your Cloudflare Account ID for cleanup of stale deployments
 - **How to get it**:
   1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
@@ -35,7 +35,7 @@ You need to add the following secrets to your GitHub repository:
   3. Your Account ID is displayed on the right side of the page
   4. Copy the Account ID (format: `1234567890abcdef1234567890abcdef`)
   5. Add it to GitHub secrets
-- **Note**: This is required for the stale deployment cleanup workflow
+- **Note**: This is optional. If not provided, the cleanup script will auto-detect it from your API token
 
 #### `TELEGRAM_BOT_TOKEN`
 - **Description**: Your Telegram bot token
