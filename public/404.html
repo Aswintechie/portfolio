@@ -23,6 +23,7 @@
       // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
+      // For this deployment (GitHub Project Pages), we use 1 to preserve the repo name.
       var pathSegmentsToKeep = 1;
 
       var l = window.location;

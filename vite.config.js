@@ -10,9 +10,13 @@ if (isGitHubPages) {
   let repoNameFromGitHub;
 
   if (process.env.GITHUB_REPOSITORY) {
-    const parts = process.env.GITHUB_REPOSITORY.split('/');
-    if (parts.length === 2) {
-      repoNameFromGitHub = parts[1];
+    // Validate and parse GITHUB_REPOSITORY format (should be 'owner/repo')
+    const ghRepo = process.env.GITHUB_REPOSITORY.trim();
+    if (ghRepo && ghRepo.includes('/')) {
+      const parts = ghRepo.split('/');
+      if (parts.length === 2 && parts[1]) {
+        repoNameFromGitHub = parts[1];
+      }
     }
   }
 
