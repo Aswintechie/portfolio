@@ -36,7 +36,6 @@ export const usePageTransitions = () => {
         'experience',
         'skills',
         'projects',
-        'personal-projects',
         'technologies',
         'contact',
       ];
@@ -86,7 +85,6 @@ export const usePageTransitions = () => {
             'experience',
             'skills',
             'projects',
-            'personal-projects',
             'technologies',
             'contact',
           ];
@@ -125,7 +123,6 @@ export const usePageTransitions = () => {
       'experience',
       'skills',
       'projects',
-      'personal-projects',
       'technologies',
       'contact',
     ];
@@ -204,7 +201,6 @@ export const usePageTransitions = () => {
         'experience',
         'skills',
         'projects',
-        'personal-projects',
         'technologies',
         'contact',
       ];

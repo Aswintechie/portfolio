@@ -48,7 +48,7 @@ window.addEventListener('scroll', () => {
 
 // Dynamic Year Calculation
 function calculateExperience() {
-  const startDate = new Date('2023-06-01'); // June 2023
+  const startDate = new Date('2023-01-06');
   const currentDate = new Date();
 
   // Calculate the difference in years

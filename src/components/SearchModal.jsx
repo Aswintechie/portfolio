@@ -19,11 +19,6 @@ const SearchModal = ({ isOpen, onClose }) => {
     { name: 'Experience', href: '#experience', description: 'View my professional experience' },
     { name: 'Skills', href: '#skills', description: 'Explore my technical skills' },
     { name: 'Projects', href: '#projects', description: 'Check out my software projects' },
-    {
-      name: 'Infrastructure',
-      href: '#personal-projects',
-      description: 'See my personal infrastructure projects',
-    },
     { name: 'Contact', href: '#contact', description: 'Get in touch with me' },
   ];
 

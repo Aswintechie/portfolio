@@ -10,7 +10,6 @@ export { default as AboutSection } from './AboutSection.jsx';
 export { default as ExperienceSection } from './ExperienceSection.jsx';
 export { default as SkillsSection } from './SkillsSection.jsx';
 export { default as ProjectsSection } from './ProjectsSection.jsx';
-export { default as PersonalProjectsSection } from './PersonalProjectsSection.jsx';
 export { default as TechnologiesSection } from './TechnologiesSection.jsx';
 export { default as ContactSection } from './ContactSection.jsx';
 export { default as Footer } from './Footer.jsx';

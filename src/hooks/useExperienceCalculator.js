@@ -12,7 +12,7 @@ export const useExperienceCalculator = () => {
 
   useEffect(() => {
     const calculateExperience = () => {
-      const startDate = new Date('2023-06-01');
+      const startDate = new Date('2023-01-06');
       const currentDate = new Date();
 
       const diffInMonths =

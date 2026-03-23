@@ -17,7 +17,6 @@ import {
   ExperienceSection,
   SkillsSection,
   ProjectsSection,
-  PersonalProjectsSection,
   TechnologiesSection,
   ContactSection,
   Footer,
@@ -57,10 +56,6 @@ const HomePage = () => {
 
       <SectionErrorBoundary sectionName='Projects'>
         <ProjectsSection />
-      </SectionErrorBoundary>
-
-      <SectionErrorBoundary sectionName='Personal Projects'>
-        <PersonalProjectsSection />
       </SectionErrorBoundary>
 
       <SectionErrorBoundary sectionName='Technologies'>
