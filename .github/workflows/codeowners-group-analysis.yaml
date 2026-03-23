@@ -295,7 +295,6 @@ jobs:
             echo "pr-exists=true" >> $GITHUB_OUTPUT
           fi
 
-
   bypass-approval:
     needs: [parse-comment, find-pr]
     if: needs.parse-comment.outputs.is-bypass-command == 'true' && needs.parse-comment.outputs.bypass-authorized == 'true' && needs.find-pr.outputs.pr-exists == 'true'

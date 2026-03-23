@@ -85,7 +85,7 @@ jobs:
         if: steps.check-mention.outputs.has_mention == 'true'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.CODEOWNERS_PING_BOT }}
-          SLACK_CHANNEL_ID: "C09HT5VSXRB"
+          SLACK_CHANNEL_ID: 'C09HT5VSXRB'
           GH_TOKEN: ${{ github.token }}
         run: |
           EVENT_NAME="${{ github.event_name }}"

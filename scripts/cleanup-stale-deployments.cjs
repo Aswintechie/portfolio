@@ -2,15 +2,15 @@
 
 /**
  * Cleanup Stale Cloudflare Worker Deployments
- * 
+ *
  * This script identifies and deletes stale PR preview deployments from Cloudflare Workers.
  * A deployment is considered stale if its corresponding GitHub PR is closed or doesn't exist.
- * 
+ *
  * Environment Variables Required:
  * - CLOUDFLARE_API_TOKEN: Cloudflare API token with Workers Scripts Edit permission
  * - GITHUB_TOKEN: GitHub token for API access (provided by GitHub Actions)
  * - GITHUB_REPOSITORY: Repository in format 'owner/repo' (provided by GitHub Actions)
- * 
+ *
  * Environment Variables Optional:
  * - CLOUDFLARE_ACCOUNT_ID: Cloudflare account ID (auto-detected if not provided)
  */
@@ -50,9 +50,9 @@ const [owner, repo] = GITHUB_REPOSITORY.split('/');
  */
 function makeRequest(options, data = null) {
   return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
+    const req = https.request(options, res => {
       let body = '';
-      res.on('data', (chunk) => body += chunk);
+      res.on('data', chunk => (body += chunk));
       res.on('end', () => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           try {
@@ -65,13 +65,13 @@ function makeRequest(options, data = null) {
         }
       });
     });
-    
+
     req.on('error', reject);
-    
+
     if (data) {
       req.write(JSON.stringify(data));
     }
-    
+
     req.end();
   });
 }
@@ -85,22 +85,24 @@ async function getCloudflareAccountId() {
     path: '/client/v4/accounts',
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+      Authorization: `Bearer ${CLOUDFLARE_API_TOKEN}`,
       'Content-Type': 'application/json',
     },
   };
-  
+
   const response = await makeRequest(options);
   const accounts = response.result || [];
-  
+
   if (accounts.length === 0) {
     throw new Error('No Cloudflare accounts found for this API token');
   }
-  
+
   if (accounts.length > 1) {
-    console.log(`⚠️  Multiple accounts found (${accounts.length}), using first account: ${accounts[0].name}`);
+    console.log(
+      `⚠️  Multiple accounts found (${accounts.length}), using first account: ${accounts[0].name}`
+    );
   }
-  
+
   return accounts[0].id;
 }
 
@@ -113,11 +115,11 @@ async function listCloudflareWorkers() {
     path: `/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/scripts`,
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+      Authorization: `Bearer ${CLOUDFLARE_API_TOKEN}`,
       'Content-Type': 'application/json',
     },
   };
-  
+
   const response = await makeRequest(options);
   return response.result || [];
 }
@@ -131,11 +133,11 @@ async function deleteWorker(workerName) {
     path: `/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/scripts/${workerName}`,
     method: 'DELETE',
     headers: {
-      'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+      Authorization: `Bearer ${CLOUDFLARE_API_TOKEN}`,
       'Content-Type': 'application/json',
     },
   };
-  
+
   await makeRequest(options);
   return true;
 }
@@ -149,12 +151,12 @@ async function isPROpen(prNumber) {
     path: `/repos/${owner}/${repo}/pulls/${prNumber}`,
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${GITHUB_TOKEN}`,
-      'Accept': 'application/vnd.github.v3+json',
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      Accept: 'application/vnd.github.v3+json',
       'User-Agent': 'stale-deployment-cleanup',
     },
   };
-  
+
   try {
     const pr = await makeRequest(options);
     return pr.state === 'open';
@@ -175,46 +177,44 @@ async function cleanupStaleDeployments() {
       CLOUDFLARE_ACCOUNT_ID = await getCloudflareAccountId();
       console.log(`✅ Detected Cloudflare Account ID: ${CLOUDFLARE_ACCOUNT_ID}`);
     }
-    
+
     console.log('🔍 Fetching all workers from Cloudflare...');
     const workers = await listCloudflareWorkers();
     console.log(`Found ${workers.length} total workers`);
-    
+
     // Filter workers that match PR pattern
-    const prWorkers = workers.filter(worker => 
-      worker.id && PR_WORKER_PATTERN.test(worker.id)
-    );
-    
+    const prWorkers = workers.filter(worker => worker.id && PR_WORKER_PATTERN.test(worker.id));
+
     console.log(`Found ${prWorkers.length} PR preview deployments`);
-    
+
     if (prWorkers.length === 0) {
       console.log('✅ No PR preview deployments found');
       return;
     }
-    
+
     let deletedCount = 0;
     let skippedCount = 0;
     const deletedWorkers = [];
     const skippedWorkers = [];
-    
+
     for (const worker of prWorkers) {
       const workerName = worker.id;
       const prMatch = workerName.match(PR_WORKER_PATTERN);
-      
+
       if (!prMatch) {
         console.log(`Skipping ${workerName} - doesn't match expected pattern`);
         continue;
       }
-      
+
       const prNumber = parseInt(prMatch[1], 10);
       console.log(`\nChecking ${workerName} (PR #${prNumber})...`);
-      
+
       const isOpen = await isPROpen(prNumber);
-      
+
       if (!isOpen) {
         console.log(`❌ PR #${prNumber} is closed or doesn't exist`);
         console.log(`🗑️  Deleting worker: ${workerName}...`);
-        
+
         try {
           await deleteWorker(workerName);
           console.log(`✅ Successfully deleted ${workerName}`);
@@ -229,32 +229,31 @@ async function cleanupStaleDeployments() {
         skippedWorkers.push({ workerName, prNumber });
       }
     }
-    
+
     console.log('\n📊 Cleanup Summary:');
     console.log(`Total PR deployments found: ${prWorkers.length}`);
     console.log(`Deleted stale deployments: ${deletedCount}`);
     console.log(`Active deployments kept: ${skippedCount}`);
-    
+
     if (deletedWorkers.length > 0) {
       console.log('\n🗑️  Deleted deployments:');
       deletedWorkers.forEach(({ workerName, prNumber }) => {
         console.log(`  - ${workerName} (PR #${prNumber})`);
       });
     }
-    
+
     if (skippedWorkers.length > 0) {
       console.log('\n✅ Active deployments (kept):');
       skippedWorkers.forEach(({ workerName, prNumber }) => {
         console.log(`  - ${workerName} (PR #${prNumber})`);
       });
     }
-    
+
     if (deletedCount > 0) {
       console.log(`\n✨ Cleanup completed! ${deletedCount} stale deployment(s) removed.`);
     } else {
       console.log('\n✅ No stale deployments found. All deployments are up to date!');
     }
-    
   } catch (error) {
     console.error('❌ Error during cleanup:', error.message);
     process.exit(1);
