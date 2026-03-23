@@ -20,6 +20,8 @@ A modern, responsive portfolio website built with React, Vite, and Tailwind CSS.
 - **Custom 404 Page**: Beautiful error page with helpful navigation
 - **Loading States**: Smooth loading animations and transitions
 - **Bundle Analysis**: Tools for performance optimization
+- **PR Preview Deployments**: Automatic preview deployments for pull requests
+- **Stale Deployment Cleanup**: Automatic cleanup of preview deployments from closed PRs
 
 ## 🛠️ Technology Stack
 
