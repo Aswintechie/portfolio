@@ -32,6 +32,14 @@ import { usePageLoading } from './hooks';
 import ScrollProgress from './components/ScrollProgress.jsx';
 import CursorTrail from './components/CursorTrail.jsx';
 
+// Get the base path for GitHub Pages support
+const getBasename = () => {
+  // Returns the base URL configured in vite.config.js
+  // In production GitHub Pages, this will be the repository path (e.g., /portfolio/)
+  // In local dev or other deployments, this will be /
+  return import.meta.env.BASE_URL || '/';
+};
+
 // Home Page Component (Main Portfolio)
 const HomePage = () => {
   return (
@@ -137,7 +145,7 @@ const App = () => {
     <>
       <GlobalErrorHandler>
         <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
-          <Router>
+          <Router basename={getBasename()}>
             {/* Beautiful Page Loader - Only on initial load */}
             {shouldShowLoading && (
               <PageLoader
