@@ -36,7 +36,7 @@ const ProjectCard = ({ project, index, inView }) => {
       className='group relative'
     >
       {/* Optimized Glassmorphism Card with Enhanced Gradient Animation */}
-      <div className='relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/30 dark:border-gray-700/50 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden'>
+      <div className='relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden'>
         {/* Glare effect */}
         <div style={glareElementStyle} />
 
@@ -61,7 +61,7 @@ const ProjectCard = ({ project, index, inView }) => {
               </div>
             </div>
 
-            <h3 className='text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3 text-center lg:text-left group-hover:text-secondary-600 dark:group-hover:text-secondary-400 transition-colors duration-300'>
+            <h3 className='text-2xl lg:text-3xl font-bold text-gray-900 mb-3 text-center lg:text-left group-hover:text-secondary-600 transition-colors duration-300'>
               {project.title}
             </h3>
 
@@ -96,13 +96,13 @@ const ProjectCard = ({ project, index, inView }) => {
 
           {/* Project Details */}
           <div className='lg:col-span-3'>
-            <p className='text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-8 font-medium'>
+            <p className='text-gray-700 text-lg leading-relaxed mb-8 font-medium'>
               {project.description}
             </p>
 
             {/* Technologies */}
             <div className='mb-8'>
-              <h4 className='text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center'>
+              <h4 className='text-xl font-bold text-gray-900 mb-4 flex items-center'>
                 <div className='p-2 bg-gradient-to-br from-secondary-500 to-accent-500 rounded-lg mr-3'>
                   <Code size={18} className='text-white' />
                 </div>
@@ -125,7 +125,7 @@ const ProjectCard = ({ project, index, inView }) => {
 
             {/* Key Features */}
             <div>
-              <h4 className='text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center'>
+              <h4 className='text-xl font-bold text-gray-900 mb-4 flex items-center'>
                 <div className='p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg mr-3'>
                   <Star size={18} className='text-white' />
                 </div>
@@ -141,12 +141,12 @@ const ProjectCard = ({ project, index, inView }) => {
                       duration: 0.3,
                       delay: index * 0.05 + featureIndex * 0.05,
                     }}
-                    className='flex items-center space-x-3 p-3 bg-gradient-to-r from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 rounded-xl border border-gray-100 dark:border-gray-600 hover:shadow-sm transition-shadow duration-200'
+                    className='flex items-center space-x-3 p-3 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-sm transition-shadow duration-200'
                   >
                     <div className='p-1 bg-gradient-to-br from-accent-500 to-emerald-500 rounded-full'>
                       <GitPullRequest size={14} className='text-white' />
                     </div>
-                    <span className='text-gray-700 dark:text-gray-300 font-medium'>{feature}</span>
+                    <span className='text-gray-700 font-medium'>{feature}</span>
                   </motion.div>
                 ))}
               </div>
@@ -180,7 +180,7 @@ const ProjectsSection = () => {
       ref={ref}
     >
       {/* Modern Background */}
-      <div className='absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'></div>
+      <div className='absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100'></div>
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.05),transparent_50%)]'></div>
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,119,198,0.05),transparent_50%)]'></div>
 
@@ -203,12 +203,12 @@ const ProjectsSection = () => {
             </span>
           </motion.div>
 
-          <h2 className='text-5xl lg:text-6xl font-black mb-8 text-gray-900 dark:text-white leading-tight'>
-            <span className='bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 dark:from-emerald-400 dark:via-teal-400 dark:to-blue-400 bg-clip-text text-transparent'>
+          <h2 className='text-5xl lg:text-6xl font-black mb-8 text-gray-900 leading-tight'>
+            <span className='bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 bg-clip-text text-transparent'>
               Featured Projects
             </span>
           </h2>
-          <p className='text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed'>
+          <p className='text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed'>
             Innovative solutions powered by machine learning and cutting-edge technology
           </p>
         </motion.div>

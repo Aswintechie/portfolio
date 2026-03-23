@@ -96,23 +96,6 @@ const AnimatedMeshGradient = () => {
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_10%_10%,rgba(34,197,94,0.2)_0%,transparent_35%)]' />
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_90%_90%,rgba(251,146,60,0.22)_0%,transparent_45%)]' />
       </div>
-
-      {/* Scanline effect */}
-      <motion.div
-        className='absolute inset-0'
-        style={{
-          backgroundImage: 'linear-gradient(0deg, transparent 50%, rgba(255,255,255,0.03) 50%)',
-          backgroundSize: '100% 4px',
-        }}
-        animate={{
-          y: [0, 1000],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      />
     </div>
   );
 };

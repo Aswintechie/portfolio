@@ -12,8 +12,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend only when API key is present (local dev can run without it)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Security middleware
 app.use(helmet());
@@ -81,6 +81,12 @@ app.post('/api/contact', limiter, contactValidation, async (req, res) => {
     }
 
     const { name, email, message } = req.body;
+
+    if (!resend) {
+      return res.status(503).json({
+        error: 'Email service is not configured. Set RESEND_API_KEY to enable contact form.',
+      });
+    }
 
     // Send notification email to admin
     const adminEmailResult = await resend.emails.send({

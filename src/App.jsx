@@ -32,8 +32,6 @@ import { PageLoader } from './components/PageTransitions';
 import { usePageLoading } from './hooks';
 import ScrollProgress from './components/ScrollProgress.jsx';
 import CursorTrail from './components/CursorTrail.jsx';
-import ThemeToggle from './components/ThemeToggle.jsx';
-import { ThemeProvider } from './context/ThemeContext.jsx';
 
 // Home Page Component (Main Portfolio)
 const HomePage = () => {
@@ -83,15 +81,12 @@ const HomePage = () => {
 // Layout Component (Wraps all pages with navigation)
 const Layout = ({ children }) => {
   return (
-    <div className='min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300'>
+    <div className='min-h-screen bg-white'>
       {/* Cursor Trail Effect */}
       <CursorTrail />
 
       {/* Scroll Progress Indicator */}
       <ScrollProgress />
-
-      {/* Theme Toggle */}
-      <ThemeToggle />
 
       {/* Navigation */}
       <ErrorBoundary level='component' fallbackComponent='Navigation'>
@@ -144,7 +139,7 @@ const App = () => {
   }, [completeLoading, isInitialLoad]);
 
   return (
-    <ThemeProvider>
+    <>
       <GlobalErrorHandler>
         <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
           <Router>
@@ -190,7 +185,7 @@ const App = () => {
           </Router>
         </ErrorBoundary>
       </GlobalErrorHandler>
-    </ThemeProvider>
+    </>
   );
 };
 
