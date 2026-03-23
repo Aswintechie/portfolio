@@ -23,7 +23,7 @@ jobs:
         run: |
           # Get the list of changed files in this PR
           CHANGED_FILES=$(gh pr view ${{ github.event.pull_request.number }} --json files --jq '.files[].path')
-          
+
           # Use proper multiline output format for GitHub Actions
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
