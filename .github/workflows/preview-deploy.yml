@@ -49,8 +49,8 @@ jobs:
 
           [vars]
           NODE_ENV = "preview"
-          WEBHOOK_URL = "https://aswin-portfolio-pr-${{ github.event.number }}.aswin8681879422.workers.dev/api/telegram-webhook"
-          FRONTEND_URL = "https://aswin-portfolio-pr-${{ github.event.number }}.aswin8681879422.workers.dev"
+          WEBHOOK_URL = "https://aswin-portfolio-pr-${{ github.event.number }}.aswincloud.workers.dev/api/telegram-webhook"
+          FRONTEND_URL = "https://aswin-portfolio-pr-${{ github.event.number }}.aswincloud.workers.dev"
 
           [assets]
           directory = "./dist"
@@ -106,10 +106,10 @@ jobs:
       - name: 🔍 Verify deployment URL
         run: |
           WORKER_NAME="aswin-portfolio-pr-${{ github.event.number }}"
-          echo "Expected URL: https://${WORKER_NAME}.aswin8681879422.workers.dev"
+          echo "Expected URL: https://${WORKER_NAME}.aswincloud.workers.dev"
           echo "Testing URL accessibility..."
           sleep 10  # Wait for deployment to be ready
-          curl -I "https://${WORKER_NAME}.aswin8681879422.workers.dev" || echo "URL not immediately accessible - this is normal for new deployments"
+          curl -I "https://${WORKER_NAME}.aswincloud.workers.dev" || echo "URL not immediately accessible - this is normal for new deployments"
 
       - name: 📝 Comment on PR with preview URL
         uses: actions/github-script@v7
@@ -117,7 +117,7 @@ jobs:
           script: |
             const prNumber = context.issue.number;
             const workerName = `aswin-portfolio-pr-${prNumber}`;
-            const previewUrl = `https://${workerName}.aswin8681879422.workers.dev`;
+            const previewUrl = `https://${workerName}.aswincloud.workers.dev`;
 
             // Check if preview comment already exists
             const comments = await github.rest.issues.listComments({
@@ -231,7 +231,7 @@ jobs:
 
             **Removed:**
             - Worker: \`aswin-portfolio-pr-${prNumber}\`
-            - Preview URL: \`https://aswin-portfolio-pr-${prNumber}.aswin8681879422.workers.dev\`
+            - Preview URL: \`https://aswin-portfolio-pr-${prNumber}.aswincloud.workers.dev\`
 
             Thank you for your contribution! 🙏`;
 

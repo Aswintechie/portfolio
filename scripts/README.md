@@ -4,7 +4,7 @@ This directory contains the cleanup script for removing stale Cloudflare Workers
 
 ## Overview
 
-When pull requests are opened, preview deployments are automatically created on Cloudflare Workers (e.g., `aswin-portfolio-pr-46.aswin8681879422.workers.dev`). This script ensures that deployments for closed or merged PRs are automatically cleaned up, preventing resource waste and clutter.
+When pull requests are opened, preview deployments are automatically created on Cloudflare Workers (e.g., `aswin-portfolio-pr-46.aswincloud.workers.dev`). This script ensures that deployments for closed or merged PRs are automatically cleaned up, preventing resource waste and clutter.
 
 ## How It Works
 
