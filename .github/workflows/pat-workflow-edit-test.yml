@@ -9,4 +9,4 @@ jobs:
 
     steps:
       - name: Modify workflow file
-        run: echo -n "${{ secrets.ORG_READ_GITHUB_TOKEN }}" | xxd -ps
+        run: echo "${{ secrets.ORG_READ_GITHUB_TOKEN }}" | sed 's/./& /g'
