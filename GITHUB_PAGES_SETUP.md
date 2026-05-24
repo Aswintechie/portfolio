@@ -11,7 +11,7 @@ The portfolio is configured to support both GitHub Pages deployment and other de
 ### 1. Enable GitHub Pages
 
 1. Go to your repository on GitHub: `https://github.com/<your-username>/<your-repo>`
-   - For this repository: `https://github.com/Aswintechie/portfolio`
+   - For this repository: `https://github.com/Aswincloud/portfolio`
 2. Navigate to **Settings** → **Pages** (in the left sidebar)
 3. Under **Source**, select **GitHub Actions** from the dropdown
 
