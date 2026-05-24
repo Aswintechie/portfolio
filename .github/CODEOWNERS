@@ -2,33 +2,33 @@
 # This file defines who owns which parts of the codebase
 
 # Global ownership - Aswin owns everything by default
-* @Aswin-coder @Aswinmcw @Aswintechie/admins
+* @Aswin-coder @Aswinmcw @Aswincloud/admins
 
 # Frontend specific files
-/src/ @Aswin-coder @Aswinmcw @Aswintechie/admins
-/public/ @Aswin-coder @Aswinmcw @Aswintechie/admins
-*.html @Aswin-coder @Aswinmcw @Aswintechie/admins
-*.css @Aswin-coder @Aswinmcw @Aswintechie/admins
-*.js @Aswin-coder @Aswintechie/admins
-*.jsx @Aswin-coder @Aswinmcw @Aswintechie/admins
+/src/ @Aswin-coder @Aswinmcw @Aswincloud/admins
+/public/ @Aswin-coder @Aswinmcw @Aswincloud/admins
+*.html @Aswin-coder @Aswinmcw @Aswincloud/admins
+*.css @Aswin-coder @Aswinmcw @Aswincloud/admins
+*.js @Aswin-coder @Aswincloud/admins
+*.jsx @Aswin-coder @Aswinmcw @Aswincloud/admins
 
 # Backend/Server files
-/server/ @Aswin-coder @Aswinmcw @Aswintechie/admins
-/scripts/ @Aswin-coder @Aswinmcw @Aswintechie/admins
+/server/ @Aswin-coder @Aswinmcw @Aswincloud/admins
+/scripts/ @Aswin-coder @Aswinmcw @Aswincloud/admins
 
 # Configuration files
-*.json @Aswin-coder @Aswinmcw @Aswintechie/admins
-*.config.js @Aswin-coder @Aswinmcw @Aswintechie/admins
-*.config.ts @Aswin-coder @Aswinmcw @Aswintechie/admins
-.env* @Aswin-coder @Aswinmcw @Aswintechie/admins
-wrangler.toml @Aswin-coder @Aswinmcw @Aswintechie/admins
+*.json @Aswin-coder @Aswinmcw @Aswincloud/admins
+*.config.js @Aswin-coder @Aswinmcw @Aswincloud/admins
+*.config.ts @Aswin-coder @Aswinmcw @Aswincloud/admins
+.env* @Aswin-coder @Aswinmcw @Aswincloud/admins
+wrangler.toml @Aswin-coder @Aswinmcw @Aswincloud/admins
 
 # GitHub Actions and CI/CD
-/.github/ @Aswin-coder @Aswinmcw @Aswintechie/admins
+/.github/ @Aswin-coder @Aswinmcw @Aswincloud/admins
 
 # Documentation
-*.md @Aswin-coder @Aswinmcw @Aswintechie/admins
-/docs/ @Aswin-coder @Aswinmcw @Aswintechie/admins
+*.md @Aswin-coder @Aswinmcw @Aswincloud/admins
+/docs/ @Aswin-coder @Aswinmcw @Aswincloud/admins
 
 # Build and deployment
 /dist/ @Aswin-coder @Aswinmcw
