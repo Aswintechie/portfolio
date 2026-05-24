@@ -12,7 +12,7 @@ This document explains the development workflow, tools, and best practices for t
 ### Initial Setup
 ```bash
 # Clone the repository
-git clone https://github.com/Aswintechie/portfolio.git
+git clone https://github.com/Aswincloud/portfolio.git
 cd portfolio
 
 # Install dependencies
