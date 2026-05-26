@@ -70,25 +70,25 @@ const HomePage = () => {
   );
 };
 
-const CHAT_ELEMENT_IDS = ['openChat', 'chatModal', 'chatModalOverlay'];
 const LEGAL_ROUTES = ['/privacy', '/terms'];
 
+// Chatwoot SDK is loaded async from index.html; if the user lands on /privacy
+// before $chatwoot is ready, listen for chatwoot:ready and apply once.
 const useChatVisibility = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const hide = LEGAL_ROUTES.includes(pathname);
-    CHAT_ELEMENT_IDS.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      if (hide) {
-        el.dataset.prevDisplay = el.style.display;
-        el.style.display = 'none';
-      } else if ('prevDisplay' in el.dataset) {
-        el.style.display = el.dataset.prevDisplay;
-        delete el.dataset.prevDisplay;
-      }
-    });
+    const apply = () => {
+      if (!window.$chatwoot) return false;
+      window.$chatwoot.toggleBubbleVisibility(LEGAL_ROUTES.includes(pathname) ? 'hide' : 'show');
+      return true;
+    };
+
+    if (apply()) return undefined;
+
+    const onReady = () => apply();
+    window.addEventListener('chatwoot:ready', onReady);
+    return () => window.removeEventListener('chatwoot:ready', onReady);
   }, [pathname]);
 };
 
