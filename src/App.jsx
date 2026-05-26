@@ -72,16 +72,25 @@ const HomePage = () => {
 
 const LEGAL_ROUTES = ['/privacy', '/terms'];
 
-// Chatwoot SDK is loaded async from index.html; if the user lands on /privacy
-// before $chatwoot is ready, listen for chatwoot:ready and apply once.
+// Chatwoot SDK is loaded async from index.html. There's a window where
+// window.$chatwoot exists but the bubble DOM hasn't been created yet — calling
+// toggleBubbleVisibility there throws on null.classList inside the SDK. So we
+// gate on both the global AND the bubble element, and swallow any race that
+// slips through with try/catch.
 const useChatVisibility = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
     const apply = () => {
       if (!window.$chatwoot) return false;
-      window.$chatwoot.toggleBubbleVisibility(LEGAL_ROUTES.includes(pathname) ? 'hide' : 'show');
-      return true;
+      const bubble = document.querySelector('.woot-widget-bubble, #cw-bubble-holder');
+      if (!bubble) return false;
+      try {
+        window.$chatwoot.toggleBubbleVisibility(LEGAL_ROUTES.includes(pathname) ? 'hide' : 'show');
+        return true;
+      } catch {
+        return false;
+      }
     };
 
     if (apply()) return undefined;
