@@ -70,7 +70,6 @@ const Navigation = React.memo(function Navigation() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        // Use solid background on non-home pages or when scrolled
         !isHomePage || scrolled
           ? 'bg-white/85 backdrop-blur-md shadow-lg border-b border-gray-200/20'
           : 'bg-black/5 backdrop-blur-sm'
@@ -78,31 +77,14 @@ const Navigation = React.memo(function Navigation() {
     >
       <div className='container-custom'>
         <div className='flex items-center justify-between h-16'>
-          {/* Optimized Logo */}
           <Link
             to='/'
             className={`flex items-center space-x-3 text-xl font-bold transition-all duration-200 hover:scale-105 ${
               !isHomePage || scrolled ? 'text-primary-900' : 'text-white'
             }`}
           >
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className='relative'
-            >
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
               <Code size={28} className='text-secondary-500' />
-              <motion.div
-                className='absolute -top-1 -right-1 w-3 h-3 bg-accent-400 rounded-full'
-                animate={{
-                  scale: [1, 1.1, 1],
-                  opacity: [0.8, 1, 0.8],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
             </motion.div>
             <span className='bg-gradient-to-r from-secondary-500 to-accent-500 bg-clip-text text-transparent'>
               Portfolio
@@ -155,7 +137,6 @@ const Navigation = React.memo(function Navigation() {
             })}
           </div>
 
-          {/* Optimized Action Buttons */}
           <div className='flex items-center space-x-3'>
             <motion.button
               onClick={() => setIsSearchOpen(true)}

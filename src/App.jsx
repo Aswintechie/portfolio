@@ -28,21 +28,12 @@ import {
   GlobalErrorHandler,
 } from './components/ErrorBoundary/';
 import ScrollProgress from './components/ScrollProgress.jsx';
-import CursorTrail from './components/CursorTrail.jsx';
 
-// Get the base path for GitHub Pages support
-const getBasename = () => {
-  // Returns the base URL configured in vite.config.js
-  // In production GitHub Pages, this will be the repository path (e.g., /portfolio/)
-  // In local dev or other deployments, this will be /
-  return import.meta.env.BASE_URL || '/';
-};
+const getBasename = () => import.meta.env.BASE_URL || '/';
 
-// Home Page Component (Main Portfolio)
 const HomePage = () => {
   return (
     <div className='relative'>
-      {/* Above-the-fold sections - load immediately */}
       <SectionErrorBoundary sectionName='Hero'>
         <HeroSection />
       </SectionErrorBoundary>
@@ -51,7 +42,6 @@ const HomePage = () => {
         <AboutSection />
       </SectionErrorBoundary>
 
-      {/* All sections - loaded directly for smooth experience */}
       <SectionErrorBoundary sectionName='Experience'>
         <ExperienceSection />
       </SectionErrorBoundary>
@@ -79,25 +69,17 @@ const HomePage = () => {
   );
 };
 
-// Layout Component (Wraps all pages with navigation)
 const Layout = ({ children }) => {
   return (
-    <div className='min-h-screen bg-white'>
-      {/* Cursor Trail Effect */}
-      <CursorTrail />
-
-      {/* Scroll Progress Indicator */}
+    <div className='min-h-screen bg-white text-gray-900'>
       <ScrollProgress />
 
-      {/* Navigation */}
       <ErrorBoundary level='component' fallbackComponent='Navigation'>
         <Navigation />
       </ErrorBoundary>
 
-      {/* Page Content */}
       {children}
 
-      {/* Search Modal */}
       <ErrorBoundary level='component' fallbackComponent='Search Modal'>
         <SearchModal />
       </ErrorBoundary>

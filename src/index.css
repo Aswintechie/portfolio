@@ -2,23 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Enable smooth scrolling globally */
 html {
   scroll-behavior: smooth;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-/* Dark mode transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
 }
 
 /* Focus styles for better accessibility */
-*:focus {
+*:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
@@ -57,7 +46,7 @@ html {
   }
 
   body {
-    @apply font-sans text-gray-900 antialiased;
+    @apply font-sans text-gray-900 antialiased bg-white;
     overflow-x: hidden;
     min-height: 100vh;
     width: 100vw;

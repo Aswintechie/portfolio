@@ -1,6 +1,27 @@
-import { Brain, Zap, Gamepad2 } from 'lucide-react';
+import { Brain, Zap, Gamepad2, Activity } from 'lucide-react';
 
 export const featuredProjects = [
+  {
+    id: 'ttnn-eltwise-performance',
+    title: 'TTNN Eltwise Performance Tracker',
+    domain: 'ttnn-eltwise-performance.aswincloud.com',
+    description:
+      "Day-by-day performance monitoring dashboard for Tenstorrent's TT-Metal TTNN eltwise operations. Tracks performance trends across dates, correlates regressions to git commits, and surfaces improvements vs. degradations with color-coded deltas.",
+    technologies: ['React', 'Vite', 'Tailwind CSS', 'Recharts', 'Python', 'Cloudflare Workers'],
+    features: [
+      'Day-by-day performance comparison with baselines',
+      '13 granular operation category filters',
+      'Trend analysis with improvement/degradation indicators',
+      'Git commit correlation for regression triage',
+      'Automated email alerts on >20% performance changes',
+    ],
+    icon: <Activity size={48} />,
+    link: 'https://ttnn-eltwise-performance.aswincloud.com',
+    status: 'Live',
+  },
+];
+
+export const additionalProjects = [
   {
     id: 'pr-reviewer',
     title: 'PR Reviewer',
@@ -19,9 +40,6 @@ export const featuredProjects = [
     link: 'https://pr-reviewer.aswincloud.com',
     status: 'Live',
   },
-];
-
-export const additionalProjects = [
   {
     id: 'mirror-download-bot',
     title: 'Mirror Download Bot',
