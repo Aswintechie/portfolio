@@ -34,7 +34,6 @@ const CONFIG = {
     'src/main.jsx',
     'src/components/__tests__',
     'src/data/', // Data files are content, not source code
-    'server/server.js',
     'worker.js',
     'script.js',
   ],

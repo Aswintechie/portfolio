@@ -4,11 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "dev:host": "concurrently \"npm run dev:frontend:host\" \"npm run dev:backend\"",
-    "dev:frontend": "vite",
-    "dev:frontend:host": "vite --host",
-    "dev:backend": "node server/server.js",
+    "dev": "vite",
+    "dev:host": "vite --host",
     "build": "vite build",
     "build:analyze": "vite build --mode analyze",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
