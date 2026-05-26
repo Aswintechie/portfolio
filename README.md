@@ -117,6 +117,17 @@ The contact form uses MailChannels for sending emails:
 - **Auto-replies**: Sent to form submitters
 - **No SMTP setup required**: Uses Resend API
 
+## 📚 Documentation
+
+Additional setup and integration guides live in [`docs/`](./docs/):
+
+- [Development](./docs/development.md) — local dev workflow
+- [Contact form setup](./docs/contact-form-setup.md)
+- [Email setup](./docs/email-setup.md) · [Email deliverability](./docs/email-deliverability-guide.md)
+- [Telegram setup](./docs/telegram-setup.md)
+- [GitHub Pages setup](./docs/github-pages-setup.md) · [GitHub Secrets setup](./docs/github-secrets-setup.md)
+- [Enhancements / roadmap](./docs/enhancements.md)
+
 ## 🌐 Live Website
 
 Visit the live portfolio: **[www.aswincloud.com](https://www.aswincloud.com)**
