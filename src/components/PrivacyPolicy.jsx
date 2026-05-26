@@ -9,10 +9,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Section = ({ title, children }) => (
-  <section className='mt-8'>
+  <div className='mt-8'>
     <h2 className='text-xl font-semibold mb-3 text-gray-800'>{title}</h2>
     <div className='text-gray-700 leading-relaxed space-y-3'>{children}</div>
-  </section>
+  </div>
 );
 
 const PrivacyPolicy = () => (
