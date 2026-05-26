@@ -54,60 +54,22 @@ A modern, responsive portfolio website built with React, Vite, and Tailwind CSS.
    npm run build
    ```
 
-## 🚀 Automated Deployment Setup
+## 🚀 Deployment
 
-The portfolio uses GitHub Actions for automated deployment to Cloudflare Workers. Here's how to set it up:
+Deployment is fully managed by **Cloudflare Workers Builds** via the connected Git integration:
 
-### Step 1: Get Cloudflare API Token
+- **Production** — every push to `main` builds and deploys to [www.aswincloud.com](https://www.aswincloud.com).
+- **Previews** — every pull request gets a unique preview URL, posted as a PR comment and torn down on PR close.
 
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens)
-2. Click "Create Token"
-3. Use the "Edit Cloudflare Workers" template
-4. Configure:
-   - **Permissions**: Zone:Zone Settings:Read, Zone:Zone:Read, User:User Details:Read
-   - **Account resources**: Include - All accounts
-   - **Zone resources**: Include - All zones
-5. Click "Continue to summary" → "Create Token"
-6. **Copy the token** (you won't see it again!)
+Build settings (configured in the Cloudflare dashboard): `npm ci && npm run build` with `./dist` as the assets directory (see [`wrangler.toml`](./wrangler.toml)). Environment variables and secrets (`RESEND_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ADMIN_CHAT_ID`, `CONTACT_EMAIL`, `FEEDBACK_EMAIL`) are managed in the worker's Settings → Variables panel — production and preview environments can be configured independently.
 
-### Step 2: Add GitHub Secret
-
-1. Go to your GitHub repository: `https://github.com/Aswincloud/portfolio`
-2. Click **Settings** → **Secrets and variables** → **Actions**
-3. Click **New repository secret**
-4. Name: `CLOUDFLARE_API_TOKEN`
-5. Value: Paste your API token from Step 1
-6. Click **Add secret**
-
-### Step 3: Enable Actions (if needed)
-
-1. Go to **Actions** tab in your repository
-2. If prompted, click **"I understand my workflows, go ahead and enable them"**
-
-### Step 4: Test Deployment
-
-Push any change to the main branch and watch the magic happen! 🎉
+If you ever need to deploy manually:
 
 ```bash
-git add .
-git commit -m "Enable automated deployment"
-git push origin main
+npx wrangler deploy
 ```
 
-## 🔧 Manual Deployment
-
-If you prefer manual deployment:
-
-```bash
-# Build the project
-npm run build
-
-# Remove problematic _redirects file
-rm -f dist/_redirects
-
-# Deploy to Cloudflare Workers
-wrangler deploy --compatibility-date=2024-01-01
-```
+GitHub Actions runs CI only (`.github/workflows/ci.yml`): lint, format check, copyright check, tests, coverage, security audit, build.
 
 ## 📧 Email Configuration
 
@@ -125,7 +87,6 @@ Additional setup and integration guides live in [`docs/`](./docs/):
 - [Contact form setup](./docs/contact-form-setup.md)
 - [Email setup](./docs/email-setup.md) · [Email deliverability](./docs/email-deliverability-guide.md)
 - [Telegram setup](./docs/telegram-setup.md)
-- [GitHub Pages setup](./docs/github-pages-setup.md) · [GitHub Secrets setup](./docs/github-secrets-setup.md)
 - [Enhancements / roadmap](./docs/enhancements.md)
 
 ## 🌐 Live Website
