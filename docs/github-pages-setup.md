@@ -151,7 +151,7 @@ Both deployments work independently and don't interfere with each other. You can
 - `vite.config.js` - Vite configuration with base path support
 - `src/App.jsx` - React Router configuration with basename support
 - `public/.nojekyll` - Prevents GitHub Pages from ignoring certain files
-- `GITHUB_PAGES_SETUP.md` - This documentation file
+- `docs/github-pages-setup.md` - This documentation file
 
 ## Notes
 

@@ -64,7 +64,8 @@ export const usePageTransitions = () => {
     };
 
     // Detect initial section after a brief delay to ensure DOM is ready
-    setTimeout(detectInitialSection, 100);
+    const timeoutId = setTimeout(detectInitialSection, 100);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // Track scroll direction and current section as fallback

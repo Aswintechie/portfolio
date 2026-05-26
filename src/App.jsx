@@ -145,7 +145,10 @@ const App = () => {
     <>
       <GlobalErrorHandler>
         <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
-          <Router basename={getBasename()}>
+          <Router
+            basename={getBasename()}
+            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+          >
             {/* Beautiful Page Loader - Only on initial load */}
             {shouldShowLoading && (
               <PageLoader
