@@ -14,5 +14,5 @@ pattern = "www.aswincloud.com/*"
 zone_name = "aswincloud.com"
 
 [assets]
-directory = "./build"
+directory = "./dist"
 binding = "ASSETS"
