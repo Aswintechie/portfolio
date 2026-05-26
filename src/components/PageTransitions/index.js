@@ -16,4 +16,3 @@ export {
 
 export { withTransition } from './withTransition.jsx';
 export { pageTransitionVariants, staggerVariants } from './pageTransitionVariants.js';
-export { default as PageLoader } from './PageLoader.jsx';

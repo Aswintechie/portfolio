@@ -27,8 +27,6 @@ import {
   SectionErrorBoundary,
   GlobalErrorHandler,
 } from './components/ErrorBoundary/';
-import { PageLoader } from './components/PageTransitions';
-import { usePageLoading } from './hooks';
 import ScrollProgress from './components/ScrollProgress.jsx';
 import CursorTrail from './components/CursorTrail.jsx';
 
@@ -109,89 +107,41 @@ const Layout = ({ children }) => {
 
 // Main App Component with Routing
 const App = () => {
-  // Skip loading screen in test environment
-  const isTestEnvironment = import.meta.env.MODE === 'test' || import.meta.env.VITEST;
-
-  // Only show loading on initial page load, not on route changes
-  const [isInitialLoad, setIsInitialLoad] = React.useState(() => {
-    return !isTestEnvironment && !sessionStorage.getItem('hasLoadedBefore');
-  });
-
-  const { isLoading, loadingProgress, loadingStage, completeLoading } = usePageLoading();
-
-  // Only use loading screen for initial load and not in tests
-  const shouldShowLoading = !isTestEnvironment && isInitialLoad && isLoading;
-
   useEffect(() => {
     initAnalytics();
-
-    // Only show loading screen on initial load
-    if (isInitialLoad) {
-      // Auto-complete loading to show beautiful screen
-      const autoComplete = setTimeout(() => {
-        completeLoading();
-        // Mark that we've loaded before
-        sessionStorage.setItem('hasLoadedBefore', 'true');
-        setIsInitialLoad(false);
-      }, 2000); // Show beautiful loading for 2 seconds
-
-      return () => {
-        clearTimeout(autoComplete);
-      };
-    }
-  }, [completeLoading, isInitialLoad]);
+  }, []);
 
   return (
-    <>
-      <GlobalErrorHandler>
-        <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
-          <Router
-            basename={getBasename()}
-            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-          >
-            {/* Beautiful Page Loader - Only on initial load */}
-            {shouldShowLoading && (
-              <PageLoader
-                isLoading={shouldShowLoading}
-                progress={loadingProgress}
-                stage={loadingStage}
-                onComplete={() => {}}
+    <GlobalErrorHandler>
+      <ErrorBoundary level='app' fallbackComponent='Portfolio Application'>
+        <Router
+          basename={getBasename()}
+          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
+          <Layout>
+            <Routes>
+              <Route path='/' element={<HomePage />} />
+              <Route
+                path='/privacy'
+                element={
+                  <ErrorBoundary level='page' fallbackComponent='Privacy Policy'>
+                    <PrivacyPolicy />
+                  </ErrorBoundary>
+                }
               />
-            )}
-
-            {/* Main App Content with Routing */}
-            {!shouldShowLoading && (
-              <Layout>
-                <Routes>
-                  {/* Main Portfolio Page */}
-                  <Route path='/' element={<HomePage />} />
-
-                  {/* Privacy Policy Page */}
-                  <Route
-                    path='/privacy'
-                    element={
-                      <ErrorBoundary level='page' fallbackComponent='Privacy Policy'>
-                        <PrivacyPolicy />
-                      </ErrorBoundary>
-                    }
-                  />
-
-                  {/* 404 Not Found Page */}
-                  <Route
-                    path='*'
-                    element={
-                      <ErrorBoundary level='page' fallbackComponent='404 Page'>
-                        <NotFound />
-                      </ErrorBoundary>
-                    }
-                  />
-                </Routes>
-              </Layout>
-            )}
-          </Router>
-        </ErrorBoundary>
-      </GlobalErrorHandler>
-    </>
+              <Route
+                path='*'
+                element={
+                  <ErrorBoundary level='page' fallbackComponent='404 Page'>
+                    <NotFound />
+                  </ErrorBoundary>
+                }
+              />
+            </Routes>
+          </Layout>
+        </Router>
+      </ErrorBoundary>
+    </GlobalErrorHandler>
   );
 };
 

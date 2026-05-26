@@ -17,6 +17,5 @@ export {
   default as usePageTransitions,
   useScrollAnimations,
   useStaggeredAnimations,
-  usePageLoading,
 } from './usePageTransitions.js';
 export { useRipple } from './useRipple.jsx';
