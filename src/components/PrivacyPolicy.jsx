@@ -16,8 +16,8 @@ const Section = ({ title, children }) => (
 );
 
 const PrivacyPolicy = () => (
-  <div className='min-h-screen bg-gray-50 py-20'>
-    <div className='container-custom max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8'>
+  <div className='min-h-screen bg-gray-50 py-20 px-4 sm:px-6'>
+    <div className='max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8'>
       <h1 className='text-3xl font-bold mb-2 text-gray-900'>Privacy Policy</h1>
       <p className='text-sm text-gray-500 mb-6'>Last updated: May 26, 2026</p>
 
