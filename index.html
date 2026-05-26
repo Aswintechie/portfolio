@@ -143,6 +143,23 @@
           });
         };
       })(document, 'script');
+
+      // Close widget on outside click. The chat panel renders in its own iframe,
+      // so clicks inside it never bubble here — any click we see is outside by
+      // definition. We just need to exclude the bubble itself so we don't fight
+      // its own toggle handler.
+      document.addEventListener('click', function (e) {
+        if (!window.$chatwoot) return;
+        if (
+          !document.querySelector(
+            '.woot-widget-bubble--expanded, .woot--bubble-holder.woot-widget-bubble--expanded'
+          )
+        )
+          return;
+        var bubble = document.querySelector('.woot-widget-bubble, #cw-bubble-holder');
+        if (bubble && bubble.contains(e.target)) return;
+        window.$chatwoot.toggle('close');
+      });
     </script>
   </body>
 </html>
