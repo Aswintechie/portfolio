@@ -1,28 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import App from '../../App';
 
-// Mock sessionStorage for tests
-const mockSessionStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
-
-Object.defineProperty(window, 'sessionStorage', {
-  value: mockSessionStorage,
-  writable: true,
-});
-
 describe('App', () => {
-  beforeEach(() => {
-    // Clear all mocks before each test
-    vi.clearAllMocks();
-    // Mock sessionStorage to prevent loading screen in tests
-    mockSessionStorage.getItem.mockReturnValue('true');
-  });
-
   it('renders without crashing', () => {
     render(<App />);
     expect(document.body).toBeInTheDocument();
