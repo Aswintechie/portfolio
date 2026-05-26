@@ -152,45 +152,6 @@ const Navigation = React.memo(function Navigation() {
               <Search size={20} />
             </motion.button>
 
-            {/* Header Chat Button - Shows when at top of page and on home page */}
-            {isHomePage && (
-              <motion.button
-                onClick={() => {
-                  // Trigger the HTML chat modal
-                  const chatModalOverlay = document.getElementById('chatModalOverlay');
-                  const chatModal = document.getElementById('chatModal');
-                  if (chatModalOverlay && chatModal) {
-                    chatModalOverlay.style.display = 'block';
-                    chatModal.style.display = 'block';
-                  }
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{
-                  opacity: scrolled ? 0 : 1,
-                  scale: scrolled ? 0.8 : 1,
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                whileHover={{
-                  scale: scrolled ? 0.8 : 1.05,
-                  boxShadow: scrolled ? 'none' : '0 4px 20px rgba(102,126,234,0.4)',
-                }}
-                whileTap={{ scale: scrolled ? 0.8 : 0.95 }}
-                className={`hidden md:flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
-                  scrolled
-                    ? 'pointer-events-none'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-purple-700'
-                }`}
-                style={{
-                  pointerEvents: scrolled ? 'none' : 'auto',
-                  boxShadow: scrolled ? 'none' : '0 4px 15px rgba(102,126,234,0.3)',
-                }}
-                aria-label='Open live chat'
-              >
-                <span className='text-lg'>💬</span>
-                <span>Live Chat</span>
-              </motion.button>
-            )}
-
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
