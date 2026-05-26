@@ -6,11 +6,12 @@
  */
 
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navigation from './components/Navigation.jsx';
 import SearchModal from './components/SearchModal.jsx';
 import NotFound from './components/NotFound.jsx';
 import PrivacyPolicy from './components/PrivacyPolicy.jsx';
+import TermsConditions from './components/TermsConditions.jsx';
 import {
   HeroSection,
   AboutSection,
@@ -69,7 +70,31 @@ const HomePage = () => {
   );
 };
 
+const CHAT_ELEMENT_IDS = ['openChat', 'chatModal', 'chatModalOverlay'];
+const LEGAL_ROUTES = ['/privacy', '/terms'];
+
+const useChatVisibility = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const hide = LEGAL_ROUTES.includes(pathname);
+    CHAT_ELEMENT_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (hide) {
+        el.dataset.prevDisplay = el.style.display;
+        el.style.display = 'none';
+      } else if ('prevDisplay' in el.dataset) {
+        el.style.display = el.dataset.prevDisplay;
+        delete el.dataset.prevDisplay;
+      }
+    });
+  }, [pathname]);
+};
+
 const Layout = ({ children }) => {
+  useChatVisibility();
+
   return (
     <div className='min-h-screen bg-white text-gray-900'>
       <ScrollProgress />
@@ -108,6 +133,14 @@ const App = () => {
                 element={
                   <ErrorBoundary level='page' fallbackComponent='Privacy Policy'>
                     <PrivacyPolicy />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path='/terms'
+                element={
+                  <ErrorBoundary level='page' fallbackComponent='Terms & Conditions'>
+                    <TermsConditions />
                   </ErrorBoundary>
                 }
               />

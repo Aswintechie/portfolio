@@ -321,9 +321,16 @@
     </div>
 
     <script>
+      // Chat is hidden on legal/static pages — see Layout in src/App.jsx
+      window.__isChatHiddenRoute = () => {
+        const p = window.location.pathname;
+        return p === '/privacy' || p === '/terms';
+      };
+
       // Show chat button and handle dynamic behavior
       window.addEventListener('load', () => {
         setTimeout(() => {
+          if (window.__isChatHiddenRoute()) return;
           const chatButton = document.getElementById('openChat');
           const chatButtonText = document.getElementById('chatButtonText');
           const chatButtonIcon = document.getElementById('chatButtonIcon');
@@ -358,6 +365,7 @@
           let isExpanded = false;
 
           const handleScroll = () => {
+            if (window.__isChatHiddenRoute()) return;
             const scrollY = window.scrollY;
             const isMobile = window.innerWidth <= 768;
 
@@ -528,6 +536,7 @@
 
       openChatBtn.onclick = function (e) {
         e.stopPropagation();
+        if (window.__isChatHiddenRoute && window.__isChatHiddenRoute()) return;
         openChat();
       };
 
